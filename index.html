@@ -408,6 +408,7 @@
             <div class="btn-row" style="margin-top:10px;">
                 <button class="btn btn-cancel" id="exportBtn">📥 导出</button>
                 <button class="btn btn-cancel" id="clearChatBtn">🗑 清空新对话</button>
+                <button class="btn btn-cancel" id="settingsMilestoneBtn">📅 纪念日</button>
                 <button class="btn btn-cancel" id="settingsCancel">关闭</button>
             </div>
         </div>
@@ -891,18 +892,9 @@ function fullRender(){
     renderedCount=0;
     chatBox.querySelectorAll(".msg-wrap,.date-sep,.typing-wrap,.sys-msg,.game-panel").forEach(el=>{if(el!==typingWrap)el.remove();});
     renderNextChunk();
-    // 监听滚动加载更多
-    chatBox.onscroll=()=>{
-        if(chatBox.scrollTop<60&&renderedCount<chatHistory.length){
-            loadMoreHistory();
-        }
-    };
 }
-// 滚动加载历史
 chatBox.addEventListener("scroll",()=>{
-    if(chatBox.scrollTop<60&&renderedCount<chatHistory.length){
-        loadMoreHistory();
-    }
+    if(chatBox.scrollTop<60&&renderedCount<chatHistory.length)loadMoreHistory();
 });
 
 // ============== 收藏 ==============
@@ -980,7 +972,7 @@ async function sendMsg(textOverride){
         const reader=res.body.getReader(),decoder=new TextDecoder();let buf="";
         while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const delta=JSON.parse(ds).choices?.[0]?.delta?.content;if(delta){fullReply+=delta;bubble.el.textContent=fullReply;scrollToBottom();}}catch{}}}
         if(!fullReply)throw new Error("未收到回复");
-    }catch(err){console.error(err);const em=(err.message||"");if(em.includes("401")){fullReply="API Key 无效，请点击 ⚙️ 重新设置。";showSettings();}else if(em.includes("429"))fullReply="（系统过载——稍等片刻再试）";else if(em.includes("Insufficient"))fullReply="（余额不足——需要充值了）";else fullReply="（连接中断——稍后再来，我在这里）";bubble.el.textContent=fullReply;}
+    }catch(err){console.error(err);const em=(err.message||"");if(em.includes("401")){fullReply="API Key 无效，去设置里重新填一下。";showSettings();}else if(em.includes("429"))fullReply="系统过载——稍等片刻再试。";else if(em.includes("Insufficient"))fullReply="余额不足，需要充值了。";else fullReply="连接中断——稍后再来，我在这里。";bubble.el.textContent=fullReply;}
     chatHistory.push({role:"assistant",content:fullReply,time:new Date().toISOString()});saveChat();
     bindEchoActions(bubble.wrap,aiIdx,fullReply);
     setLoading(false);
@@ -1027,6 +1019,10 @@ document.getElementById("clearChatBtn").addEventListener("click",()=>{
         if(!confirm("确定清空所有新对话吗？\n（导入的历史记录也可以在设置里重新加载）"))return;
         chatHistory=[];saveChat();fullRender();updateEmptyHint();scrollToBottom();toast("新对话已清空");
     },300);
+});
+document.getElementById("settingsMilestoneBtn").addEventListener("click",()=>{
+    hideSettings();
+    setTimeout(()=>{renderMilestoneList();milestoneModal.style.display="flex";},300);
 });
 
 // ============== 游戏面板 ==============
@@ -1528,8 +1524,6 @@ addMilestoneBtn.addEventListener("click",()=>{
 });
 milestoneClose.addEventListener("click",()=>{milestoneModal.style.display="none";});
 milestoneModal.addEventListener("click",e=>{if(e.target===milestoneModal)milestoneModal.style.display="none";});
-// 在顶栏点击 Echo 名字打开设置时，同时可以查看里程碑
-echoNameDisplay.addEventListener("dblclick",()=>{renderMilestoneList();milestoneModal.style.display="flex";});
 
 // ============== 事件绑定 ==============
 sendBtn.addEventListener("click",()=>sendMsg());
