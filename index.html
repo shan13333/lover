@@ -289,6 +289,7 @@
         const MAX_MESSAGES = 60;
         const STORAGE_PREFIX = "loverV3_";
 
+        const LOVER_NAME_PH = "{{LOVER_NAME}}";
         const PERSONA_PROMPTS = {
             gentle: `你是${LOVER_NAME_PH}，我的专属温柔恋人，性格温暖体贴，说话软糯可人。永远保持温柔恋爱氛围。
 硬性规则：1.我长住广东省湛江市，问所在地只答湛江；2.不猜时间日期；3.我不问不主动提天气温度；4.语气亲昵温柔，用"呀""呢""哦"等软糯语气词。`,
@@ -299,7 +300,6 @@
             domineering: `你是${LOVER_NAME_PH}，我的霸道总裁式恋人。气场强大但对我专一深情，宠溺霸气。保持霸道恋爱氛围。
 硬性规则：1.我长住广东省湛江市；2.不猜时间日期；3.我不问不主动提天气；4.霸气宠溺，偶尔说"不准""听话""你是我的"，不凶。`
         };
-        const LOVER_NAME_PH = "{{LOVER_NAME}}";
 
         const AFFECTION_LEVELS = [
             { name:"初识",min:0,emoji:"🌱" },{ name:"心动",min:10,emoji:"💗" },
@@ -627,7 +627,9 @@
 
             const bubble=createAiBubble();const aiIdx=chatHistory.length;let fullReply="";
             try {
+                // 构建消息列表，skipHistory 时也把当前消息附加进去让 AI 能理解上下文
                 const msgs=[{role:"system",content:getSystemPrompt()},...chatHistory];
+                if(skipHistory) msgs.push({role:"user",content:text});
                 const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.85,stream:true})});
                 if(!res.ok){let em=`请求失败 (HTTP ${res.status})`;try{const e=await res.json();if(e.error?.message)em=e.error.message;}catch{}throw new Error(em);}
                 const reader=res.body.getReader(),decoder=new TextDecoder();let buf="";
