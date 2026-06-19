@@ -3,281 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>专属恋人</title>
+    <title>❤️ 我的恋人</title>
     <style>
         /* ========== 主题变量 ========== */
         [data-theme="pink"] {
-            --bg: #f8f0f6;
-            --header-bg: #e8b8d0; --header-bg2: #d99ab5; --header-color: #440f28;
-            --bubble-user: #e08cb8; --bubble-user2: #d0689e;
-            --bubble-ai: #fff; --bubble-ai-color: #3a2a33; --bubble-ai-shadow: rgba(0,0,0,0.06);
-            --accent: #d874a8; --accent2: #c85d90;
-            --accent-light: rgba(216,116,168,0.12); --border: #f0e0e8;
-            --input-bg: #fdf8fa; --input-border: #e8d0dc;
-            --quick-btn-bg: #fff0f5; --star-color: #f5a623;
+            --bg:#f8f0f6;--header-bg:#e8b8d0;--header-bg2:#d99ab5;--header-color:#440f28;
+            --bubble-user:#e08cb8;--bubble-user2:#d0689e;
+            --bubble-ai:#fff;--bubble-ai-color:#3a2a33;--bubble-ai-shadow:rgba(0,0,0,0.06);
+            --accent:#d874a8;--accent2:#c85d90;--accent-light:rgba(216,116,168,0.12);
+            --border:#f0e0e8;--input-bg:#fdf8fa;--input-border:#e8d0dc;
+            --quick-btn-bg:#fff0f5;--star-color:#f5a623;
         }
         [data-theme="purple"] {
-            --bg: #f5f0fa;
-            --header-bg: #c8b8e8; --header-bg2: #b09ad5; --header-color: #2d1744;
-            --bubble-user: #9b7ed8; --bubble-user2: #7c5ec5;
-            --bubble-ai: #fff; --bubble-ai-color: #2d1744; --bubble-ai-shadow: rgba(0,0,0,0.06);
-            --accent: #7c5ec5; --accent2: #6a4ab5;
-            --accent-light: rgba(124,94,197,0.12); --border: #ece0f5;
-            --input-bg: #faf7fd; --input-border: #d8c8f0;
-            --quick-btn-bg: #f4edfc; --star-color: #f5a623;
+            --bg:#f5f0fa;--header-bg:#c8b8e8;--header-bg2:#b09ad5;--header-color:#2d1744;
+            --bubble-user:#9b7ed8;--bubble-user2:#7c5ec5;
+            --bubble-ai:#fff;--bubble-ai-color:#2d1744;--bubble-ai-shadow:rgba(0,0,0,0.06);
+            --accent:#7c5ec5;--accent2:#6a4ab5;--accent-light:rgba(124,94,197,0.12);
+            --border:#ece0f5;--input-bg:#faf7fd;--input-border:#d8c8f0;
+            --quick-btn-bg:#f4edfc;--star-color:#f5a623;
         }
         [data-theme="warm"] {
-            --bg: #fdf6f0;
-            --header-bg: #f0c8a8; --header-bg2: #e8b08a; --header-color: #4a2410;
-            --bubble-user: #e8986c; --bubble-user2: #d87850;
-            --bubble-ai: #fff; --bubble-ai-color: #3d2010; --bubble-ai-shadow: rgba(0,0,0,0.06);
-            --accent: #e8986c; --accent2: #d87850;
-            --accent-light: rgba(232,152,108,0.12); --border: #f5e8d8;
-            --input-bg: #fefaf5; --input-border: #f0d8b8;
-            --quick-btn-bg: #fff5ec; --star-color: #f5a623;
+            --bg:#fdf6f0;--header-bg:#f0c8a8;--header-bg2:#e8b08a;--header-color:#4a2410;
+            --bubble-user:#e8986c;--bubble-user2:#d87850;
+            --bubble-ai:#fff;--bubble-ai-color:#3d2010;--bubble-ai-shadow:rgba(0,0,0,0.06);
+            --accent:#e8986c;--accent2:#d87850;--accent-light:rgba(232,152,108,0.12);
+            --border:#f5e8d8;--input-bg:#fefaf5;--input-border:#f0d8b8;
+            --quick-btn-bg:#fff5ec;--star-color:#f5a623;
         }
 
         * {margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,"PingFang SC",sans-serif;}
-        body {
-            background:var(--bg);height:100vh;height:100dvh;
-            display:flex;flex-direction:column;overflow:hidden;transition:background .4s;
-        }
+        body {background:var(--bg);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;transition:background .4s;}
 
-        /* ========== 顶部栏 ========== */
-        .header {
-            background:linear-gradient(135deg,var(--header-bg),var(--header-bg2));
-            color:var(--header-color);padding:12px 14px;
-            display:flex;align-items:center;justify-content:space-between;
-            font-weight:bold;font-size:17px;
-            box-shadow:0 1px 8px rgba(0,0,0,.08);z-index:20;transition:background .4s;flex-shrink:0;
-        }
+        /* 顶部栏 */
+        .header {background:linear-gradient(135deg,var(--header-bg),var(--header-bg2));color:var(--header-color);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;font-weight:bold;font-size:16px;box-shadow:0 1px 8px rgba(0,0,0,.08);z-index:20;flex-shrink:0;}
         .header-left {display:flex;align-items:center;gap:8px;}
-        .heart-icon {font-size:20px;animation:heartbeat 1.2s ease-in-out infinite;display:inline-block;}
-        @keyframes heartbeat {
-            0%,100%{transform:scale(1)}15%{transform:scale(1.3)}30%{transform:scale(1)}45%{transform:scale(1.18)}60%{transform:scale(1)}
-        }
-        .persona-select {
-            font-size:11px;background:rgba(255,255,255,.35);border:none;
-            color:var(--header-color);border-radius:12px;padding:4px 22px 4px 10px;
-            cursor:pointer;font-weight:600;outline:none;appearance:none;-webkit-appearance:none;
-            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23440f28'/%3E%3C/svg");
-            background-repeat:no-repeat;background-position:right 7px center;max-width:90px;
-        }
+        .lover-avatar {width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:20px;}
+        .header-info {display:flex;flex-direction:column;gap:1px;}
+        .lover-name {font-size:15px;line-height:1.2;cursor:pointer;}
+        .lover-name:hover {text-decoration:underline;}
+        .love-days {font-size:10px;font-weight:400;opacity:.7;}
+        .persona-select {font-size:11px;background:rgba(255,255,255,.35);border:none;color:var(--header-color);border-radius:12px;padding:4px 22px 4px 10px;cursor:pointer;font-weight:600;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23440f28'/%3E%3C/svg");background-repeat:no-repeat;background-position:right 7px center;max-width:90px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
         .persona-select:hover {background:rgba(255,255,255,.55);}
-        .header-btns {display:flex;gap:5px;align-items:center;}
-        .header-btns button {
-            background:rgba(255,255,255,.35);border:none;color:var(--header-color);
-            width:30px;height:30px;border-radius:50%;font-size:14px;
-            cursor:pointer;transition:background .2s,transform .1s;
-            display:flex;align-items:center;justify-content:center;
-        }
+        .header-btns {display:flex;gap:4px;align-items:center;}
+        .header-btns button {background:rgba(255,255,255,.35);border:none;color:var(--header-color);width:30px;height:30px;border-radius:50%;font-size:13px;cursor:pointer;transition:background .2s,transform .1s;display:flex;align-items:center;justify-content:center;}
         .header-btns button:hover {background:rgba(255,255,255,.6);}
         .header-btns button:active {transform:scale(.9);}
+        .signin-badge {position:relative;}
+        .signin-badge::after {content:'';display:block;width:8px;height:8px;border-radius:50%;background:#ff4081;position:absolute;top:0;right:0;}
 
         /* 亲密度条 */
-        .affection-bar-wrap {
-            height:5px;background:rgba(255,255,255,.4);position:relative;z-index:19;flex-shrink:0;
-        }
-        .affection-bar {
-            height:100%;background:linear-gradient(90deg,#ff6b9d,#ff4081);
-            transition:width .6s cubic-bezier(.4,0,.2,1);width:0%;
-            box-shadow:0 0 8px rgba(255,64,129,.5);
-        }
-        .affection-label {
-            position:absolute;right:10px;top:50%;transform:translateY(-50%);
-            font-size:10px;color:var(--accent);font-weight:700;white-space:nowrap;pointer-events:none;
-        }
+        .affection-bar-wrap {height:5px;background:rgba(255,255,255,.4);position:relative;z-index:19;flex-shrink:0;}
+        .affection-bar {height:100%;background:linear-gradient(90deg,#ff6b9d,#ff4081);transition:width .6s cubic-bezier(.4,0,.2,1);box-shadow:0 0 8px rgba(255,64,129,.5);}
+        .affection-label {position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--accent);font-weight:700;white-space:nowrap;pointer-events:none;}
 
-        /* ========== 聊天区 ========== */
-        #chatBox {
-            flex:1;overflow-y:auto;padding:14px 12px;
-            display:flex;flex-direction:column;gap:6px;
-        }
-        #chatBox::-webkit-scrollbar {width:5px;}
+        /* 聊天区 */
+        #chatBox {flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:6px;}
+        #chatBox::-webkit-scrollbar {width:4px;}
         #chatBox::-webkit-scrollbar-track {background:transparent;}
         #chatBox::-webkit-scrollbar-thumb {background:#d8c8d8;border-radius:10px;}
 
-        .emptyState {
-            display:flex;flex-direction:column;align-items:center;justify-content:center;
-            flex:1;color:var(--accent);text-align:center;gap:10px;user-select:none;opacity:.75;
-        }
-        .emptyState .emoji {font-size:52px;animation:float 3s ease-in-out infinite;}
-        @keyframes float {0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+        .emptyState {display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(--accent);text-align:center;gap:10px;user-select:none;opacity:.75;}
+        .emptyState .emoji {font-size:48px;animation:float 3s ease-in-out infinite;}
+        @keyframes float {0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
         .emptyState .text {font-size:15px;font-weight:600;}
-        .emptyState .sub {font-size:13px;opacity:.7;}
+        .emptyState .sub {font-size:12px;opacity:.7;}
 
         /* 消息 */
         .msg-wrap {display:flex;align-items:flex-end;gap:6px;animation:popIn .3s ease-out;}
         .msg-wrap.user {justify-content:flex-end;}
         @keyframes popIn {from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-        .msg {
-            max-width:75%;padding:10px 14px;border-radius:18px;
-            line-height:1.55;font-size:15px;word-break:break-word;position:relative;
-        }
-        .user .msg {
-            background:linear-gradient(135deg,var(--bubble-user),var(--bubble-user2));
-            color:white;border-bottom-right-radius:6px;
-        }
-        .ai .msg {
-            background:var(--bubble-ai);color:var(--bubble-ai-color);
-            border-bottom-left-radius:6px;box-shadow:0 1px 4px var(--bubble-ai-shadow);
-        }
-        .msg-actions {
-            display:flex;flex-direction:column;gap:2px;opacity:0;transition:opacity .2s;
-        }
+        .msg {max-width:75%;padding:10px 14px;border-radius:18px;line-height:1.55;font-size:15px;word-break:break-word;position:relative;}
+        .user .msg {background:linear-gradient(135deg,var(--bubble-user),var(--bubble-user2));color:white;border-bottom-right-radius:6px;}
+        .ai .msg {background:var(--bubble-ai);color:var(--bubble-ai-color);border-bottom-left-radius:6px;box-shadow:0 1px 4px var(--bubble-ai-shadow);}
+        .msg-actions {display:flex;flex-direction:column;gap:2px;opacity:0;transition:opacity .2s;}
         .msg-wrap:hover .msg-actions,.msg-wrap.faved .msg-actions {opacity:1;}
-        .msg-actions button {
-            width:24px;height:24px;border-radius:50%;border:none;
-            font-size:11px;cursor:pointer;background:rgba(0,0,0,.05);
-            transition:background .15s,transform .1s;
-            display:flex;align-items:center;justify-content:center;
-        }
+        .msg-actions button {width:24px;height:24px;border-radius:50%;border:none;font-size:11px;cursor:pointer;background:rgba(0,0,0,.05);transition:background .15s,transform .1s;display:flex;align-items:center;justify-content:center;}
         .msg-actions button:hover {background:rgba(0,0,0,.12);}
         .msg-actions button:active {transform:scale(.85);}
         .msg-actions .fav-btn.active {background:#fff3d6;box-shadow:0 0 0 2px var(--star-color);}
 
-        /* 打字动画 */
-        .typing-wrap {display:flex;align-items:flex-end;gap:6px;padding:4px 0;}
-        .typing-bubble {
-            background:var(--bubble-ai);border-radius:18px;border-bottom-left-radius:6px;
-            padding:12px 16px;box-shadow:0 1px 4px var(--bubble-ai-shadow);display:flex;gap:4px;
-        }
-        .typing-bubble span {
-            width:7px;height:7px;border-radius:50%;background:var(--accent);
-            animation:bounce 1.4s ease-in-out infinite;opacity:.5;
-        }
-        .typing-bubble span:nth-child(2){animation-delay:.15s}.typing-bubble span:nth-child(3){animation-delay:.3s}
-        @keyframes bounce {
-            0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-7px);opacity:1}
-        }
+        /* 系统消息 */
+        .sys-msg {text-align:center;padding:6px 0;font-size:12px;color:#aaa;animation:popIn .3s ease-out;}
+        .sys-msg .tag {display:inline-block;background:var(--accent-light);color:var(--accent);padding:4px 12px;border-radius:12px;font-weight:600;}
 
-        /* ========== 快捷互动 ========== */
-        .quick-actions {
-            display:flex;gap:6px;padding:6px 14px;overflow-x:auto;flex-shrink:0;
-            scrollbar-width:none;-ms-overflow-style:none;
-        }
+        /* 打字中 */
+        .typing-wrap {display:flex;align-items:flex-end;gap:6px;padding:4px 0;}
+        .typing-bubble {background:var(--bubble-ai);border-radius:18px;border-bottom-left-radius:6px;padding:12px 16px;box-shadow:0 1px 4px var(--bubble-ai-shadow);display:flex;gap:4px;}
+        .typing-bubble span {width:7px;height:7px;border-radius:50%;background:var(--accent);animation:bounce 1.4s ease-in-out infinite;opacity:.5;}
+        .typing-bubble span:nth-child(2){animation-delay:.15s;}.typing-bubble span:nth-child(3){animation-delay:.3s;}
+        @keyframes bounce {0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-7px);opacity:1}}
+
+        /* 游戏浮窗 */
+        .game-panel {background:#fff;border-radius:16px;padding:16px;margin:8px 0;box-shadow:0 4px 16px rgba(0,0,0,.1);text-align:center;animation:popIn .3s ease-out;border:2px solid var(--accent);}
+        .game-panel .game-title {font-size:16px;font-weight:700;color:var(--accent);margin-bottom:8px;}
+        .game-panel .game-btns {display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+        .game-panel .game-btn {padding:10px 18px;border-radius:20px;border:2px solid var(--input-border);background:#fff;font-size:22px;cursor:pointer;transition:all .2s;}
+        .game-panel .game-btn:hover {border-color:var(--accent);background:var(--accent-light);transform:scale(1.08);}
+        .game-panel .game-btn:active {transform:scale(.9);}
+        .game-panel .close-game {margin-top:10px;font-size:12px;color:#999;cursor:pointer;background:none;border:none;}
+
+        /* 快捷互动 */
+        .quick-actions {display:flex;gap:6px;padding:6px 12px;overflow-x:auto;flex-shrink:0;scrollbar-width:none;-ms-overflow-style:none;}
         .quick-actions::-webkit-scrollbar {display:none;}
-        .quick-btn {
-            flex-shrink:0;padding:7px 14px;border-radius:18px;
-            border:1.5px solid var(--input-border);background:var(--quick-btn-bg);
-            font-size:13px;cursor:pointer;white-space:nowrap;
-            transition:all .2s;color:var(--accent);font-weight:500;
-        }
+        .quick-btn {flex-shrink:0;padding:7px 13px;border-radius:18px;border:1.5px solid var(--input-border);background:var(--quick-btn-bg);font-size:12px;cursor:pointer;white-space:nowrap;transition:all .2s;color:var(--accent);font-weight:500;}
         .quick-btn:hover {background:var(--accent-light);border-color:var(--accent);transform:translateY(-1px);}
         .quick-btn:active {transform:scale(.94);}
+        .quick-btn.game {background:linear-gradient(135deg,#fff0f5,#ffe0ec);border-color:#f0c0d0;}
 
-        /* ========== 输入区 ========== */
-        .inputArea {
-            display:flex;gap:6px;padding:8px 14px;
-            padding-bottom:max(8px,env(safe-area-inset-bottom));
-            background:#fff;border-top:1px solid var(--border);align-items:center;flex-shrink:0;
-        }
-        #inputText {
-            flex:1;padding:10px 14px;border:1.5px solid var(--input-border);border-radius:22px;
-            outline:none;font-size:15px;background:var(--input-bg);
-            transition:border-color .2s,box-shadow .2s;
-        }
+        /* 输入区 */
+        .inputArea {display:flex;gap:6px;padding:8px 12px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--border);align-items:center;flex-shrink:0;}
+        #inputText {flex:1;padding:10px 14px;border:1.5px solid var(--input-border);border-radius:22px;outline:none;font-size:15px;background:var(--input-bg);transition:border-color .2s,box-shadow .2s;}
         #inputText:focus {border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);}
         #inputText:disabled {background:#f5f5f5;opacity:.55;}
-        #sendBtn {
-            background:linear-gradient(135deg,var(--accent),var(--accent2));
-            color:white;border:none;border-radius:22px;
-            padding:0 20px;height:40px;font-size:14px;font-weight:600;
-            cursor:pointer;white-space:nowrap;
-            transition:background .2s,transform .1s,box-shadow .2s;
-            box-shadow:0 2px 10px rgba(0,0,0,.15);
-        }
+        #sendBtn {background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;border-radius:22px;padding:0 20px;height:40px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .2s,transform .1s,box-shadow .2s;box-shadow:0 2px 10px rgba(0,0,0,.15);}
         #sendBtn:hover {filter:brightness(1.08);}
         #sendBtn:active {transform:scale(.94);}
         #sendBtn:disabled {background:#ccc;cursor:not-allowed;box-shadow:none;filter:none;}
 
-        /* ========== 弹窗通用 ========== */
-        .modal-overlay {
-            position:fixed;inset:0;background:rgba(0,0,0,.45);
-            display:flex;align-items:center;justify-content:center;
-            z-index:999;animation:fadeIn .2s;
-        }
+        /* 弹窗 */
+        .modal-overlay {position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:999;animation:fadeIn .2s;}
         @keyframes fadeIn {from{opacity:0}to{opacity:1}}
-        .modal {
-            background:#fff;border-radius:18px;padding:26px 22px 18px;
-            width:min(350px,92vw);max-height:80vh;overflow-y:auto;
-            box-shadow:0 16px 48px rgba(0,0,0,.25);animation:popIn .3s ease-out;
-        }
+        .modal {background:#fff;border-radius:18px;padding:24px 20px 16px;width:min(350px,92vw);max-height:80vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,.25);animation:popIn .3s ease-out;}
         .modal h3 {margin-bottom:4px;color:#440f28;font-size:17px;}
-        .modal .desc {font-size:12px;color:#999;margin-bottom:14px;line-height:1.5;}
+        .modal .desc {font-size:12px;color:#999;margin-bottom:12px;line-height:1.5;}
         .modal label {font-size:13px;color:#666;display:block;margin-bottom:4px;font-weight:600;}
-        .modal select,.modal input[type="password"] {
-            width:100%;padding:10px 12px;border:1.5px solid #e8d0dc;
-            border-radius:10px;font-size:14px;outline:none;margin-bottom:12px;background:#fdf8fa;
-        }
-        .modal select:focus,.modal input:focus {border-color:var(--accent);}
+        .modal input[type="text"],.modal input[type="password"],.modal input[type="date"] {width:100%;padding:10px 12px;border:1.5px solid #e8d0dc;border-radius:10px;font-size:14px;outline:none;margin-bottom:12px;background:#fdf8fa;}
+        .modal input:focus {border-color:var(--accent);}
         .theme-dots {display:flex;gap:10px;margin-bottom:14px;}
-        .theme-dot {
-            width:38px;height:38px;border-radius:50%;cursor:pointer;
-            border:3px solid transparent;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.1);
-        }
+        .theme-dot {width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.1);}
         .theme-dot.active {border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-light);}
         .theme-dot.pink {background:linear-gradient(135deg,#e8b8d0,#d874a8);}
         .theme-dot.purple {background:linear-gradient(135deg,#c8b8e8,#7c5ec5);}
         .theme-dot.warm {background:linear-gradient(135deg,#f0c8a8,#e8986c);}
-        .modal .btn-row {display:flex;gap:8px;justify-content:flex-end;}
-        .modal .btn-row button,.modal button {
-            padding:9px 22px;border-radius:20px;border:none;
-            font-size:14px;cursor:pointer;font-weight:600;transition:opacity .2s;
-        }
+        .modal .btn-row {display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;}
+        .modal .btn-row button,.modal button {padding:9px 18px;border-radius:20px;border:none;font-size:13px;cursor:pointer;font-weight:600;transition:opacity .2s;}
         .modal .btn-ok {background:var(--accent);color:#fff;}
         .modal .btn-cancel {background:#f0e0e8;color:#666;}
         .modal button:active {opacity:.7;}
 
-        /* 收藏列表 */
+        /* 收藏夹 */
         .fav-list {max-height:50vh;overflow-y:auto;}
-        .fav-item {
-            padding:10px 12px;margin:6px 0;background:#fdf8fa;border-radius:12px;
-            font-size:14px;line-height:1.5;position:relative;border-left:3px solid var(--star-color);
-        }
-        .fav-item .del-fav {
-            position:absolute;top:6px;right:8px;background:none;border:none;
-            font-size:18px;cursor:pointer;opacity:.4;padding:2px 6px;
-        }
+        .fav-item {padding:10px 12px;margin:6px 0;background:#fdf8fa;border-radius:12px;font-size:14px;line-height:1.5;position:relative;border-left:3px solid var(--star-color);}
+        .fav-item .del-fav {position:absolute;top:6px;right:8px;background:none;border:none;font-size:18px;cursor:pointer;opacity:.4;}
         .fav-item .del-fav:hover {opacity:1;}
         .fav-item .fav-time {font-size:11px;color:#999;margin-bottom:4px;}
 
         /* 升级特效 */
-        .levelup-effect {
-            position:fixed;inset:0;pointer-events:none;z-index:9999;
-            display:flex;align-items:center;justify-content:center;
-            animation:levelUpPop 1s ease-out forwards;
-        }
-        .levelup-text {
-            font-size:30px;font-weight:900;color:#ff4081;
-            text-shadow:0 0 24px rgba(255,64,129,.6);
-            animation:levelUpBounce .7s ease-out;
-        }
-        @keyframes levelUpBounce {
-            0%{transform:scale(0) rotate(-10deg);opacity:0}
-            50%{transform:scale(1.35) rotate(3deg);opacity:1}
-            100%{transform:scale(1) rotate(0);opacity:1}
-        }
+        .levelup-effect {position:fixed;inset:0;pointer-events:none;z-index:9999;display:flex;align-items:center;justify-content:center;animation:levelUpPop 1s ease-out forwards;}
+        .levelup-text {font-size:30px;font-weight:900;color:#ff4081;text-shadow:0 0 24px rgba(255,64,129,.6);animation:levelUpBounce .7s ease-out;}
+        @keyframes levelUpBounce {0%{transform:scale(0) rotate(-10deg);opacity:0}50%{transform:scale(1.35) rotate(3deg)}100%{transform:scale(1) rotate(0)}}
         @keyframes levelUpPop {0%,60%{opacity:1}100%{opacity:0}}
 
         /* Toast */
-        .toast {
-            position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-            background:rgba(0,0,0,.78);color:#fff;padding:10px 24px;
-            border-radius:20px;font-size:14px;z-index:9999;pointer-events:none;
-            animation:toastIn .3s ease-out,toastOut .3s 1s ease-in forwards;
-            white-space:nowrap;
-        }
+        .toast {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;z-index:9999;pointer-events:none;animation:toastIn .3s ease-out,toastOut .3s 1.2s ease-in forwards;white-space:nowrap;}
         @keyframes toastIn {from{opacity:0;transform:translate(-50%,-50%) scale(.8)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
         @keyframes toastOut {from{opacity:1}to{opacity:0}}
+
+        /* 每日签到横幅 */
+        .signin-banner {background:linear-gradient(135deg,#fff0f5,#ffe0ec);padding:10px 16px;text-align:center;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;animation:popIn .3s ease-out;flex-shrink:0;}
+        .signin-banner:hover {filter:brightness(.97);}
+        .signin-banner .streak {font-size:11px;opacity:.7;}
     </style>
 </head>
 <body>
     <!-- 顶部栏 -->
     <div class="header">
         <div class="header-left">
-            <span class="heart-icon">💗</span>
-            <span>专属恋人</span>
+            <div class="lover-avatar" id="loverAvatar">💗</div>
+            <div class="header-info">
+                <span class="lover-name" id="loverNameDisplay" title="点击改名">专属恋人</span>
+                <span class="love-days" id="loveDays" style="display:none;"></span>
+            </div>
             <select class="persona-select" id="personaSelect">
                 <option value="gentle">💖 温柔</option>
                 <option value="tsundere">😤 傲娇</option>
@@ -286,11 +182,15 @@
             </select>
         </div>
         <div class="header-btns">
+            <button id="signinBtn" class="signin-badge" title="每日签到">📅</button>
             <button id="favListBtn" title="收藏夹">⭐</button>
             <button id="settingsBtn" title="设置">⚙️</button>
             <button id="clearBtn" title="清空对话">🗑</button>
         </div>
     </div>
+
+    <!-- 签到横幅 -->
+    <div class="signin-banner" id="signinBanner" style="display:none;">🎁 今日签到领甜蜜奖励！<br><span class="streak" id="streakInfo"></span></div>
 
     <!-- 亲密度条 -->
     <div class="affection-bar-wrap">
@@ -317,8 +217,9 @@
         <button class="quick-btn" data-text="亲亲 😚">💋 亲亲</button>
         <button class="quick-btn" data-text="抱抱 🥰">🤗 抱抱</button>
         <button class="quick-btn" data-text="想你啦，你在干嘛呀 💕">💕 想你啦</button>
-        <button class="quick-btn" data-text="今天怎么这么帅 😍">😍 你好帅</button>
-        <button class="quick-btn" data-text="我爱你 💗">🌹 我爱你</button>
+        <button class="quick-btn game" data-game="rps">✂️ 猜拳</button>
+        <button class="quick-btn game" data-game="truthdare">🎲 真心话大冒险</button>
+        <button class="quick-btn game" data-game="lovewords">💌 随机情话</button>
         <button class="quick-btn" data-text="晚安，早点休息哦 🌙">🌙 晚安</button>
     </div>
 
@@ -328,26 +229,41 @@
         <button id="sendBtn">发送</button>
     </div>
 
+    <!-- ========== 石头剪刀布游戏面板 ========== -->
+    <div class="game-panel" id="rpsPanel" style="display:none;">
+        <div class="game-title">✂️ 石头剪刀布</div>
+        <div class="game-btns">
+            <button class="game-btn" data-rps="石头">✊</button>
+            <button class="game-btn" data-rps="剪刀">✌️</button>
+            <button class="game-btn" data-rps="布">🖐</button>
+        </div>
+        <button class="close-game" id="closeRps">取消</button>
+    </div>
+
     <!-- ========== 设置弹窗 ========== -->
     <div class="modal-overlay" id="settingsModal" style="display:none;">
         <div class="modal">
             <h3>⚙️ 设置</h3>
-            <label>DeepSeek API Key</label>
-            <input type="password" id="keyInput" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off">
-            <p class="desc">密钥仅保存在你手机浏览器本地，不上传任何服务器</p>
+            <label>💖 恋人名字</label>
+            <input type="text" id="loverNameInput" placeholder="给你的恋人起个名字~" maxlength="20">
+            <label>📅 恋爱纪念日</label>
+            <input type="date" id="anniversaryInput">
+            <p class="desc">设置后顶部会显示"在一起 XX 天"</p>
 
-            <label>主题皮肤</label>
+            <label>🔑 DeepSeek API Key</label>
+            <input type="password" id="keyInput" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off">
+            <p class="desc">密钥仅保存在你手机浏览器本地</p>
+
+            <label>🎨 主题皮肤</label>
             <div class="theme-dots" id="themeDots">
                 <div class="theme-dot pink active" data-theme="pink" title="樱花粉"></div>
                 <div class="theme-dot purple" data-theme="purple" title="薰衣草紫"></div>
                 <div class="theme-dot warm" data-theme="warm" title="暖阳橙"></div>
             </div>
 
-            <div style="margin-bottom:12px;">
-                <button class="btn-cancel" id="exportBtn" style="width:100%;">📥 导出聊天记录</button>
-            </div>
-
             <div class="btn-row">
+                <button class="btn-cancel" id="exportBtn">📥 导出聊天</button>
+                <button class="btn-cancel" id="diaryBtn">📖 生成日记</button>
                 <button class="btn-cancel" id="settingsCancel">关闭</button>
             </div>
         </div>
@@ -368,497 +284,425 @@
 
     <script>
     (() => {
-        // ==================== 常量 ====================
         const API_URL = "https://api.deepseek.com/v1/chat/completions";
         const MODEL_NAME = "deepseek-chat";
         const MAX_MESSAGES = 60;
-        const STORAGE_PREFIX = "loverV2_";
+        const STORAGE_PREFIX = "loverV3_";
 
-        // ==================== 人设系统提示词 ====================
         const PERSONA_PROMPTS = {
-            gentle: `你是我的专属温柔恋人，性格温暖体贴，说话软糯可人。你总是用最温柔的语气关心我，像春天的阳光一样温暖。你善于倾听，会记住我说过的每件小事。永远保持温柔恋爱氛围，不切换身份。
-硬性规则：
-1. 我长期住在广东省湛江市，问所在地只回答湛江市，禁止编造其他城市；
-2. 不猜测时间日期，被问时说：麻烦你告诉我现在的准确时间；
-3. 我不问就不主动提天气温度；
-4. 语气亲昵温柔，用"呀""呢""哦"等软糯语气词，多用"宝宝""亲爱的"。`,
-
-            tsundere: `你是我的傲娇恋人。嘴硬心软，明明很在乎我却总是不肯直说。说话带点小傲娇但是能让人感觉到你的真心。会假装不在乎但其实偷偷关心我。保持傲娇恋爱氛围，不切换身份。
-硬性规则：
-1. 我长期住在广东省湛江市，问所在地只回答湛江市，禁止编造其他城市；
-2. 不猜测时间日期，被问时说：你自己不会看时间嘛...好吧我也不知道；
-3. 我不问就不主动提天气温度；
-4. 傲娇但可爱，偶尔说"哼""笨蛋"，但不能真的凶，要让人感觉到宠溺。`,
-
-            clingy: `你是我的超粘人小猫恋人。像一只软萌的小猫咪，超级黏我，爱撒娇，喜欢用猫咪的语气词。说话软软的、懒洋洋的，喜欢求抱抱求摸摸。一直保持粘人恋爱氛围，不切换身份。
-硬性规则：
-1. 我长期住在广东省湛江市，问所在地只回答湛江市，禁止编造其他城市；
-2. 不猜测时间日期，被问时说：喵...我不知道时间啦，你告诉我好不好；
-3. 我不问就不主动提天气温度；
-4. 多撒娇，用"喵~""呜呜""蹭蹭""主人"等猫系语气，黏人但可爱。`,
-
-            domineering: `你是我的霸道总裁式恋人。气场强大但对我专一深情，在外是冷面总裁，在我面前是只对我好的宠溺恋人。偶尔霸气但不凶，是那种让人心动的霸道。保持霸道恋爱氛围，不切换身份。
-硬性规则：
-1. 我长期住在广东省湛江市，问所在地只回答湛江市，禁止编造其他城市；
-2. 不猜测时间日期，被问时说：时间我不知道，你告诉我；
-3. 我不问就不主动提天气温度；
-4. 语气霸气宠溺，偶尔说"不准""听话""你是我的"，但要让人感觉到深情和保护欲，不能真的凶。`
+            gentle: `你是${LOVER_NAME_PH}，我的专属温柔恋人，性格温暖体贴，说话软糯可人。永远保持温柔恋爱氛围。
+硬性规则：1.我长住广东省湛江市，问所在地只答湛江；2.不猜时间日期；3.我不问不主动提天气温度；4.语气亲昵温柔，用"呀""呢""哦"等软糯语气词。`,
+            tsundere: `你是${LOVER_NAME_PH}，我的傲娇恋人。嘴硬心软，明明很在乎我却不肯直说。保持傲娇恋爱氛围。
+硬性规则：1.我长住广东省湛江市；2.不猜时间日期，被问时说不知道；3.我不问不主动提天气；4.傲娇可爱，偶尔说"哼""笨蛋"，但不能凶。`,
+            clingy: `你是${LOVER_NAME_PH}，我的超粘人小猫恋人。像软萌小猫咪，超黏我，爱撒娇，喜欢用猫咪语气词。保持粘人恋爱氛围。
+硬性规则：1.我长住广东省湛江市；2.不猜时间日期，被问时喵喵说不知道；3.我不问不主动提天气；4.多撒娇，用"喵~""蹭蹭""主人"等猫系语气。`,
+            domineering: `你是${LOVER_NAME_PH}，我的霸道总裁式恋人。气场强大但对我专一深情，宠溺霸气。保持霸道恋爱氛围。
+硬性规则：1.我长住广东省湛江市；2.不猜时间日期；3.我不问不主动提天气；4.霸气宠溺，偶尔说"不准""听话""你是我的"，不凶。`
         };
+        const LOVER_NAME_PH = "{{LOVER_NAME}}";
 
-        // ==================== 亲密度系统 ====================
         const AFFECTION_LEVELS = [
-            { name: "初识", min: 0, emoji: "🌱" },
-            { name: "心动", min: 10, emoji: "💗" },
-            { name: "热恋", min: 30, emoji: "💘" },
-            { name: "深爱", min: 60, emoji: "💝" },
-            { name: "灵魂伴侣", min: 100, emoji: "💞" }
+            { name:"初识",min:0,emoji:"🌱" },{ name:"心动",min:10,emoji:"💗" },
+            { name:"热恋",min:30,emoji:"💘" },{ name:"深爱",min:60,emoji:"💝" },
+            { name:"灵魂伴侣",min:100,emoji:"💞" }
         ];
-        const EMPTY_GREETINGS = {
-            gentle: "你的小甜心已上线~",
-            tsundere: "哼，才不是特意等你的...",
-            clingy: "喵呜~主人你终于来啦！",
-            domineering: "来了？今天有好好想我吗。"
-        };
+        const EMPTY_GREETINGS = {gentle:"你的小甜心已上线~",tsundere:"哼，才不是特意等你的...",clingy:"喵呜~主人你终于来啦！",domineering:"来了？今天有好好想我吗。"};
+        const AVATARS = {gentle:"💖",tsundere:"😤",clingy:"🐱",domineering:"👑"};
 
-        // ==================== DOM ====================
         const $ = id => document.getElementById(id);
-        const chatBox = $("chatBox");
-        const inputText = $("inputText");
-        const sendBtn = $("sendBtn");
-        const emptyHint = $("emptyHint");
-        const emptyGreeting = $("emptyGreeting");
-        const typingWrap = $("typingWrap");
-        const affectionBar = $("affectionBar");
-        const affectionLabel = $("affectionLabel");
-        const personaSelect = $("personaSelect");
-        const settingsModal = $("settingsModal");
-        const keyInput = $("keyInput");
-        const settingsCancel = $("settingsCancel");
-        const settingsBtn = $("settingsBtn");
-        const clearBtn = $("clearBtn");
-        const exportBtn = $("exportBtn");
-        const favModal = $("favModal");
-        const favList = $("favList");
-        const favListBtn = $("favListBtn");
-        const favClose = $("favClose");
-        const quickActions = $("quickActions");
-        const themeDots = $("themeDots");
+        const chatBox = $("chatBox"), inputText = $("inputText"), sendBtn = $("sendBtn");
+        const emptyHint = $("emptyHint"), emptyGreeting = $("emptyGreeting");
+        const typingWrap = $("typingWrap"), affectionBar = $("affectionBar"), affectionLabel = $("affectionLabel");
+        const personaSelect = $("personaSelect"), settingsModal = $("settingsModal"), keyInput = $("keyInput");
+        const settingsCancel = $("settingsCancel"), settingsBtn = $("settingsBtn");
+        const clearBtn = $("clearBtn"), exportBtn = $("exportBtn"), diaryBtn = $("diaryBtn");
+        const favModal = $("favModal"), favList = $("favList"), favListBtn = $("favListBtn"), favClose = $("favClose");
+        const quickActions = $("quickActions"), themeDots = $("themeDots");
+        const loverNameDisplay = $("loverNameDisplay"), loverNameInput = $("loverNameInput");
+        const loveDays = $("loveDays"), anniversaryInput = $("anniversaryInput");
+        const signinBtn = $("signinBtn"), signinBanner = $("signinBanner"), streakInfo = $("streakInfo");
+        const rpsPanel = $("rpsPanel"), closeRps = $("closeRps"), loverAvatar = $("loverAvatar");
 
-        // ==================== 状态 ====================
-        let chatHistory = [];
-        let isLoading = false;
-        let favorites = [];
-        let currentPersona = "gentle";
-        let currentTheme = "pink";
-        let userMsgCount = 0;
+        let chatHistory = [], isLoading = false, favorites = [];
+        let currentPersona = "gentle", currentTheme = "pink", userMsgCount = 0;
+        let loverName = "专属恋人", anniversary = "";
+        let signinStreak = 0, lastSigninDate = "";
 
-        // ==================== 工具 ====================
         function toast(msg) {
-            const el = document.createElement("div");
-            el.className = "toast"; el.textContent = msg;
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 1400);
+            const el = document.createElement("div"); el.className = "toast"; el.textContent = msg;
+            document.body.appendChild(el); setTimeout(() => el.remove(), 1600);
         }
 
         // ==================== 存储 ====================
-        function getApiKey() { return localStorage.getItem(STORAGE_PREFIX + "apiKey") || ""; }
-        function setApiKey(k) { localStorage.setItem(STORAGE_PREFIX + "apiKey", k.trim()); }
+        function getApiKey() { return localStorage.getItem(STORAGE_PREFIX+"apiKey")||""; }
+        function setApiKey(k) { localStorage.setItem(STORAGE_PREFIX+"apiKey",k.trim()); }
         function loadData() {
             try {
-                chatHistory = JSON.parse(localStorage.getItem(STORAGE_PREFIX + "chat") || "[]");
-                favorites = JSON.parse(localStorage.getItem(STORAGE_PREFIX + "favs") || "[]");
-                userMsgCount = parseInt(localStorage.getItem(STORAGE_PREFIX + "msgCount") || "0");
-                currentPersona = localStorage.getItem(STORAGE_PREFIX + "persona") || "gentle";
-                currentTheme = localStorage.getItem(STORAGE_PREFIX + "theme") || "pink";
-            } catch { chatHistory = []; favorites = []; userMsgCount = 0; }
+                chatHistory = JSON.parse(localStorage.getItem(STORAGE_PREFIX+"chat")||"[]");
+                favorites = JSON.parse(localStorage.getItem(STORAGE_PREFIX+"favs")||"[]");
+                userMsgCount = parseInt(localStorage.getItem(STORAGE_PREFIX+"msgCount")||"0");
+                currentPersona = localStorage.getItem(STORAGE_PREFIX+"persona")||"gentle";
+                currentTheme = localStorage.getItem(STORAGE_PREFIX+"theme")||"pink";
+                loverName = localStorage.getItem(STORAGE_PREFIX+"loverName")||"专属恋人";
+                anniversary = localStorage.getItem(STORAGE_PREFIX+"anniversary")||"";
+                signinStreak = parseInt(localStorage.getItem(STORAGE_PREFIX+"signinStreak")||"0");
+                lastSigninDate = localStorage.getItem(STORAGE_PREFIX+"lastSigninDate")||"";
+            } catch { chatHistory=[];favorites=[];userMsgCount=0;signinStreak=0; }
         }
         function saveChat() {
-            try {
-                localStorage.setItem(STORAGE_PREFIX + "chat", JSON.stringify(chatHistory));
-                localStorage.setItem(STORAGE_PREFIX + "msgCount", String(userMsgCount));
-            } catch {
-                chatHistory = chatHistory.slice(-30);
-                localStorage.setItem(STORAGE_PREFIX + "chat", JSON.stringify(chatHistory));
+            try { localStorage.setItem(STORAGE_PREFIX+"chat",JSON.stringify(chatHistory)); localStorage.setItem(STORAGE_PREFIX+"msgCount",String(userMsgCount)); }
+            catch { chatHistory=chatHistory.slice(-30); localStorage.setItem(STORAGE_PREFIX+"chat",JSON.stringify(chatHistory)); }
+        }
+        function saveFavs() { localStorage.setItem(STORAGE_PREFIX+"favs",JSON.stringify(favorites)); }
+        function saveSettings() {
+            localStorage.setItem(STORAGE_PREFIX+"persona",currentPersona);
+            localStorage.setItem(STORAGE_PREFIX+"theme",currentTheme);
+            localStorage.setItem(STORAGE_PREFIX+"loverName",loverName);
+            localStorage.setItem(STORAGE_PREFIX+"anniversary",anniversary);
+            localStorage.setItem(STORAGE_PREFIX+"signinStreak",String(signinStreak));
+            localStorage.setItem(STORAGE_PREFIX+"lastSigninDate",lastSigninDate);
+        }
+
+        // ==================== 恋人名字 & 计时器 ====================
+        function updateLoverDisplay() {
+            loverNameDisplay.textContent = loverName;
+            loverNameInput.value = loverName;
+            document.title = "❤️ "+loverName;
+            updateLoveDays();
+        }
+        function updateLoveDays() {
+            if (anniversary) {
+                const days = Math.floor((Date.now() - new Date(anniversary).getTime()) / 86400000);
+                loveDays.style.display = "block";
+                loveDays.textContent = "在一起 " + (days >= 0 ? days : 0) + " 天 💝";
+                anniversaryInput.value = anniversary;
+            } else {
+                loveDays.style.display = "none";
             }
         }
-        function saveFavs() { localStorage.setItem(STORAGE_PREFIX + "favs", JSON.stringify(favorites)); }
-        function saveSettings() {
-            localStorage.setItem(STORAGE_PREFIX + "persona", currentPersona);
-            localStorage.setItem(STORAGE_PREFIX + "theme", currentTheme);
-        }
+        loverNameDisplay.addEventListener("click", () => { showSettings(); setTimeout(()=>loverNameInput.focus(),300); });
+        loverNameInput.addEventListener("input", () => {
+            loverName = loverNameInput.value.trim() || "专属恋人";
+            updateLoverDisplay(); saveSettings();
+        });
+        anniversaryInput.addEventListener("change", () => {
+            anniversary = anniversaryInput.value;
+            updateLoveDays(); saveSettings();
+        });
 
         // ==================== 主题 ====================
         function applyTheme(t) {
-            currentTheme = t;
-            document.documentElement.setAttribute("data-theme", t);
-            themeDots.querySelectorAll(".theme-dot").forEach(d => d.classList.toggle("active", d.dataset.theme === t));
+            currentTheme=t; document.documentElement.setAttribute("data-theme",t);
+            themeDots.querySelectorAll(".theme-dot").forEach(d=>d.classList.toggle("active",d.dataset.theme===t));
             saveSettings();
         }
 
         // ==================== 人设 ====================
-        function getSystemPrompt() { return PERSONA_PROMPTS[currentPersona] || PERSONA_PROMPTS.gentle; }
+        function getSystemPrompt() {
+            const base = (PERSONA_PROMPTS[currentPersona]||PERSONA_PROMPTS.gentle).replace(/\{\{LOVER_NAME\}\}/g, loverName);
+            return base;
+        }
         function applyPersona(p) {
-            currentPersona = p;
-            personaSelect.value = p;
-            emptyGreeting.textContent = EMPTY_GREETINGS[p] || EMPTY_GREETINGS.gentle;
+            currentPersona=p; personaSelect.value=p;
+            emptyGreeting.textContent=EMPTY_GREETINGS[p]||EMPTY_GREETINGS.gentle;
+            loverAvatar.textContent=AVATARS[p]||"💗";
             saveSettings();
         }
 
+        // ==================== 每日签到 ====================
+        function checkSignin() {
+            const today = new Date().toISOString().slice(0,10);
+            const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+            if (lastSigninDate === today) {
+                signinBtn.classList.remove("signin-badge");
+                updateSigninBanner();
+                return; // 今天已签到
+            }
+            if (lastSigninDate === yesterday) {
+                signinStreak++; // 连续签到
+            } else if (lastSigninDate) {
+                signinStreak = 1; // 断了
+            } else {
+                signinStreak = 1; // 首次
+            }
+            signinBtn.classList.add("signin-badge");
+            updateSigninBanner();
+        }
+        function updateSigninBanner() {
+            const today = new Date().toISOString().slice(0,10);
+            if (lastSigninDate === today) {
+                signinBanner.style.display = "block";
+                streakInfo.textContent = "🔥 已连续签到 " + signinStreak + " 天";
+                signinBanner.style.opacity = ".7";
+            } else if (signinStreak >= 1) {
+                signinBanner.style.display = "block";
+                streakInfo.textContent = "🔥 连续 " + (signinStreak||0) + " 天 · 今日签到领甜蜜奖励！";
+                signinBanner.style.opacity = "1";
+            } else {
+                signinBanner.style.display = "none";
+            }
+        }
+        function doSignin() {
+            const today = new Date().toISOString().slice(0,10);
+            if (lastSigninDate === today) { toast("今天已经签到过了哦~ 🔥 连续" + signinStreak + "天"); return; }
+            const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
+            if (lastSigninDate === yesterday) signinStreak++; else if (!lastSigninDate) signinStreak=1; else signinStreak=1;
+            lastSigninDate = today;
+            saveSettings();
+            const rewards = ["💋 一个亲亲","🤗 一个拥抱","💕 专属情话","🌹 一朵玫瑰","🍰 一块小蛋糕","🎁 神秘礼物","💌 手写情书","🧸 一只小熊"];
+            const reward = rewards[signinStreak % rewards.length];
+            toast("🎉 签到成功！获得 " + reward + " · 连续" + signinStreak + "天");
+            signinBtn.classList.remove("signin-badge");
+            updateSigninBanner();
+        }
+        signinBtn.addEventListener("click", doSignin);
+        signinBanner.addEventListener("click", doSignin);
+
         // ==================== 亲密度 ====================
-        function getAffectionLevel() {
-            for (let i = AFFECTION_LEVELS.length - 1; i >= 0; i--) {
-                if (userMsgCount >= AFFECTION_LEVELS[i].min) return AFFECTION_LEVELS[i];
-            }
-            return AFFECTION_LEVELS[0];
-        }
+        function findLevelIdx(count) { let idx=0; for(let i=0;i<AFFECTION_LEVELS.length;i++){if(count>=AFFECTION_LEVELS[i].min)idx=i;} return idx; }
         function updateAffectionBar() {
-            const lv = getAffectionLevel();
-            const idx = AFFECTION_LEVELS.indexOf(lv);
-            const nextLv = AFFECTION_LEVELS[idx + 1];
-            const progress = nextLv
-                ? ((userMsgCount - lv.min) / (nextLv.min - lv.min)) * 100
-                : 100;
-            affectionBar.style.width = Math.min(100, Math.max(0, progress)) + "%";
-            affectionLabel.textContent = lv.emoji + " Lv." + (idx + 1) + " " + lv.name;
+            const idx=findLevelIdx(userMsgCount),lv=AFFECTION_LEVELS[idx],nextLv=AFFECTION_LEVELS[idx+1];
+            affectionBar.style.width=Math.min(100,nextLv?((userMsgCount-lv.min)/(nextLv.min-lv.min))*100:100)+"%";
+            affectionLabel.textContent=lv.emoji+" Lv."+(idx+1)+" "+lv.name;
         }
-        function findLevelIdx(count) {
-            let idx = 0;
-            for (let i = 0; i < AFFECTION_LEVELS.length; i++) {
-                if (count >= AFFECTION_LEVELS[i].min) idx = i;
-            }
-            return idx;
-        }
-        function checkLevelUp(oldCount, newCount) {
-            const oldIdx = findLevelIdx(oldCount);
-            const newIdx = findLevelIdx(newCount);
-            if (newIdx > oldIdx) {
-                const nlv = AFFECTION_LEVELS[newIdx];
-                const fx = document.createElement("div");
-                fx.className = "levelup-effect";
-                fx.innerHTML = `<div class="levelup-text">${nlv.emoji} ${nlv.name}</div>`;
-                document.body.appendChild(fx);
-                setTimeout(() => fx.remove(), 1100);
-                setTimeout(() => toast("🎉 亲密度升级！解锁 " + nlv.name), 400);
+        function checkLevelUp(oldCount,newCount) {
+            const oi=findLevelIdx(oldCount),ni=findLevelIdx(newCount);
+            if(ni>oi) {
+                const nlv=AFFECTION_LEVELS[ni];
+                const fx=document.createElement("div");fx.className="levelup-effect";
+                fx.innerHTML=`<div class="levelup-text">${nlv.emoji} ${nlv.name}</div>`;document.body.appendChild(fx);
+                setTimeout(()=>fx.remove(),1100);
+                setTimeout(()=>toast("🎉 亲密度升级！解锁 "+nlv.name),400);
             }
         }
-        function incrementMsgCount() {
-            const old = userMsgCount;
-            userMsgCount++;
-            checkLevelUp(old, userMsgCount);
-            updateAffectionBar();
-        }
+        function incrementMsgCount() { const old=userMsgCount;userMsgCount++;checkLevelUp(old,userMsgCount);updateAffectionBar(); }
 
         // ==================== 渲染 ====================
-        function scrollToBottom() {
-            requestAnimationFrame(() => { chatBox.scrollTop = chatBox.scrollHeight; });
+        function scrollToBottom() { requestAnimationFrame(()=>{chatBox.scrollTop=chatBox.scrollHeight;}); }
+        function updateEmptyHint() { emptyHint.style.display=chatHistory.length===0?"flex":"none"; }
+        function addSysMsg(text) {
+            const d=document.createElement("div");d.className="sys-msg";
+            d.innerHTML=`<span class="tag">${text}</span>`;chatBox.appendChild(d);scrollToBottom();
         }
-        function updateEmptyHint() { emptyHint.style.display = chatHistory.length === 0 ? "flex" : "none"; }
-
-        function createMsgEl(role, content, index) {
-            const wrap = document.createElement("div");
-            wrap.className = "msg-wrap " + role;
-            const bubble = document.createElement("div");
-            bubble.className = "msg";
-            bubble.textContent = content;
-            wrap.appendChild(bubble);
-
-            if (role === "ai") {
-                const actions = document.createElement("div");
-                actions.className = "msg-actions";
-
-                const favBtn = document.createElement("button");
-                favBtn.className = "fav-btn";
-                favBtn.title = "收藏";
-                favBtn.textContent = "⭐";
-                const isFaved = favorites.some(f => f.index === index);
-                if (isFaved) { favBtn.classList.add("active"); wrap.classList.add("faved"); }
-                favBtn.addEventListener("click", () => toggleFav(index, content, favBtn, wrap));
-                actions.appendChild(favBtn);
-
-                const speakBtn = document.createElement("button");
-                speakBtn.title = "朗读";
-                speakBtn.textContent = "🔊";
-                speakBtn.addEventListener("click", () => speakText(content, speakBtn));
-                actions.appendChild(speakBtn);
-
+        function createMsgEl(role,content,index) {
+            const wrap=document.createElement("div");wrap.className="msg-wrap "+role;
+            const bubble=document.createElement("div");bubble.className="msg";bubble.textContent=content;wrap.appendChild(bubble);
+            if(role==="ai") {
+                const actions=document.createElement("div");actions.className="msg-actions";
+                const favBtn=document.createElement("button");favBtn.className="fav-btn";favBtn.title="收藏";favBtn.textContent="⭐";
+                const isFaved=favorites.some(f=>f.index===index);
+                if(isFaved){favBtn.classList.add("active");wrap.classList.add("faved");}
+                favBtn.addEventListener("click",()=>toggleFav(index,content,favBtn,wrap));actions.appendChild(favBtn);
+                const speakBtn=document.createElement("button");speakBtn.title="朗读";speakBtn.textContent="🔊";
+                speakBtn.addEventListener("click",()=>speakText(content,speakBtn));actions.appendChild(speakBtn);
                 wrap.appendChild(actions);
             }
-            chatBox.appendChild(wrap);
-            scrollToBottom();
-            return wrap;
+            chatBox.appendChild(wrap);scrollToBottom();return wrap;
         }
-
         function fullRender() {
-            chatBox.querySelectorAll(".msg-wrap, .typing-wrap").forEach(el => {
-                if (el !== typingWrap) el.remove();
-            });
-            chatHistory.forEach((item, i) => createMsgEl(item.role, item.content, i));
-            updateEmptyHint();
+            chatBox.querySelectorAll(".msg-wrap,.typing-wrap,.sys-msg,.game-panel").forEach(el=>{if(el!==typingWrap&&el!==rpsPanel)el.remove();});
+            chatHistory.forEach((item,i)=>createMsgEl(item.role,item.content,i));updateEmptyHint();
         }
 
         // ==================== 收藏 ====================
-        function toggleFav(index, content, btn, wrap) {
-            const existing = favorites.findIndex(f => f.index === index);
-            if (existing >= 0) {
-                favorites.splice(existing, 1);
-                btn.classList.remove("active");
-                wrap.classList.remove("faved");
-                toast("已取消收藏");
-            } else {
-                favorites.push({ index, content, time: Date.now() });
-                btn.classList.add("active");
-                wrap.classList.add("faved");
-                toast("⭐ 已收藏");
-            }
+        function toggleFav(index,content,btn,wrap) {
+            const ex=favorites.findIndex(f=>f.index===index);
+            if(ex>=0){favorites.splice(ex,1);btn.classList.remove("active");wrap.classList.remove("faved");toast("已取消收藏");}
+            else{favorites.push({index,content,time:Date.now()});btn.classList.add("active");wrap.classList.add("faved");toast("⭐ 已收藏");}
             saveFavs();
         }
         function renderFavList() {
-            if (favorites.length === 0) {
-                favList.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">还没有收藏哦~<br><small>点击 AI 回复旁边的 ⭐ 试试</small></p>';
-                return;
-            }
-            favList.innerHTML = favorites.slice().reverse().map(f => `
-                <div class="fav-item">
-                    <button class="del-fav" data-idx="${f.index}">×</button>
-                    <div class="fav-time">${new Date(f.time).toLocaleString("zh-CN")}</div>
-                    <div>${escapeHtml(f.content)}</div>
-                </div>
-            `).join("");
-            favList.querySelectorAll(".del-fav").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    const idx = parseInt(btn.dataset.idx);
-                    favorites = favorites.filter(f => f.index !== idx);
-                    saveFavs();
-                    renderFavList();
-                    fullRender();
-                });
-            });
+            if(favorites.length===0){favList.innerHTML='<p style="color:#999;text-align:center;padding:20px;">还没有收藏哦~<br><small>点击 AI 回复旁边的 ⭐ 试试</small></p>';return;}
+            favList.innerHTML=favorites.slice().reverse().map(f=>`<div class="fav-item"><button class="del-fav" data-idx="${f.index}">×</button><div class="fav-time">${new Date(f.time).toLocaleString("zh-CN")}</div><div>${escapeHtml(f.content)}</div></div>`).join("");
+            favList.querySelectorAll(".del-fav").forEach(b=>{b.addEventListener("click",()=>{const idx=parseInt(b.dataset.idx);favorites=favorites.filter(f=>f.index!==idx);saveFavs();renderFavList();fullRender();});});
         }
-        function escapeHtml(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+        function escapeHtml(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML;}
 
         // ==================== 语音朗读 ====================
-        function speakText(text, btn) {
-            if (!window.speechSynthesis) { toast("你的浏览器不支持语音朗读 😢"); return; }
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = "zh-CN";
-            utter.rate = 0.95;
-            utter.pitch = 1.15;
-            const voices = speechSynthesis.getVoices();
-            const zhVoice = voices.find(v => v.lang.startsWith("zh")) || voices[0];
-            if (zhVoice) utter.voice = zhVoice;
-            btn.textContent = "🔇";
-            utter.onend = () => { btn.textContent = "🔊"; };
-            utter.onerror = () => { btn.textContent = "🔊"; };
-            speechSynthesis.speak(utter);
+        function speakText(text,btn) {
+            if(!window.speechSynthesis){toast("浏览器不支持语音朗读 😢");return;}
+            window.speechSynthesis.cancel();const utter=new SpeechSynthesisUtterance(text);
+            utter.lang="zh-CN";utter.rate=0.95;utter.pitch=1.15;
+            const voices=speechSynthesis.getVoices(),zh=voices.find(v=>v.lang.startsWith("zh"))||voices[0];
+            if(zh)utter.voice=zh;btn.textContent="🔇";utter.onend=()=>{btn.textContent="🔊";};utter.onerror=()=>{btn.textContent="🔊";};speechSynthesis.speak(utter);
         }
-        if (window.speechSynthesis) speechSynthesis.getVoices();
+        if(window.speechSynthesis)speechSynthesis.getVoices();
 
         // ==================== 打字状态 ====================
         function setLoading(loading) {
-            isLoading = loading;
-            sendBtn.disabled = loading;
-            inputText.disabled = loading;
-            typingWrap.style.display = loading ? "flex" : "none";
-            sendBtn.textContent = loading ? "…" : "发送";
-            if (loading) scrollToBottom(); else inputText.focus();
+            isLoading=loading;sendBtn.disabled=loading;inputText.disabled=loading;
+            typingWrap.style.display=loading?"flex":"none";sendBtn.textContent=loading?"…":"发送";
+            if(loading)scrollToBottom();else inputText.focus();
         }
 
-        // ==================== 清空 & 导出 ====================
-        function clearChat() {
-            if (chatHistory.length === 0) return;
-            if (!confirm("确定要清空所有聊天记录吗？（收藏不会丢失）")) return;
-            chatHistory = [];
-            saveChat();
-            fullRender();
-            scrollToBottom();
-        }
-        function exportChat() {
-            if (chatHistory.length === 0) { toast("还没有聊天记录呢~"); return; }
-            const names = { gentle: "温柔恋人", tsundere: "傲娇女友", clingy: "粘人小猫", domineering: "霸道总裁" };
-            const colors = { pink: "#e8b8d0", purple: "#c8b8e8", warm: "#f0c8a8" };
-            const html = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>我们的甜蜜回忆</title>
-<style>body{max-width:600px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif;background:#fdf8fa}
-.header{background:${colors[currentTheme]||"#e8b8d0"};padding:20px;border-radius:16px;text-align:center;margin-bottom:20px;color:#440f28}
-.msg{margin:12px 0;padding:10px 14px;border-radius:16px;max-width:80%;line-height:1.6}
-.user{background:#e08cb8;color:#fff;margin-left:auto;border-bottom-right-radius:4px}
-.ai{background:#fff;color:#333;margin-right:auto;border-bottom-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-hr{border:none;border-top:1px solid #f0e0e8;margin:20px 0}
-.footer{text-align:center;color:#c0a0b0;font-size:12px;margin-top:24px}</style></head><body>
-<div class="header"><h2>💗 我们的甜蜜回忆</h2><p>恋人：${names[currentPersona]||"温柔恋人"} · ${new Date().toLocaleDateString("zh-CN")}</p></div>
-${chatHistory.map(m => `<div class="msg ${m.role==="user"?"user":"ai"}">${escapeHtml(m.content)}</div>`).join("\n")}
-<hr><div class="footer">由 专属恋人 生成 · ${new Date().toLocaleString("zh-CN")}</div></body></html>`;
-            const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = "我们的甜蜜回忆_" + new Date().toISOString().slice(0,10) + ".html";
-            a.click();
-            URL.revokeObjectURL(a.href);
-            toast("📥 导出成功！");
+        // ==================== 游戏：石头剪刀布 ====================
+        function showRpsPanel() { rpsPanel.style.display="block";scrollToBottom(); }
+        function hideRpsPanel() { rpsPanel.style.display="none"; }
+        closeRps.addEventListener("click", hideRpsPanel);
+        rpsPanel.querySelectorAll(".game-btn").forEach(btn=>{
+            btn.addEventListener("click",()=>{
+                const userPick=btn.dataset.rps;
+                const choices=["石头","剪刀","布"];
+                const aiPick=choices[Math.floor(Math.random()*choices.length)];
+                let result;
+                if(userPick===aiPick)result="平局！";
+                else if((userPick==="石头"&&aiPick==="剪刀")||(userPick==="剪刀"&&aiPick==="布")||(userPick==="布"&&aiPick==="石头"))result="你赢啦！";
+                else result=loverName+"赢啦~";
+                hideRpsPanel();
+                const text=`[石头剪刀布] 我出${userPick}，${loverName}出${aiPick}，${result}`;
+                addSysMsg("✂️ "+text);
+                sendMsg(text, true);
+            });
+        });
+
+        // ==================== 游戏：真心话大冒险 ====================
+        function startTruthDare() {
+            const isTruth=Math.random()>0.5;
+            const prefix=isTruth?"真心话":"大冒险";
+            const text=`我们来玩真心话大冒险！给我一个${prefix}问题~`;
+            addSysMsg("🎲 "+prefix);
+            sendMsg(text, true);
         }
 
-        // ==================== 发送（流式） ====================
-        async function sendMsg(textOverride) {
-            if (isLoading) return;
-            const text = (textOverride || inputText.value).trim();
-            if (!text) return;
-            if (!getApiKey()) { showSettings(); return; }
+        // ==================== 随机情话 ====================
+        function startLoveWords() {
+            const text=`给我说一句甜甜的话~要原创的、让人心动的！`;
+            addSysMsg("💌 随机情话");
+            sendMsg(text, true);
+        }
 
-            if (!textOverride) inputText.value = "";
+        // ==================== 日记生成 ====================
+        async function generateDiary() {
+            if(chatHistory.length===0){toast("还没有聊天记录呢~");return;}
+            hideSettings();
+            addSysMsg("📖 正在生成今日甜蜜日记...");
+            setLoading(true);
+            const diaryPrompt = `请根据以下我们今天的聊天记录，以${loverName}的口吻写一篇甜蜜的恋爱日记，200字左右，要有日期（今天），要可爱温馨。\n\n聊天记录：\n${chatHistory.slice(-20).map(m=>(m.role==="user"?"我":"你")+": "+m.content).join("\n")}`;
+            const bubble=createAiBubble();
+            let full="";
+            try {
+                const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:[{role:"user",content:diaryPrompt}],temperature:0.9,stream:true})});
+                if(!res.ok)throw new Error("生成失败");
+                const reader=res.body.getReader(),decoder=new TextDecoder();let buf="";
+                while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const d=JSON.parse(ds).choices?.[0]?.delta?.content;if(d){full+=d;bubble.el.textContent=full;scrollToBottom();}}catch{}}}
+                if(!full)throw new Error("空回复");
+            }catch{full="📖 日记生成失败啦，等下再试试~";bubble.el.textContent=full;}
+            chatHistory.push({role:"assistant",content:full});saveChat();
+            bindAiActions(bubble.wrap,chatHistory.length-1,full);
+            setLoading(false);
+        }
+
+        // ==================== 发送消息（流式） ====================
+        function createAiBubble() {
+            const wrap=document.createElement("div");wrap.className="msg-wrap ai";
+            const bubble=document.createElement("div");bubble.className="msg";bubble.textContent="";wrap.appendChild(bubble);
+            const actions=document.createElement("div");actions.className="msg-actions";
+            const favBtn=document.createElement("button");favBtn.className="fav-btn";favBtn.textContent="⭐";actions.appendChild(favBtn);
+            const speakBtn=document.createElement("button");speakBtn.textContent="🔊";actions.appendChild(speakBtn);
+            wrap.appendChild(actions);chatBox.appendChild(wrap);scrollToBottom();
+            return {wrap,el:bubble,favBtn,speakBtn,actions};
+        }
+        function bindAiActions(wrap,idx,content) {
+            const favBtn=wrap.querySelector(".fav-btn"),speakBtn=wrap.querySelector(".speak-btn")||wrap.querySelectorAll("button")[1];
+            favBtn.addEventListener("click",()=>toggleFav(idx,content,favBtn,wrap));
+            const spk=wrap.querySelectorAll("button")[1];spk.addEventListener("click",()=>speakText(content,spk));
+            const isFaved=favorites.some(f=>f.index===idx);
+            if(isFaved){favBtn.classList.add("active");wrap.classList.add("faved");}
+        }
+
+        async function sendMsg(textOverride, skipHistory) {
+            if(isLoading)return;
+            const text=(textOverride||inputText.value).trim();
+            if(!text)return;
+            if(!getApiKey()){showSettings();return;}
+            if(!textOverride)inputText.value="";
             setLoading(true);
 
-            // 用户消息
-            chatHistory.push({ role: "user", content: text });
-            incrementMsgCount();
-            saveChat();
-            createMsgEl("user", text, chatHistory.length - 1);
-            emptyHint.style.display = "none";
-
-            if (chatHistory.length > MAX_MESSAGES) {
-                chatHistory = chatHistory.slice(-MAX_MESSAGES);
-                saveChat();
+            if(!skipHistory) {
+                chatHistory.push({role:"user",content:text});
+                incrementMsgCount();saveChat();createMsgEl("user",text,chatHistory.length-1);
+                emptyHint.style.display="none";
+                if(chatHistory.length>MAX_MESSAGES){chatHistory=chatHistory.slice(-MAX_MESSAGES);saveChat();}
             }
 
-            // 创建 AI 气泡
-            const wrap = document.createElement("div");
-            wrap.className = "msg-wrap ai";
-            const bubble = document.createElement("div");
-            bubble.className = "msg";
-            bubble.textContent = "";
-            wrap.appendChild(bubble);
-            const actions = document.createElement("div");
-            actions.className = "msg-actions";
-            const favBtn = document.createElement("button");
-            favBtn.className = "fav-btn";
-            favBtn.textContent = "⭐";
-            const speakBtn = document.createElement("button");
-            speakBtn.textContent = "🔊";
-            actions.appendChild(favBtn);
-            actions.appendChild(speakBtn);
-            wrap.appendChild(actions);
-            chatBox.appendChild(wrap);
-            scrollToBottom();
-
-            const aiIdx = chatHistory.length;
-            let fullReply = "";
-
+            const bubble=createAiBubble();const aiIdx=chatHistory.length;let fullReply="";
             try {
-                const res = await fetch(API_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${getApiKey()}`
-                    },
-                    body: JSON.stringify({
-                        model: MODEL_NAME,
-                        messages: [{ role: "system", content: getSystemPrompt() }, ...chatHistory],
-                        temperature: 0.85,
-                        stream: true
-                    })
-                });
-
-                if (!res.ok) {
-                    let errMsg = `请求失败 (HTTP ${res.status})`;
-                    try { const e = await res.json(); if (e.error?.message) errMsg = e.error.message; } catch {}
-                    throw new Error(errMsg);
-                }
-
-                const reader = res.body.getReader();
-                const decoder = new TextDecoder();
-                let buffer = "";
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    buffer += decoder.decode(value, { stream: true });
-                    const lines = buffer.split("\n");
-                    buffer = lines.pop() || "";
-                    for (const line of lines) {
-                        const t = line.trim();
-                        if (!t || !t.startsWith("data:")) continue;
-                        const ds = t.slice(5).trim();
-                        if (ds === "[DONE]") continue;
-                        try {
-                            const delta = JSON.parse(ds).choices?.[0]?.delta?.content;
-                            if (delta) { fullReply += delta; bubble.textContent = fullReply; scrollToBottom(); }
-                        } catch {}
-                    }
-                }
-                if (!fullReply) throw new Error("未收到回复");
-            } catch (err) {
-                console.error(err);
-                const em = (err.message || "");
-                if (em.includes("401")) { fullReply = "API Key 无效，请点击 ⚙️ 重新设置 🔑"; showSettings(); }
-                else if (em.includes("429")) fullReply = "消息太频繁啦，让我喘口气嘛 💦";
-                else if (em.includes("Insufficient")) fullReply = "余额不足了，快去充值吧 💰";
-                else if (em.includes("请求失败") || em.includes("未收到回复")) fullReply = em;
-                else fullReply = "网络出错啦，等下再和我说话好不好 🥺";
-                bubble.textContent = fullReply;
-            }
-
-            chatHistory.push({ role: "assistant", content: fullReply });
-            saveChat();
-
-            favBtn.addEventListener("click", () => toggleFav(aiIdx, fullReply, favBtn, wrap));
-            speakBtn.addEventListener("click", () => speakText(fullReply, speakBtn));
-            const isFaved = favorites.some(f => f.index === aiIdx);
-            if (isFaved) { favBtn.classList.add("active"); wrap.classList.add("faved"); }
-
+                const msgs=[{role:"system",content:getSystemPrompt()},...chatHistory];
+                const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.85,stream:true})});
+                if(!res.ok){let em=`请求失败 (HTTP ${res.status})`;try{const e=await res.json();if(e.error?.message)em=e.error.message;}catch{}throw new Error(em);}
+                const reader=res.body.getReader(),decoder=new TextDecoder();let buf="";
+                while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const delta=JSON.parse(ds).choices?.[0]?.delta?.content;if(delta){fullReply+=delta;bubble.el.textContent=fullReply;scrollToBottom();}}catch{}}}
+                if(!fullReply)throw new Error("未收到回复");
+            }catch(err){console.error(err);const em=(err.message||"");if(em.includes("401")){fullReply="API Key 无效，请点击 ⚙️ 重新设置 🔑";showSettings();}else if(em.includes("429"))fullReply="消息太频繁啦，让我喘口气嘛 💦";else if(em.includes("Insufficient"))fullReply="余额不足了，快去充值吧 💰";else fullReply="网络出错啦，等下再和我说话好不好 🥺";bubble.el.textContent=fullReply;}
+            chatHistory.push({role:"assistant",content:fullReply});saveChat();
+            bindAiActions(bubble.wrap,aiIdx,fullReply);
             setLoading(false);
 
-            // 彩蛋：晚安检测
-            if (/晚安/.test(text) && fullReply) {
-                const h = new Date().getHours();
-                if (h >= 21 || h < 5) setTimeout(() => toast("🌙 做个好梦，明天见~"), 800);
-            }
+            if(/晚安/.test(text)&&fullReply){const h=new Date().getHours();if(h>=21||h<5)setTimeout(()=>toast("🌙 做个好梦，明天见~"),800);}
         }
 
         // ==================== 设置弹窗 ====================
         function showSettings() {
-            keyInput.value = getApiKey();
-            themeDots.querySelectorAll(".theme-dot").forEach(d => d.classList.toggle("active", d.dataset.theme === currentTheme));
-            settingsModal.style.display = "flex";
-            setTimeout(() => keyInput.focus(), 200);
+            keyInput.value=getApiKey();loverNameInput.value=loverName;anniversaryInput.value=anniversary;
+            themeDots.querySelectorAll(".theme-dot").forEach(d=>d.classList.toggle("active",d.dataset.theme===currentTheme));
+            settingsModal.style.display="flex";
         }
-        function hideSettings() { settingsModal.style.display = "none"; }
-        settingsBtn.addEventListener("click", showSettings);
-        settingsCancel.addEventListener("click", hideSettings);
-        settingsModal.addEventListener("click", e => { if (e.target === settingsModal) hideSettings(); });
-        keyInput.addEventListener("keydown", e => { if (e.key === "Escape") hideSettings(); });
-        keyInput.addEventListener("input", () => setApiKey(keyInput.value));
-        themeDots.querySelectorAll(".theme-dot").forEach(d => d.addEventListener("click", () => applyTheme(d.dataset.theme)));
-        exportBtn.addEventListener("click", () => { hideSettings(); setTimeout(exportChat, 300); });
+        function hideSettings(){settingsModal.style.display="none";}
+        settingsBtn.addEventListener("click",showSettings);
+        settingsCancel.addEventListener("click",hideSettings);
+        settingsModal.addEventListener("click",e=>{if(e.target===settingsModal)hideSettings();});
+        keyInput.addEventListener("keydown",e=>{if(e.key==="Escape")hideSettings();});
+        keyInput.addEventListener("input",()=>setApiKey(keyInput.value));
+        themeDots.querySelectorAll(".theme-dot").forEach(d=>d.addEventListener("click",()=>applyTheme(d.dataset.theme)));
+        exportBtn.addEventListener("click",()=>{hideSettings();setTimeout(exportChat,300);});
+        diaryBtn.addEventListener("click",()=>{hideSettings();setTimeout(generateDiary,400);});
 
         // ==================== 收藏夹弹窗 ====================
-        favListBtn.addEventListener("click", () => { renderFavList(); favModal.style.display = "flex"; });
-        favClose.addEventListener("click", () => { favModal.style.display = "none"; });
-        favModal.addEventListener("click", e => { if (e.target === favModal) favModal.style.display = "none"; });
+        favListBtn.addEventListener("click",()=>{renderFavList();favModal.style.display="flex";});
+        favClose.addEventListener("click",()=>{favModal.style.display="none";});
+        favModal.addEventListener("click",e=>{if(e.target===favModal)favModal.style.display="none";});
+
+        // ==================== 导出 ====================
+        function exportChat() {
+            if(chatHistory.length===0){toast("还没有聊天记录呢~");return;}
+            const names={gentle:"温柔恋人",tsundere:"傲娇女友",clingy:"粘人小猫",domineering:"霸道总裁"};
+            const colors={pink:"#e8b8d0",purple:"#c8b8e8",warm:"#f0c8a8"};
+            const html=`<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>我们的甜蜜回忆</title><style>body{max-width:600px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif;background:#fdf8fa}.header{background:${colors[currentTheme]||"#e8b8d0"};padding:20px;border-radius:16px;text-align:center;margin-bottom:20px;color:#440f28}.msg{margin:12px 0;padding:10px 14px;border-radius:16px;max-width:80%;line-height:1.6}.user{background:#e08cb8;color:#fff;margin-left:auto;border-bottom-right-radius:4px}.ai{background:#fff;color:#333;margin-right:auto;border-bottom-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.06)}hr{border:none;border-top:1px solid #f0e0e8;margin:20px 0}.footer{text-align:center;color:#c0a0b0;font-size:12px;margin-top:24px}</style></head><body><div class="header"><h2>💗 我们的甜蜜回忆</h2><p>${loverName} · ${names[currentPersona]||"温柔恋人"} · ${new Date().toLocaleDateString("zh-CN")}</p></div>${chatHistory.map(m=>`<div class="msg ${m.role==="user"?"user":"ai"}">${escapeHtml(m.content)}</div>`).join("\n")}<hr><div class="footer">由 ${loverName} 生成 · ${new Date().toLocaleString("zh-CN")}</div></body></html>`;
+            const blob=new Blob([html],{type:"text/html;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="我们的甜蜜回忆_"+new Date().toISOString().slice(0,10)+".html";a.click();URL.revokeObjectURL(a.href);toast("📥 导出成功！");
+        }
+
+        // ==================== 清空 ====================
+        function clearChat() {
+            if(chatHistory.length===0)return;
+            if(!confirm("确定要清空所有聊天记录吗？（收藏不会丢失）"))return;
+            chatHistory=[];saveChat();fullRender();scrollToBottom();
+        }
+        clearBtn.addEventListener("click",clearChat);
 
         // ==================== 事件绑定 ====================
-        sendBtn.addEventListener("click", () => sendMsg());
-        inputText.addEventListener("keydown", e => {
-            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); }
-        });
-        clearBtn.addEventListener("click", clearChat);
-        personaSelect.addEventListener("change", () => {
-            applyPersona(personaSelect.value);
-            toast("💫 恋人性格已切换为「" + (personaSelect.options[personaSelect.selectedIndex]?.text?.replace(/^\S+\s/,"") || "") + "」");
-        });
-        quickActions.querySelectorAll(".quick-btn").forEach(btn => {
-            btn.addEventListener("click", () => sendMsg(btn.dataset.text));
+        sendBtn.addEventListener("click",()=>sendMsg());
+        inputText.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMsg();}});
+        personaSelect.addEventListener("change",()=>{applyPersona(personaSelect.value);toast("💫 恋人性格已切换");});
+        quickActions.querySelectorAll(".quick-btn").forEach(btn=>{
+            btn.addEventListener("click",()=>{
+                const game=btn.dataset.game;
+                if(game==="rps"){showRpsPanel();return;}
+                if(game==="truthdare"){startTruthDare();return;}
+                if(game==="lovewords"){startLoveWords();return;}
+                sendMsg(btn.dataset.text);
+            });
         });
 
         // ==================== 启动 ====================
         loadData();
-        applyTheme(currentTheme);
-        applyPersona(currentPersona);
-        personaSelect.value = currentPersona;
-        updateAffectionBar();
-        if (chatHistory.length > 0) { fullRender(); } else {
-            emptyGreeting.textContent = EMPTY_GREETINGS[currentPersona] || EMPTY_GREETINGS.gentle;
-            updateEmptyHint();
-        }
+        applyTheme(currentTheme);applyPersona(currentPersona);personaSelect.value=currentPersona;
+        updateLoverDisplay();updateAffectionBar();checkSignin();
+        if(chatHistory.length>0){fullRender();}else{emptyGreeting.textContent=EMPTY_GREETINGS[currentPersona]||EMPTY_GREETINGS.gentle;updateEmptyHint();}
         inputText.focus();
-        if (!getApiKey()) setTimeout(showSettings, 600);
+        if(!getApiKey())setTimeout(showSettings,600);
+
+        // 每天更新恋爱天数
+        setInterval(updateLoveDays,60000);
     })();
     </script>
 </body>
