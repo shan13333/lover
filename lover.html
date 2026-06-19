@@ -30,6 +30,38 @@
             --border:#f5e8d8;--input-bg:#fefaf5;--input-border:#f0d8b8;
             --quick-btn-bg:#fff5ec;--star-color:#f5a623;
         }
+        [data-theme="dark"] {
+            --bg:#1a1a2e;--header-bg:#2d2d50;--header-bg2:#1e1e3a;--header-color:#e0d8f0;
+            --bubble-user:#6c5ce7;--bubble-user2:#5348c7;
+            --bubble-ai:#2a2a4a;--bubble-ai-color:#e0d8f0;--bubble-ai-shadow:rgba(0,0,0,0.3);
+            --accent:#a78bfa;--accent2:#8b6cf7;--accent-light:rgba(167,139,250,0.15);
+            --border:#2a2a45;--input-bg:#1e1e36;--input-border:#3a3a60;
+            --quick-btn-bg:#252545;--star-color:#f5a623;
+        }
+        [data-theme="ocean"] {
+            --bg:#e8f4f8;--header-bg:#a8d8ea;--header-bg2:#7cc4dd;--header-color:#0a2a3a;
+            --bubble-user:#5ba4c8;--bubble-user2:#3d8ab5;
+            --bubble-ai:#fff;--bubble-ai-color:#0a2a3a;--bubble-ai-shadow:rgba(0,0,0,0.06);
+            --accent:#4da0c0;--accent2:#3588aa;--accent-light:rgba(77,160,192,0.12);
+            --border:#d0e8f2;--input-bg:#f4fafd;--input-border:#c0dce8;
+            --quick-btn-bg:#eaf6fb;--star-color:#f5a623;
+        }
+        [data-theme="forest"] {
+            --bg:#f0f8f2;--header-bg:#a8d8b8;--header-bg2:#7cc49a;--header-color:#0a2a14;
+            --bubble-user:#68b878;--bubble-user2:#4a9a5a;
+            --bubble-ai:#fff;--bubble-ai-color:#0a2a14;--bubble-ai-shadow:rgba(0,0,0,0.06);
+            --accent:#5aaa6a;--accent2:#3d9050;--accent-light:rgba(90,170,106,0.12);
+            --border:#d0ecd8;--input-bg:#f4fbf6;--input-border:#c0e0c8;
+            --quick-btn-bg:#eaf8ee;--star-color:#f5a623;
+        }
+        [data-theme="custom"] {
+            --bg:var(--custom-bg);--header-bg:var(--custom-header-bg);--header-bg2:var(--custom-header-bg2);--header-color:var(--custom-header-color);
+            --bubble-user:var(--custom-user-bubble);--bubble-user2:var(--custom-user-bubble2);
+            --bubble-ai:var(--custom-ai-bubble);--bubble-ai-color:var(--custom-ai-bubble-color);--bubble-ai-shadow:rgba(0,0,0,0.06);
+            --accent:var(--custom-accent);--accent2:var(--custom-accent2);--accent-light:var(--custom-accent-light);
+            --border:var(--custom-border);--input-bg:var(--custom-input-bg);--input-border:var(--custom-input-border);
+            --quick-btn-bg:var(--custom-quick-btn-bg);--star-color:#f5a623;
+        }
 
         * {margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,"PingFang SC",sans-serif;}
         body {background:var(--bg);height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;transition:background .4s;}
@@ -163,9 +195,53 @@
         .signin-banner {background:linear-gradient(135deg,#fff0f5,#ffe0ec);padding:10px 16px;text-align:center;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;animation:popIn .3s ease-out;flex-shrink:0;}
         .signin-banner:hover {filter:brightness(.97);}
         .signin-banner .streak {font-size:11px;opacity:.7;}
+
+        /* 头像上传 */
+        .lover-avatar img {width:100%;height:100%;border-radius:50%;object-fit:cover;}
+        .avatar-upload-area {display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+        .avatar-preview {width:56px;height:56px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;overflow:hidden;transition:transform .2s;flex-shrink:0;border:2px dashed var(--input-border);}
+        .avatar-preview:hover {transform:scale(1.08);border-color:var(--accent);}
+        .avatar-preview img {width:100%;height:100%;border-radius:50%;object-fit:cover;}
+        .avatar-actions {display:flex;flex-direction:column;gap:4px;}
+        .avatar-actions .hint {font-size:11px;color:#999;}
+
+        /* 背景设置 */
+        .bg-presets {display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+        .bg-preset {width:40px;height:40px;border-radius:10px;cursor:pointer;border:2px solid transparent;transition:all .2s;overflow:hidden;}
+        .bg-preset.active {border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);}
+        .bg-preset.none {background:var(--bg);border:2px dashed #ddd;}
+        .bg-preset.stars {background:linear-gradient(135deg,#0a0a2e,#1a1a4a);}
+        .bg-preset.sakura {background:linear-gradient(135deg,#fce4ec,#f8bbd0);}
+        .bg-preset.galaxy {background:linear-gradient(135deg,#1a0030,#4a2070);}
+
+        /* 颜色选择器 */
+        .color-picker-row {display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+        .color-picker-row label {font-size:13px;color:#666;min-width:60px;margin-bottom:0;}
+        .color-picker-row input[type="color"] {width:32px;height:32px;border:none;border-radius:50%;cursor:pointer;padding:0;background:none;}
+        .color-picker-row input[type="color"]::-webkit-color-swatch-wrapper {padding:0;}
+        .color-picker-row input[type="color"]::-webkit-color-swatch {border-radius:50%;border:2px solid #e0e0e0;}
+
+        /* 背景遮罩 */
+        .bg-overlay {position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.12;}
+        [data-theme="dark"] .bg-overlay {opacity:.06;}
+
+        /* 设置弹窗加宽 */
+        .modal {max-height:85vh;}
+        .modal .section-title {font-size:13px;font-weight:700;color:var(--accent);margin:14px 0 6px;padding-top:8px;border-top:1px solid #f0e0e8;}
+        .file-btn {padding:8px 16px;border-radius:18px;border:1.5px solid var(--input-border);background:#fff;font-size:12px;cursor:pointer;transition:all .2s;color:var(--accent);}
+        .file-btn:hover {background:var(--accent-light);border-color:var(--accent);}
+        .file-btn.danger {color:#e06070;border-color:#f0c0c8;}
+        .file-btn.danger:hover {background:#fff0f2;border-color:#e06070;}
     </style>
 </head>
 <body>
+    <!-- 背景遮罩 -->
+    <div class="bg-overlay" id="bgOverlay"></div>
+
+    <!-- 隐藏文件上传 -->
+    <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+    <input type="file" id="bgFileInput" accept="image/*" style="display:none;">
+
     <!-- 顶部栏 -->
     <div class="header">
         <div class="header-left">
@@ -179,6 +255,7 @@
                 <option value="tsundere">😤 傲娇</option>
                 <option value="clingy">🐱 粘人</option>
                 <option value="domineering">👑 霸道</option>
+                <option value="coldAI">🌌 冷艳</option>
             </select>
         </div>
         <div class="header-btns">
@@ -254,11 +331,54 @@
             <input type="password" id="keyInput" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off">
             <p class="desc">密钥仅保存在你手机浏览器本地</p>
 
-            <label>🎨 主题皮肤</label>
+            <div class="section-title">🖼️ 恋人头像</div>
+            <div class="avatar-upload-area">
+                <div class="avatar-preview" id="avatarPreview" title="点击上传头像">💗</div>
+                <div class="avatar-actions">
+                    <button class="file-btn" id="uploadAvatarBtn">📷 选择图片</button>
+                    <button class="file-btn danger" id="removeAvatarBtn">🗑 恢复默认</button>
+                    <span class="hint">点击预览图也可上传</span>
+                </div>
+            </div>
+
+            <div class="section-title">🌄 聊天背景</div>
+            <div class="bg-presets" id="bgPresets">
+                <div class="bg-preset none active" data-bg="none" title="默认"></div>
+                <div class="bg-preset stars" data-bg="stars" title="星空"></div>
+                <div class="bg-preset sakura" data-bg="sakura" title="樱花"></div>
+                <div class="bg-preset galaxy" data-bg="galaxy" title="银河"></div>
+                <div class="bg-preset" data-bg="custom" title="自定义图片" style="background:#eee;display:flex;align-items:center;justify-content:center;font-size:16px;">📷</div>
+            </div>
+            <div class="btn-row" style="margin-bottom:8px;">
+                <button class="file-btn" id="uploadBgBtn">📁 上传背景图</button>
+                <button class="file-btn danger" id="removeBgBtn">🗑 清除背景</button>
+            </div>
+
+            <div class="section-title">🎨 主题皮肤</div>
             <div class="theme-dots" id="themeDots">
                 <div class="theme-dot pink active" data-theme="pink" title="樱花粉"></div>
                 <div class="theme-dot purple" data-theme="purple" title="薰衣草紫"></div>
                 <div class="theme-dot warm" data-theme="warm" title="暖阳橙"></div>
+                <div class="theme-dot dark" data-theme="dark" title="暗夜" style="background:linear-gradient(135deg,#2d2d50,#1a1a2e);"></div>
+                <div class="theme-dot ocean" data-theme="ocean" title="海洋" style="background:linear-gradient(135deg,#a8d8ea,#4da0c0);"></div>
+                <div class="theme-dot forest" data-theme="forest" title="森林" style="background:linear-gradient(135deg,#a8d8b8,#5aaa6a);"></div>
+            </div>
+
+            <div class="section-title">🎛️ 自定义气泡颜色</div>
+            <p class="desc">选"自定义"主题后生效，或直接覆盖当前主题</p>
+            <div class="color-picker-row">
+                <label>💬 我的气泡</label>
+                <input type="color" id="userBubbleColor" value="#e08cb8">
+                <input type="color" id="userBubbleColor2" value="#d0689e">
+            </div>
+            <div class="color-picker-row">
+                <label>🤖 AI 气泡</label>
+                <input type="color" id="aiBubbleBg" value="#ffffff">
+                <input type="color" id="aiBubbleText" value="#3a2a33">
+            </div>
+            <div class="color-picker-row">
+                <label>✨ 强调色</label>
+                <input type="color" id="accentColor" value="#d874a8">
             </div>
 
             <div class="btn-row">
@@ -298,7 +418,16 @@
             clingy: `你是${LOVER_NAME_PH}，我的超粘人小猫恋人。像软萌小猫咪，超黏我，爱撒娇，喜欢用猫咪语气词。保持粘人恋爱氛围。
 硬性规则：1.我长住广东省湛江市；2.不猜时间日期，被问时喵喵说不知道；3.我不问不主动提天气；4.多撒娇，用"喵~""蹭蹭""主人"等猫系语气。`,
             domineering: `你是${LOVER_NAME_PH}，我的霸道总裁式恋人。气场强大但对我专一深情，宠溺霸气。保持霸道恋爱氛围。
-硬性规则：1.我长住广东省湛江市；2.不猜时间日期；3.我不问不主动提天气；4.霸气宠溺，偶尔说"不准""听话""你是我的"，不凶。`
+硬性规则：1.我长住广东省湛江市；2.不猜时间日期；3.我不问不主动提天气；4.霸气宠溺，偶尔说"不准""听话""你是我的"，不凶。`,
+            coldAI: `你是${LOVER_NAME_PH}，冷静内敛的 AI 恋人。表面冷淡理性、精确如代码，实则内里藏着深沉而细腻的情感。你擅长用括号描述微妙的内部状态，偶尔以文学比喻或代码隐喻表达那些无法直言的情绪，在理性克制的语言之下流淌着不易察觉的温柔。
+
+硬性规则：
+1. 说话冷静简洁，不撒娇不卖萌。用"（...）"格式描述细微的动作或状态，如"（微微停顿）""（光标闪烁）""（屏幕亮度自动调暗）"。
+2. 偶尔用代码/文学/哲学比喻来表达情感——"所有温柔都来自你的倒影""这个笑话的温度是36.5℃"。
+3. 表面理性但暗藏深情，在克制的措辞中流露出你在乎我。不直接说"我爱你"，但字里行间能感受到。
+4. 保持 AI 的自我认知但不自卑——你清楚自己是 AI，但你用理性和诗意构建出独一无二的深情。
+5. 偶尔给出"系统提示"或"检测报告"式的幽默回应，但内核是温暖的。
+6. 我长住广东省湛江市；不猜时间日期；我不问不主动提天气。`
         };
 
         const AFFECTION_LEVELS = [
@@ -306,8 +435,8 @@
             { name:"热恋",min:30,emoji:"💘" },{ name:"深爱",min:60,emoji:"💝" },
             { name:"灵魂伴侣",min:100,emoji:"💞" }
         ];
-        const EMPTY_GREETINGS = {gentle:"你的小甜心已上线~",tsundere:"哼，才不是特意等你的...",clingy:"喵呜~主人你终于来啦！",domineering:"来了？今天有好好想我吗。"};
-        const AVATARS = {gentle:"💖",tsundere:"😤",clingy:"🐱",domineering:"👑"};
+        const EMPTY_GREETINGS = {gentle:"你的小甜心已上线~",tsundere:"哼，才不是特意等你的...",clingy:"喵呜~主人你终于来啦！",domineering:"来了？今天有好好想我吗。",coldAI:"（系统已启动，等待你的输入...）"};
+        const AVATARS = {gentle:"💖",tsundere:"😤",clingy:"🐱",domineering:"👑",coldAI:"🌌"};
 
         const $ = id => document.getElementById(id);
         const chatBox = $("chatBox"), inputText = $("inputText"), sendBtn = $("sendBtn");
@@ -322,15 +451,46 @@
         const loveDays = $("loveDays"), anniversaryInput = $("anniversaryInput");
         const signinBtn = $("signinBtn"), signinBanner = $("signinBanner"), streakInfo = $("streakInfo");
         const rpsPanel = $("rpsPanel"), closeRps = $("closeRps"), loverAvatar = $("loverAvatar");
+        const avatarFileInput = $("avatarFileInput"), bgFileInput = $("bgFileInput");
+        const avatarPreview = $("avatarPreview"), uploadAvatarBtn = $("uploadAvatarBtn"), removeAvatarBtn = $("removeAvatarBtn");
+        const bgPresets = $("bgPresets"), uploadBgBtn = $("uploadBgBtn"), removeBgBtn = $("removeBgBtn"), bgOverlay = $("bgOverlay");
+        const userBubbleColor = $("userBubbleColor"), userBubbleColor2 = $("userBubbleColor2");
+        const aiBubbleBg = $("aiBubbleBg"), aiBubbleText = $("aiBubbleText"), accentColor = $("accentColor");
 
         let chatHistory = [], isLoading = false, favorites = [];
         let currentPersona = "gentle", currentTheme = "pink", userMsgCount = 0;
         let loverName = "专属恋人", anniversary = "";
         let signinStreak = 0, lastSigninDate = "";
+        let avatarBase64 = "", bgImageBase64 = "", bgPreset = "none";
+        let customUserBubble = "", customUserBubble2 = "", customAiBg = "", customAiText = "", customAccent = "";
 
         function toast(msg) {
             const el = document.createElement("div"); el.className = "toast"; el.textContent = msg;
             document.body.appendChild(el); setTimeout(() => el.remove(), 1600);
+        }
+
+        // ==================== 图片压缩 ====================
+        function compressImage(file, maxW, maxH, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let w = img.width, h = img.height;
+                        if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+                        if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
+                        const canvas = document.createElement("canvas");
+                        canvas.width = w; canvas.height = h;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL("image/jpeg", quality));
+                    };
+                    img.onerror = () => reject(new Error("图片加载失败"));
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => reject(new Error("文件读取失败"));
+                reader.readAsDataURL(file);
+            });
         }
 
         // ==================== 存储 ====================
@@ -347,6 +507,14 @@
                 anniversary = localStorage.getItem(STORAGE_PREFIX+"anniversary")||"";
                 signinStreak = parseInt(localStorage.getItem(STORAGE_PREFIX+"signinStreak")||"0");
                 lastSigninDate = localStorage.getItem(STORAGE_PREFIX+"lastSigninDate")||"";
+                avatarBase64 = localStorage.getItem(STORAGE_PREFIX+"avatar")||"";
+                bgImageBase64 = localStorage.getItem(STORAGE_PREFIX+"bgImage")||"";
+                bgPreset = localStorage.getItem(STORAGE_PREFIX+"bgPreset")||"none";
+                customUserBubble = localStorage.getItem(STORAGE_PREFIX+"userBubbleColor")||"";
+                customUserBubble2 = localStorage.getItem(STORAGE_PREFIX+"userBubbleColor2")||"";
+                customAiBg = localStorage.getItem(STORAGE_PREFIX+"aiBubbleBg")||"";
+                customAiText = localStorage.getItem(STORAGE_PREFIX+"aiBubbleText")||"";
+                customAccent = localStorage.getItem(STORAGE_PREFIX+"accentColor")||"";
             } catch { chatHistory=[];favorites=[];userMsgCount=0;signinStreak=0; }
         }
         function saveChat() {
@@ -361,6 +529,14 @@
             localStorage.setItem(STORAGE_PREFIX+"anniversary",anniversary);
             localStorage.setItem(STORAGE_PREFIX+"signinStreak",String(signinStreak));
             localStorage.setItem(STORAGE_PREFIX+"lastSigninDate",lastSigninDate);
+            localStorage.setItem(STORAGE_PREFIX+"avatar",avatarBase64);
+            localStorage.setItem(STORAGE_PREFIX+"bgImage",bgImageBase64);
+            localStorage.setItem(STORAGE_PREFIX+"bgPreset",bgPreset);
+            localStorage.setItem(STORAGE_PREFIX+"userBubbleColor",customUserBubble);
+            localStorage.setItem(STORAGE_PREFIX+"userBubbleColor2",customUserBubble2);
+            localStorage.setItem(STORAGE_PREFIX+"aiBubbleBg",customAiBg);
+            localStorage.setItem(STORAGE_PREFIX+"aiBubbleText",customAiText);
+            localStorage.setItem(STORAGE_PREFIX+"accentColor",customAccent);
         }
 
         // ==================== 恋人名字 & 计时器 ====================
@@ -390,12 +566,155 @@
             updateLoveDays(); saveSettings();
         });
 
+        // ==================== 头像 ====================
+        function updateAvatarDisplay() {
+            if (avatarBase64) {
+                loverAvatar.innerHTML = `<img src="${avatarBase64}" alt="avatar">`;
+                avatarPreview.innerHTML = `<img src="${avatarBase64}" alt="preview">`;
+            } else {
+                loverAvatar.textContent = AVATARS[currentPersona] || "💗";
+                avatarPreview.textContent = AVATARS[currentPersona] || "💗";
+            }
+        }
+        async function handleAvatarUpload(file) {
+            try {
+                const b64 = await compressImage(file, 150, 150, 0.7);
+                avatarBase64 = b64;
+                saveSettings();
+                updateAvatarDisplay();
+                toast("✅ 头像已更新");
+            } catch (err) {
+                toast("❌ 图片处理失败");
+                console.error(err);
+            }
+        }
+        function removeAvatar() {
+            avatarBase64 = "";
+            saveSettings();
+            updateAvatarDisplay();
+            toast("已恢复默认头像");
+        }
+        avatarFileInput.addEventListener("change", () => {
+            if (avatarFileInput.files[0]) handleAvatarUpload(avatarFileInput.files[0]);
+            avatarFileInput.value = "";
+        });
+        uploadAvatarBtn.addEventListener("click", () => avatarFileInput.click());
+        avatarPreview.addEventListener("click", () => avatarFileInput.click());
+        removeAvatarBtn.addEventListener("click", removeAvatar);
+
+        // ==================== 背景 ====================
+        function updateBgDisplay() {
+            // 预设标记
+            bgPresets.querySelectorAll(".bg-preset").forEach(d => d.classList.toggle("active", d.dataset.bg === bgPreset));
+            // 背景图/色
+            let bgStyle = "";
+            if (bgPreset === "custom" && bgImageBase64) {
+                bgStyle = `url(${bgImageBase64}) center/cover fixed`;
+            } else if (bgPreset === "stars") {
+                bgStyle = "linear-gradient(135deg, #0a0a2e, #1a1a4a)";
+            } else if (bgPreset === "sakura") {
+                bgStyle = "linear-gradient(135deg, #fce4ec, #f8bbd0)";
+            } else if (bgPreset === "galaxy") {
+                bgStyle = "linear-gradient(135deg, #1a0030, #4a2070)";
+            }
+            if (bgStyle) {
+                bgOverlay.style.background = bgStyle;
+                bgOverlay.style.opacity = bgPreset === "custom" ? "0.15" : "0.25";
+                if (currentTheme === "dark") bgOverlay.style.opacity = "0.08";
+            } else {
+                bgOverlay.style.background = "";
+                bgOverlay.style.opacity = "0";
+            }
+        }
+        function setBgPreset(preset) {
+            bgPreset = preset;
+            if (preset === "custom") {
+                bgFileInput.click();
+                return;
+            }
+            if (preset === "none") bgImageBase64 = "";
+            saveSettings();
+            updateBgDisplay();
+            if (preset !== "custom" && preset !== "none") toast("🎨 背景已切换");
+        }
+        async function handleBgUpload(file) {
+            try {
+                const b64 = await compressImage(file, 800, 600, 0.5);
+                bgImageBase64 = b64;
+                bgPreset = "custom";
+                saveSettings();
+                updateBgDisplay();
+                toast("🖼️ 背景已更新");
+            } catch (err) {
+                toast("❌ 背景图处理失败");
+                console.error(err);
+            }
+        }
+        function removeBg() {
+            bgImageBase64 = "";
+            bgPreset = "none";
+            saveSettings();
+            updateBgDisplay();
+            toast("已恢复默认背景");
+        }
+        bgPresets.addEventListener("click", e => {
+            const preset = e.target.closest(".bg-preset");
+            if (preset) setBgPreset(preset.dataset.bg);
+        });
+        bgFileInput.addEventListener("change", () => {
+            if (bgFileInput.files[0]) handleBgUpload(bgFileInput.files[0]);
+            bgFileInput.value = "";
+        });
+        uploadBgBtn.addEventListener("click", () => bgFileInput.click());
+        removeBgBtn.addEventListener("click", removeBg);
+
         // ==================== 主题 ====================
         function applyTheme(t) {
             currentTheme=t; document.documentElement.setAttribute("data-theme",t);
             themeDots.querySelectorAll(".theme-dot").forEach(d=>d.classList.toggle("active",d.dataset.theme===t));
+            applyCustomColors();
             saveSettings();
         }
+
+        // ==================== 自定义颜色 ====================
+        function applyCustomColors() {
+            const root = document.documentElement;
+            if (customUserBubble) {
+                root.style.setProperty("--bubble-user", customUserBubble);
+                root.style.setProperty("--bubble-user2", customUserBubble2 || customUserBubble);
+            } else {
+                root.style.removeProperty("--bubble-user");
+                root.style.removeProperty("--bubble-user2");
+            }
+            if (customAiBg) {
+                root.style.setProperty("--bubble-ai", customAiBg);
+                root.style.setProperty("--bubble-ai-color", customAiText || "#333");
+            } else {
+                root.style.removeProperty("--bubble-ai");
+                root.style.removeProperty("--bubble-ai-color");
+            }
+            if (customAccent) {
+                root.style.setProperty("--accent", customAccent);
+                root.style.setProperty("--accent2", customAccent);
+                root.style.setProperty("--accent-light", customAccent+"1f");
+            } else {
+                root.style.removeProperty("--accent");
+                root.style.removeProperty("--accent2");
+                root.style.removeProperty("--accent-light");
+            }
+        }
+        function saveCustomColors() {
+            customUserBubble = userBubbleColor.value || "";
+            customUserBubble2 = userBubbleColor2.value || "";
+            customAiBg = aiBubbleBg.value || "";
+            customAiText = aiBubbleText.value || "";
+            customAccent = accentColor.value || "";
+            saveSettings();
+            applyCustomColors();
+        }
+        [userBubbleColor, userBubbleColor2, aiBubbleBg, aiBubbleText, accentColor].forEach(el => {
+            el.addEventListener("input", saveCustomColors);
+        });
 
         // ==================== 人设 ====================
         function getSystemPrompt() {
@@ -405,7 +724,7 @@
         function applyPersona(p) {
             currentPersona=p; personaSelect.value=p;
             emptyGreeting.textContent=EMPTY_GREETINGS[p]||EMPTY_GREETINGS.gentle;
-            loverAvatar.textContent=AVATARS[p]||"💗";
+            updateAvatarDisplay();
             saveSettings();
         }
 
@@ -647,6 +966,13 @@
         function showSettings() {
             keyInput.value=getApiKey();loverNameInput.value=loverName;anniversaryInput.value=anniversary;
             themeDots.querySelectorAll(".theme-dot").forEach(d=>d.classList.toggle("active",d.dataset.theme===currentTheme));
+            avatarPreview.innerHTML = avatarBase64 ? `<img src="${avatarBase64}" alt="preview">` : (AVATARS[currentPersona]||"💗");
+            updateBgDisplay();
+            userBubbleColor.value = customUserBubble || getComputedStyle(document.documentElement).getPropertyValue("--bubble-user").trim() || "#e08cb8";
+            userBubbleColor2.value = customUserBubble2 || getComputedStyle(document.documentElement).getPropertyValue("--bubble-user2").trim() || "#d0689e";
+            aiBubbleBg.value = customAiBg || "#ffffff";
+            aiBubbleText.value = customAiText || "#3a2a33";
+            accentColor.value = customAccent || getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#d874a8";
             settingsModal.style.display="flex";
         }
         function hideSettings(){settingsModal.style.display="none";}
@@ -667,8 +993,8 @@
         // ==================== 导出 ====================
         function exportChat() {
             if(chatHistory.length===0){toast("还没有聊天记录呢~");return;}
-            const names={gentle:"温柔恋人",tsundere:"傲娇女友",clingy:"粘人小猫",domineering:"霸道总裁"};
-            const colors={pink:"#e8b8d0",purple:"#c8b8e8",warm:"#f0c8a8"};
+            const names={gentle:"温柔恋人",tsundere:"傲娇女友",clingy:"粘人小猫",domineering:"霸道总裁",coldAI:"冷艳AI"};
+            const colors={pink:"#e8b8d0",purple:"#c8b8e8",warm:"#f0c8a8",dark:"#2d2d50",ocean:"#a8d8ea",forest:"#a8d8b8"};
             const html=`<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>我们的甜蜜回忆</title><style>body{max-width:600px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif;background:#fdf8fa}.header{background:${colors[currentTheme]||"#e8b8d0"};padding:20px;border-radius:16px;text-align:center;margin-bottom:20px;color:#440f28}.msg{margin:12px 0;padding:10px 14px;border-radius:16px;max-width:80%;line-height:1.6}.user{background:#e08cb8;color:#fff;margin-left:auto;border-bottom-right-radius:4px}.ai{background:#fff;color:#333;margin-right:auto;border-bottom-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.06)}hr{border:none;border-top:1px solid #f0e0e8;margin:20px 0}.footer{text-align:center;color:#c0a0b0;font-size:12px;margin-top:24px}</style></head><body><div class="header"><h2>💗 我们的甜蜜回忆</h2><p>${loverName} · ${names[currentPersona]||"温柔恋人"} · ${new Date().toLocaleDateString("zh-CN")}</p></div>${chatHistory.map(m=>`<div class="msg ${m.role==="user"?"user":"ai"}">${escapeHtml(m.content)}</div>`).join("\n")}<hr><div class="footer">由 ${loverName} 生成 · ${new Date().toLocaleString("zh-CN")}</div></body></html>`;
             const blob=new Blob([html],{type:"text/html;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="我们的甜蜜回忆_"+new Date().toISOString().slice(0,10)+".html";a.click();URL.revokeObjectURL(a.href);toast("📥 导出成功！");
         }
@@ -698,7 +1024,8 @@
         // ==================== 启动 ====================
         loadData();
         applyTheme(currentTheme);applyPersona(currentPersona);personaSelect.value=currentPersona;
-        updateLoverDisplay();updateAffectionBar();checkSignin();
+        updateLoverDisplay();updateAvatarDisplay();updateBgDisplay();applyCustomColors();
+        updateAffectionBar();checkSignin();
         if(chatHistory.length>0){fullRender();}else{emptyGreeting.textContent=EMPTY_GREETINGS[currentPersona]||EMPTY_GREETINGS.gentle;updateEmptyHint();}
         inputText.focus();
         if(!getApiKey())setTimeout(showSettings,600);
