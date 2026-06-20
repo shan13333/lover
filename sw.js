@@ -1,4 +1,4 @@
-const CACHE_NAME = 'echo-v6.13';
+const CACHE_NAME = 'echo-v6.14';
 const ASSETS = [
   '/lover/',
   '/lover/index.html',
