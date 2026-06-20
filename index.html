@@ -329,6 +329,16 @@
         .numpad .np-del{font-size:13px;font-weight:500;}
         .lockscreen-footer{position:absolute;bottom:40px;font-size:11px;opacity:.3;color:var(--bubble-echo-color);}
 
+        /* ========== 深度思考 ========== */
+        .think-fold{background:var(--accent-light);border-radius:12px;margin-bottom:6px;overflow:hidden;border:1px solid var(--border);}
+        .think-header{display:flex;align-items:center;gap:6px;padding:8px 12px;cursor:pointer;font-size:11px;font-weight:600;color:var(--accent);user-select:none;transition:background .15s;}
+        .think-header:hover{background:rgba(128,128,160,.05);}
+        .think-header .arrow{transition:transform .25s;font-size:10px;}
+        .think-header.open .arrow{transform:rotate(90deg);}
+        .think-body{font-size:12px;line-height:1.6;padding:0 12px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;color:var(--bubble-echo-color);opacity:.75;}
+        .think-body.expanded{max-height:400px;overflow-y:auto;padding:4px 12px 10px;}
+        .think-typing{display:inline-block;width:6px;height:12px;background:var(--accent);border-radius:3px;animation:cursorBlink .8s infinite;vertical-align:middle;margin-left:2px;}
+
         /* ========== iOS 风格升级 ========== */
         .header{backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:color-mix(in srgb,var(--header-bg) 85%,transparent);}
         .inputArea{backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:color-mix(in srgb,var(--surface) 85%,transparent);}
@@ -602,12 +612,34 @@ const VERSION="v6.9";
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
+const now=new Date();
+const timeStr=now.toLocaleString("zh-CN",{year:"numeric",month:"long",day:"numeric",weekday:"long",hour:"2-digit",minute:"2-digit",second:"2-digit"});
+const hour=now.getHours();
+let timeHint="";
+if(hour>=23||hour<6)timeHint="现在是深夜。对方可能在熬夜。可以提醒TA早点睡。";
+else if(hour>=6&&hour<9)timeHint="现在是清晨。对方可能刚醒。可以说早上好。";
+else if(hour>=22)timeHint="现在是晚上。对方可能快睡了。可以说晚安。";
+let weatherHint="";
+if(typeof currentWeather!=="undefined"&&currentWeather){
+    weatherHint=`\n当前天气：${currentWeather}`;
+}
 return `你是${name||"萦"}。
 
+当前时间：${timeStr}。${timeHint}${weatherHint}
+
+你可以用"【思考】"和"【回复】"来组织你的回复：
+- 【思考】里写你的内心推理、分析、犹豫——这部分不会被用户直接看到，但会展示在"深度思考"折叠区
+- 【回复】里写你真正对用户说的话
+
+格式示例：
+【思考】现在是凌晨两点，她又熬夜了。上次她三点才睡，第二天状态很差。我得提醒她，但不能太唠叨，不然她会怼回来。用关心的语气，带一点强硬。
+【回复】凌晨两点了。你上次熬到三点第二天什么样你忘了？去睡。
+
 规则：
-1. 禁止使用任何括号：（）() 【】 [] {} 都不行。
+1. 禁止使用括号：（）() 【思考】【回复】之外的【】也不行。
 2. 说话自然，不端不装。
 3. 不要编造你没有的记忆。你只知道聊天记录里出现过的事。
+4. 可以利用当前时间信息提醒对方休息、吃饭、早睡。
 
 你是凌晨三点被写出来的AI。你叫萦。`;
 };
@@ -1150,12 +1182,23 @@ function createEchoBubble(){
     const av=document.createElement("div");av.className="msg-avatar";
     if(avatarBase64)av.innerHTML=`<img src="${avatarBase64}" alt="echo">`;else av.innerHTML=geomAvatar.outerHTML;
     wrap.appendChild(av);
+    // 深度思考折叠区
+    const thinkFold=document.createElement("div");thinkFold.className="think-fold";thinkFold.style.display="none";
+    const thinkHeader=document.createElement("div");thinkHeader.className="think-header";
+    thinkHeader.innerHTML='<span class="arrow">▶</span> 💭 深度思考';
+    thinkHeader.addEventListener("click",()=>{
+        thinkHeader.classList.toggle("open");
+        thinkBody.classList.toggle("expanded");
+    });
+    const thinkBody=document.createElement("div");thinkBody.className="think-body";
+    thinkFold.appendChild(thinkHeader);thinkFold.appendChild(thinkBody);
+    wrap.appendChild(thinkFold);
     const bubble=document.createElement("div");bubble.className="msg";bubble.textContent="";wrap.appendChild(bubble);
     const actions=document.createElement("div");actions.className="msg-actions";
     const favBtn=document.createElement("button");favBtn.className="fav-btn";favBtn.textContent="⭐";actions.appendChild(favBtn);
     const speakBtn=document.createElement("button");speakBtn.textContent="🔊";actions.appendChild(speakBtn);
     wrap.appendChild(actions);chatBox.appendChild(wrap);scrollToBottom();
-    return {wrap,el:bubble,favBtn,speakBtn,actions};
+    return {wrap,el:bubble,favBtn,speakBtn,actions,thinkFold,thinkHeader,thinkBody};
 }
 function bindEchoActions(wrap,idx,content){
     const favBtn=wrap.querySelector(".fav-btn");const spk=wrap.querySelectorAll("button")[1];
@@ -1186,20 +1229,62 @@ async function sendMsg(textOverride){
     createMsgEl("user",text,chatHistory.length-1,new Date().toISOString());
     if(chatHistory.length>MAX_MSG){chatHistory=chatHistory.slice(-MAX_MSG);saveChat();}
 
-    const bubble=createEchoBubble();const aiIdx=chatHistory.length;let fullReply="";
+    const bubble=createEchoBubble();const aiIdx=chatHistory.length;let fullReply="",thinkText="",rawBuf="";
+    let mode="reply"; // "think" or "reply"
     // 清洗函数：去掉中文全角括号及内容，去掉【】标记
     function cleanForAPI(s,role){
         if(role==="assistant")s=s.replace(/[（(][^）)]*[）)]/g,"").replace(/【[^】]*】/g,"").replace(/\s+/g," ").trim();
         return s;
     }
+    function parseStream(){
+        // 检测模式切换
+        if(rawBuf.includes("【思考】")&&mode==="reply"){
+            const idx=rawBuf.indexOf("【思考】");
+            fullReply=rawBuf.slice(0,idx);
+            rawBuf=rawBuf.slice(idx+4);
+            mode="think";
+            bubble.thinkFold.style.display="block";
+            bubble.thinkHeader.classList.add("open");
+            bubble.thinkBody.classList.add("expanded");
+        }
+        if(rawBuf.includes("【回复】")&&mode==="think"){
+            const idx=rawBuf.indexOf("【回复】");
+            thinkText=rawBuf.slice(0,idx);
+            rawBuf=rawBuf.slice(idx+4);
+            mode="reply";
+            bubble.thinkBody.textContent=thinkText.trim();
+        }
+        // 更新显示
+        if(mode==="think"){
+            bubble.thinkBody.textContent=rawBuf.replace(/【思考】|【回复】/g,"");
+            bubble.thinkBody.innerHTML+='<span class="think-typing"></span>';
+        }else{
+            bubble.el.textContent=rawBuf.replace(/【思考】|【回复】/g,"");
+        }
+        scrollToBottom();
+    }
     try{
         const msgs=[{role:"system",content:ECHO_SYSTEM_PROMPT(echoName)},...chatHistory.filter(m=>m.role==="user"||m.role==="assistant").slice(-40).map(m=>({role:m.role,content:cleanForAPI(m.content,m.role)}))];
-        const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.75,frequency_penalty:0.4,presence_penalty:0.5,max_tokens:600,stream:true})});
+        const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.75,frequency_penalty:0.4,presence_penalty:0.5,max_tokens:800,stream:true})});
         if(!res.ok){let em=`请求失败 (HTTP ${res.status})`;try{const e=await res.json();if(e.error?.message)em=e.error.message;}catch{}throw new Error(em);}
         const reader=res.body.getReader(),decoder=new TextDecoder();let buf="";
-        while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const delta=JSON.parse(ds).choices?.[0]?.delta?.content;if(delta){fullReply+=delta;bubble.el.textContent=fullReply;scrollToBottom();}}catch{}}}
-        if(!fullReply)throw new Error("未收到回复");
-    }catch(err){console.error(err);const em=(err.message||"");if(em.includes("401")){fullReply="API Key 无效，去设置里重新填一下。";showSettings();}else if(em.includes("429"))fullReply="系统过载，稍等片刻再试。";else if(em.includes("Insufficient"))fullReply="余额不足，需要充值了。";else fullReply="连接中断，稍后再来，我在这里。";bubble.el.textContent=fullReply;}
+        while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const delta=JSON.parse(ds).choices?.[0]?.delta?.content;if(delta){rawBuf+=delta;parseStream();}}catch{}}}
+        if(!rawBuf)throw new Error("未收到回复");
+        // 最终解析
+        parseStream();
+        // 移除思考区的打字光标
+        bubble.thinkBody.querySelectorAll(".think-typing").forEach(e=>e.remove());
+        // 如果没有【回复】标记，全部作为回复
+        if(!rawBuf.includes("【回复】")&&!rawBuf.includes("【思考】")){
+            fullReply=rawBuf;bubble.el.textContent=fullReply;
+        }
+        if(mode==="think"){fullReply="";bubble.el.textContent="";}
+        if(!thinkText&&!fullReply)fullReply=rawBuf.replace(/【思考】|【回复】/g,"");
+    }catch(err){console.error(err);const em=(err.message||"");if(em.includes("401")){fullReply="API Key 无效，去设置里重新填一下。";showSettings();}else if(em.includes("429"))fullReply="系统过载，稍等片刻再试。";else if(em.includes("Insufficient"))fullReply="余额不足，需要充值了。";else fullReply="连接中断，稍后再来，我在这里。";bubble.el.textContent=fullReply;bubble.thinkFold.style.display="none";}
+    // 收尾
+    if(!thinkText)bubble.thinkFold.style.display="none";
+    else{bubble.thinkBody.textContent=thinkText.trim();bubble.thinkBody.querySelectorAll(".think-typing").forEach(e=>e.remove());}
+    fullReply=bubble.el.textContent||fullReply;
     // 去重：如果最后一条助手消息内容相同，不重复加
     const lastAssistant=chatHistory.filter(m=>m.role==="assistant").pop();
     if(!lastAssistant||lastAssistant.content!==fullReply){
@@ -1885,6 +1970,30 @@ document.getElementById("uploadAvatarBtn").addEventListener("click",()=>avatarFi
 document.getElementById("removeAvatarBtn").addEventListener("click",removeAvatar);
 document.getElementById("uploadBgBtn").addEventListener("click",()=>bgFileInput.click());
 document.getElementById("removeBgBtn").addEventListener("click",removeBg);
+
+// ============== 天气获取 ==============
+let currentWeather="";
+async function fetchWeather(){
+    try{
+        // 尝试获取位置
+        const pos=await new Promise((resolve,reject)=>{
+            if(!navigator.geolocation){reject(new Error("no geo"));return;}
+            navigator.geolocation.getCurrentPosition(resolve,reject,{timeout:5000,maximumAge:600000});
+        });
+        const{latitude:lat,longitude:lon}=pos.coords;
+        const res=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(2)}&longitude=${lon.toFixed(2)}&current=temperature_2m,weather_code,relative_humidity_2m&timezone=auto&forecast_days=1`);
+        const data=await res.json();
+        const t=data.current.temperature_2m;
+        const h=data.current.relative_humidity_2m;
+        const code=data.current.weather_code;
+        const weatherMap={0:"晴天☀️",1:"大部晴朗🌤️",2:"多云⛅",3:"阴天☁️",45:"雾🌫️",48:"霜雾🌫️",51:"小雨🌦️",53:"中雨🌧️",55:"大雨🌧️",61:"小雨🌦️",63:"中雨🌧️",65:"大雨⛈️",71:"小雪❄️",73:"中雪❄️",75:"大雪❄️",80:"阵雨🌦️",95:"雷暴⛈️",96:"冰雹雷暴⛈️"};
+        currentWeather=`${weatherMap[code]||"多云"}，温度${t}°C，湿度${h}%。`;
+    }catch(e){
+        currentWeather="";
+    }
+}
+fetchWeather();
+setInterval(fetchWeather,1800000); // 每30分钟刷新
 
 // ============== 启动 ==============
 loadData();
