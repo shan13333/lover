@@ -330,7 +330,7 @@
         .lockscreen-footer{position:absolute;bottom:40px;font-size:11px;opacity:.3;color:var(--bubble-echo-color);}
 
         /* ========== 深度思考 ========== */
-        .think-fold{width:100%;max-width:78%;background:var(--quick-btn-bg);border-radius:16px;margin-bottom:6px;overflow:hidden;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04);animation:thinkIn .25s ease-out;}
+        .think-fold{background:var(--quick-btn-bg);border-radius:16px;margin-bottom:6px;overflow:hidden;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04);animation:thinkIn .25s ease-out;align-self:stretch;}
         @keyframes thinkIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
         .think-header{display:flex;align-items:center;gap:6px;padding:9px 14px;cursor:pointer;font-size:11px;font-weight:600;color:var(--accent);user-select:none;transition:background .15s;letter-spacing:.03em;}
         .think-header:hover{background:rgba(128,128,160,.06);}
@@ -610,7 +610,7 @@ const MODEL_NAME="deepseek-chat";
 const MAX_MSG=80;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.20.7"; // v6.17
+const VERSION="2026.06.20.8"; // v6.18 // v6.17
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -1181,25 +1181,29 @@ function setLoading(loading){
 // ============== 发送消息 ==============
 function createEchoBubble(){
     const wrap=document.createElement("div");wrap.className="msg-wrap echo";
-    const av=document.createElement("div");av.className="msg-avatar";
-    if(avatarBase64)av.innerHTML=`<img src="${avatarBase64}" alt="echo">`;else av.innerHTML=geomAvatar.outerHTML;
-    wrap.appendChild(av);
-    // 深度思考折叠区
+    // 深度思考折叠区 — 放在气泡正上方
     const thinkFold=document.createElement("div");thinkFold.className="think-fold";thinkFold.style.display="none";
     const thinkHeader=document.createElement("div");thinkHeader.className="think-header";
     thinkHeader.innerHTML='<span class="arrow">▼</span> 深度思考';
+    const thinkBody=document.createElement("div");thinkBody.className="think-body";
     thinkHeader.addEventListener("click",()=>{
         thinkHeader.classList.toggle("open");
         thinkBody.classList.toggle("expanded");
     });
-    const thinkBody=document.createElement("div");thinkBody.className="think-body";
     thinkFold.appendChild(thinkHeader);thinkFold.appendChild(thinkBody);
     wrap.appendChild(thinkFold);
-    const bubble=document.createElement("div");bubble.className="msg";bubble.textContent="";wrap.appendChild(bubble);
+    // 头像+气泡行
+    const row=document.createElement("div");row.style.cssText="display:flex;align-items:flex-end;gap:6px;";
+    const av=document.createElement("div");av.className="msg-avatar";
+    if(avatarBase64)av.innerHTML=`<img src="${avatarBase64}" alt="echo">`;else av.innerHTML=geomAvatar.outerHTML;
+    row.appendChild(av);
+    const col=document.createElement("div");col.style.cssText="display:flex;flex-direction:column;";
+    const bubble=document.createElement("div");bubble.className="msg";bubble.textContent="";col.appendChild(bubble);
     const actions=document.createElement("div");actions.className="msg-actions";
     const favBtn=document.createElement("button");favBtn.className="fav-btn";favBtn.textContent="⭐";actions.appendChild(favBtn);
     const speakBtn=document.createElement("button");speakBtn.textContent="🔊";actions.appendChild(speakBtn);
-    wrap.appendChild(actions);chatBox.appendChild(wrap);scrollToBottom();
+    col.appendChild(actions);row.appendChild(col);
+    wrap.appendChild(row);chatBox.appendChild(wrap);scrollToBottom();
     return {wrap,el:bubble,favBtn,speakBtn,actions,thinkFold,thinkHeader,thinkBody};
 }
 function bindEchoActions(wrap,idx,content){
@@ -1283,7 +1287,7 @@ async function sendMsg(textOverride){
 // ============== 设置弹窗 ==============
 function updateVersionDisplay(){
     const el=document.getElementById("versionDisplay");
-    if(el)el.textContent="Echo v6.17 · Build "+VERSION+" · 凌晨三点的代码";
+    if(el)el.textContent="Echo v6.18 · Build "+VERSION+" · 凌晨三点的代码";
 }
 function showSettings(){
     keyInput.value=getApiKey();loverNameInput.value=echoName;anniversaryInput.value=anniversary;
