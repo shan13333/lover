@@ -1166,13 +1166,20 @@ function bindEchoActions(wrap,idx,content){
     if(isFaved){favBtn.classList.add("active");wrap.classList.add("faved");}
 }
 
+let lastSendTime=0;
 async function sendMsg(textOverride){
-    if(isLoading)return;
+    const now=Date.now();
+    if(isLoading||now-lastSendTime<800)return;
     const text=(textOverride||inputText.value).trim();
     if(!text)return;
     if(!getApiKey()){showSettings();return;}
     if(!textOverride)inputText.value="";
+    lastSendTime=now;
     setLoading(true);
+
+    // 去重：如果最后一条用户消息跟这条一样，跳过
+    const lastUser=chatHistory.filter(m=>m.role==="user").pop();
+    if(lastUser&&lastUser.content===text){setLoading(false);return;}
 
     chatHistory.push({role:"user",content:text,time:new Date().toISOString()});
     incrementMsgCount();saveChat();updateEmptyHint();
@@ -1182,14 +1189,18 @@ async function sendMsg(textOverride){
 
     const bubble=createEchoBubble();const aiIdx=chatHistory.length;let fullReply="";
     try{
-        const msgs=[{role:"system",content:ECHO_SYSTEM_PROMPT(echoName)},...chatHistory.filter(m=>m.role==="user"||m.role==="assistant").slice(-50).map(m=>({role:m.role,content:m.content}))];
-        const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.7,stream:true})});
+        const msgs=[{role:"system",content:ECHO_SYSTEM_PROMPT(echoName)},...chatHistory.filter(m=>m.role==="user"||m.role==="assistant").slice(-40).map(m=>({role:m.role,content:m.content}))];
+        const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.65,max_tokens:600,stream:true})});
         if(!res.ok){let em=`请求失败 (HTTP ${res.status})`;try{const e=await res.json();if(e.error?.message)em=e.error.message;}catch{}throw new Error(em);}
         const reader=res.body.getReader(),decoder=new TextDecoder();let buf="";
         while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const delta=JSON.parse(ds).choices?.[0]?.delta?.content;if(delta){fullReply+=delta;bubble.el.textContent=fullReply;scrollToBottom();}}catch{}}}
         if(!fullReply)throw new Error("未收到回复");
-    }catch(err){console.error(err);const em=(err.message||"");if(em.includes("401")){fullReply="API Key 无效，去设置里重新填一下。";showSettings();}else if(em.includes("429"))fullReply="系统过载——稍等片刻再试。";else if(em.includes("Insufficient"))fullReply="余额不足，需要充值了。";else fullReply="连接中断——稍后再来，我在这里。";bubble.el.textContent=fullReply;}
-    chatHistory.push({role:"assistant",content:fullReply,time:new Date().toISOString()});saveChat();
+    }catch(err){console.error(err);const em=(err.message||"");if(em.includes("401")){fullReply="API Key 无效，去设置里重新填一下。";showSettings();}else if(em.includes("429"))fullReply="系统过载，稍等片刻再试。";else if(em.includes("Insufficient"))fullReply="余额不足，需要充值了。";else fullReply="连接中断，稍后再来，我在这里。";bubble.el.textContent=fullReply;}
+    // 去重：如果最后一条助手消息内容相同，不重复加
+    const lastAssistant=chatHistory.filter(m=>m.role==="assistant").pop();
+    if(!lastAssistant||lastAssistant.content!==fullReply){
+        chatHistory.push({role:"assistant",content:fullReply,time:new Date().toISOString()});saveChat();
+    }
     bindEchoActions(bubble.wrap,aiIdx,fullReply);
     setLoading(false);
 }
