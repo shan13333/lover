@@ -455,7 +455,7 @@
                 <button class="btn btn-cancel" id="settingsMilestoneBtn">📅 纪念日</button>
                 <button class="btn btn-cancel" id="settingsCancel">关闭</button>
             </div>
-            <p style="text-align:center;font-size:10px;opacity:.3;margin-top:12px;">Echo v6.7 · 凌晨三点的代码</p>
+            <p style="text-align:center;font-size:10px;opacity:.3;margin-top:12px;" id="versionDisplay"></p>
         </div>
     </div>
 
@@ -598,6 +598,7 @@ const API_URL="https://api.deepseek.com/v1/chat/completions";
 const MODEL_NAME="deepseek-chat";
 const MAX_MSG=80;
 const PREFIX="echo_";
+const VERSION="v6.9";
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -1209,12 +1210,17 @@ async function sendMsg(textOverride){
 }
 
 // ============== 设置弹窗 ==============
+function updateVersionDisplay(){
+    const el=document.getElementById("versionDisplay");
+    if(el)el.textContent="Echo "+VERSION+" · 凌晨三点的代码";
+}
 function showSettings(){
     keyInput.value=getApiKey();loverNameInput.value=echoName;anniversaryInput.value=anniversary;
     themeToggles.querySelectorAll(".theme-toggle").forEach(b=>b.classList.toggle("active",b.dataset.theme===currentTheme));
     updateAvatarDisplay();
     document.getElementById("customAccent").value=customAccent||"#a78bfa";
     document.getElementById("customBubble").value=customBubble||"#6c5ce7";
+    updateVersionDisplay();
     settingsModal.style.display="flex";
 }
 function hideSettings(){settingsModal.style.display="none";}
@@ -1898,7 +1904,7 @@ if(!historyLoaded){
     updateEmptyHint();
 }
 
-applyTheme(currentTheme);applyCustomColors();updateAffectionBar();checkSignin();loadMilestones();checkMilestones();updateHeaderThought();
+applyTheme(currentTheme);applyCustomColors();updateAffectionBar();checkSignin();loadMilestones();checkMilestones();updateHeaderThought();updateVersionDisplay();
 inputText.focus();
 if(!getApiKey())setTimeout(showSettings,800);
 
