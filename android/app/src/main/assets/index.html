@@ -471,7 +471,7 @@ const geomAvatar=$("geomAvatar");
 
 let chatHistory=[],isLoading=false,favorites=[],
 let echoName="萦",anniversary="",currentTheme="dark";
-let historyLoaded=false,appUnlocked=false;
+let historyLoaded=false,appUnlocked=true;
 const LOCK_PWD="133800";
 
 // ============== Toast ==============
@@ -1037,7 +1037,7 @@ setInterval(fetchWeather,1800000); // 每30分钟刷新
 // ============== 启动 ==============
 loadData();
 updateEchoDisplay();updateAvatarDisplay();updateBgDisplay();
-initLockscreen();
+if(lockscreen)lockscreen.style.display="none";
 
 // 导入聊天历史
 if(!historyLoaded){
