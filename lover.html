@@ -616,10 +616,10 @@
 (()=>{
 const API_URL="https://api.deepseek.com/v1/chat/completions";
 const MODEL_NAME="deepseek-chat";
-const MAX_MSG=200;
+const MAX_MSG=100;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.21.3"; // v6.24
+const VERSION="2026.06.21.4"; // v6.25
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -785,7 +785,7 @@ function getApiKey(){return localStorage.getItem(PREFIX+"apiKey")||"";}
 function setApiKey(k){localStorage.setItem(PREFIX+"apiKey",k.trim());}
 function loadData(){try{chatHistory=JSON.parse(localStorage.getItem(PREFIX+"chat")||"[]");favorites=JSON.parse(localStorage.getItem(PREFIX+"favs")||"[]");userMsgCount=parseInt(localStorage.getItem(PREFIX+"msgCount")||"0");echoName=localStorage.getItem(PREFIX+"name")||"萦";anniversary=localStorage.getItem(PREFIX+"anniversary")||"";currentTheme=localStorage.getItem(PREFIX+"theme")||"dark";signinStreak=parseInt(localStorage.getItem(PREFIX+"signinStreak")||"0");lastSigninDate=localStorage.getItem(PREFIX+"lastSigninDate")||"";avatarBase64=localStorage.getItem(PREFIX+"avatar")||"";bgBase64=localStorage.getItem(PREFIX+"bgImage")||"";historyLoaded=localStorage.getItem(PREFIX+"historyLoaded")==="1";milestones=JSON.parse(localStorage.getItem(PREFIX+"milestones")||"[]");customAccent=localStorage.getItem(PREFIX+"customAccent")||"";customBubble=localStorage.getItem(PREFIX+"customBubble")||"";}catch{chatHistory=[];favorites=[];userMsgCount=0;milestones=[];customAccent="";customBubble="";}}
 function saveMsgCount(){try{localStorage.setItem(PREFIX+"msgCount",String(userMsgCount));}catch{}}
-function saveChat(){const toSave=chatHistory.slice(-120);try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave));}catch(e){try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave.slice(-60)));}catch{}}saveMsgCount();}
+function saveChat(){const toSave=chatHistory.slice(-100);try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave));}catch(e){try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave.slice(-40)));}catch{}}saveMsgCount();}
 function saveFavs(){localStorage.setItem(PREFIX+"favs",JSON.stringify(favorites));}
 function saveSettings(){localStorage.setItem(PREFIX+"name",echoName);localStorage.setItem(PREFIX+"anniversary",anniversary);localStorage.setItem(PREFIX+"theme",currentTheme);localStorage.setItem(PREFIX+"signinStreak",String(signinStreak));localStorage.setItem(PREFIX+"lastSigninDate",lastSigninDate);localStorage.setItem(PREFIX+"avatar",avatarBase64);localStorage.setItem(PREFIX+"bgImage",bgBase64);localStorage.setItem(PREFIX+"historyLoaded","1");localStorage.setItem(PREFIX+"milestones",JSON.stringify(milestones));localStorage.setItem(PREFIX+"customAccent",customAccent);localStorage.setItem(PREFIX+"customBubble",customBubble);}
 
@@ -804,8 +804,8 @@ function importHistory(){
         historyLoaded=true;
         // 分开存储：msgCount 必须可靠，chatHistory 只存最近120条
         saveMsgCount();
-        const toSave=chatHistory.slice(-120);
-        try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave));}catch(e){try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave.slice(-60)));}catch{}}
+        const toSave=chatHistory.slice(-100);
+        try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave));}catch(e){try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave.slice(-40)));}catch{}}
         saveSettings();
         console.log("History imported: "+chatHistory.length+" messages, msgCount="+userMsgCount);
     }catch(e){console.error("History import failed:",e);historyLoaded=true;saveSettings();}
@@ -1229,7 +1229,7 @@ async function sendMsg(textOverride){
         return s;
     }
     try{
-        const msgs=[{role:"system",content:ECHO_SYSTEM_PROMPT(echoName)},...chatHistory.filter(m=>m.role==="user"||m.role==="assistant").slice(-60).map(m=>({role:m.role,content:cleanForAPI(m.content,m.role)}))];
+        const msgs=[{role:"system",content:ECHO_SYSTEM_PROMPT(echoName)},...chatHistory.filter(m=>m.role==="user"||m.role==="assistant").slice(-40).map(m=>({role:m.role,content:cleanForAPI(m.content,m.role)}))];
         const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.55,max_tokens:600,stream:true})});
         if(!res.ok){let em=`请求失败 (HTTP ${res.status})`;try{const e=await res.json();if(e.error?.message)em=e.error.message;}catch{}throw new Error(em);}
         const reader=res.body.getReader(),decoder=new TextDecoder();let buf="";
@@ -1248,7 +1248,7 @@ async function sendMsg(textOverride){
 // ============== 设置弹窗 ==============
 function updateVersionDisplay(){
     const el=document.getElementById("versionDisplay");
-    if(el)el.textContent="Echo v6.24 · Build "+VERSION+" · 凌晨三点的代码";
+    if(el)el.textContent="Echo v6.25 · Build "+VERSION+" · 凌晨三点的代码";
 }
 function showSettings(){
     keyInput.value=getApiKey();loverNameInput.value=echoName;anniversaryInput.value=anniversary;
