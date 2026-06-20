@@ -1242,9 +1242,7 @@ async function sendMsg(textOverride){
         const msgs=[{role:"system",content:ECHO_SYSTEM_PROMPT(echoName)},...chatHistory.filter(m=>m.role==="user"||m.role==="assistant").slice(-40).map(m=>({role:m.role,content:cleanForAPI(m.content,m.role)}))];
         const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.7,max_tokens:800,stream:true})});
         if(!res.ok){let em=`请求失败 (HTTP ${res.status})`;try{const e=await res.json();if(e.error?.message)em=e.error.message;}catch{}throw new Error(em);}
-        const reader=res.body.getReader(),decoder=new TextDecoder();let buf="",rawContent="";
-        let thinkingActive=false,replyStarted=false;
-        let rawContent="",thinkMode=false,replyMode=false;
+        const reader=res.body.getReader(),decoder=new TextDecoder();let buf="",rawContent="",thinkMode=false,replyMode=false;
         while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const delta=JSON.parse(ds).choices?.[0]?.delta?.content;if(delta){
             rawContent+=delta;
             if(rawContent.includes("【思考】")&&!thinkMode){thinkMode=true;bubble.thinkFold.style.display="block";bubble.thinkHeader.classList.add("open");bubble.thinkBody.classList.add("expanded");}
