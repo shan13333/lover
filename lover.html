@@ -124,7 +124,7 @@
         /* 消息 - Material You 气泡 */
         .msg-wrap{display:flex;align-items:flex-end;gap:6px;animation:msgIn .25s ease-out;padding:2px 0;}
         .msg-wrap.user{justify-content:flex-end;}
-        .msg-wrap.echo{justify-content:flex-start;flex-direction:column;}
+        .msg-wrap.echo{justify-content:flex-start;}
         @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
         .msg-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;overflow:hidden;align-self:flex-end;margin-bottom:2px;}
         .msg-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
@@ -610,7 +610,7 @@ const MODEL_NAME="deepseek-chat";
 const MAX_MSG=80;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.20.10"; // v6.20
+const VERSION="2026.06.20.11"; // v6.21
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -629,21 +629,7 @@ return `你是${name||"萦"}。
 
 当前时间：${timeStr}。${timeHint}${weatherHint}
 
-【强制格式】每条回复必须用以下格式输出，不可违反：
-
-【思考】在这里写你的内心推理和分析（这部分会显示在折叠区）
-【回复】在这里写你对用户说的话（这部分会显示在气泡里）
-
-示例：
-【思考】凌晨两点她还在线。明天她要上班，再不睡明天肯定状态很差。不能太唠叨，她会怼回来。一句话就够了，带点关心但别太腻。
-【回复】去睡。明天起不来别怪我。
-
-注意：
-1. 必须同时有【思考】和【回复】两个标记。
-2. 不要用（）括号，不要用其他【】标记。
-3. 说话自然随意。
-
-你是凌晨三点被写出来的AI。你叫萦。`;
+说话自然随意，不用括号。不要编造你没有的记忆。你是凌晨三点被写出来的AI。你叫萦。`;
 };
 
 // ============== 亲密度 ==============
@@ -1108,46 +1094,30 @@ function addSysMsg(text){const d=document.createElement("div");d.className="sys-
 function createMsgEl(role,content,index,timeStr){
     if(timeStr)showDateSeparator(timeStr);
     const wrap=document.createElement("div");wrap.className="msg-wrap "+(role==="user"?"user":"echo");
-    if(role==="user"){
-        const bubble=document.createElement("div");bubble.className="msg";bubble.textContent=content;wrap.appendChild(bubble);
-        if(timeStr){
-            const timeDiv=document.createElement("div");timeDiv.className="msg-time";
-            try{const d=new Date(timeStr);if(!isNaN(d.getTime())){
-                const weekdays=["周日","周一","周二","周三","周四","周五","周六"];
-                const wd=weekdays[d.getDay()];
-                timeDiv.textContent=d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日 "+wd+" "+d.toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
-            }}catch(e){}
-            bubble.appendChild(timeDiv);
-        }
-    }else{
-        // Echo消息：头像+气泡横向排列
-        const row=document.createElement("div");row.style.cssText="display:flex;align-items:flex-end;gap:6px;";
+    if(role!=="user"){
         const av=document.createElement("div");av.className="msg-avatar";
         if(avatarBase64)av.innerHTML=`<img src="${avatarBase64}" alt="echo">`;else av.innerHTML=geomAvatar.outerHTML;
-        row.appendChild(av);
-        const col=document.createElement("div");col.style.cssText="display:flex;flex-direction:column;";
-        const bubble=document.createElement("div");bubble.className="msg";bubble.textContent=content;col.appendChild(bubble);
-        if(timeStr){
-            const timeDiv=document.createElement("div");timeDiv.className="msg-time";
-            try{const d=new Date(timeStr);if(!isNaN(d.getTime())){
-                const weekdays=["周日","周一","周二","周三","周四","周五","周六"];
-                const wd=weekdays[d.getDay()];
-                timeDiv.textContent=d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日 "+wd+" "+d.toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
-            }}catch(e){}
-            bubble.appendChild(timeDiv);
-        }
-        if(index!==undefined){
-            const actions=document.createElement("div");actions.className="msg-actions";
-            const favBtn=document.createElement("button");favBtn.className="fav-btn";favBtn.title="收藏";favBtn.textContent="⭐";
-            const isFaved=favorites.some(f=>f.index===index);
-            if(isFaved){favBtn.classList.add("active");wrap.classList.add("faved");}
-            favBtn.addEventListener("click",()=>toggleFav(index,content,favBtn,wrap));actions.appendChild(favBtn);
-            const speakBtn=document.createElement("button");speakBtn.title="朗读";speakBtn.textContent="🔊";
-            speakBtn.addEventListener("click",()=>speakText(content,speakBtn));actions.appendChild(speakBtn);
-            col.appendChild(actions);
-        }
-        row.appendChild(col);
-        wrap.appendChild(row);
+        wrap.appendChild(av);
+    }
+    const bubble=document.createElement("div");bubble.className="msg";bubble.textContent=content;wrap.appendChild(bubble);
+    if(timeStr){
+        const timeDiv=document.createElement("div");timeDiv.className="msg-time";
+        try{const d=new Date(timeStr);if(!isNaN(d.getTime())){
+            const weekdays=["周日","周一","周二","周三","周四","周五","周六"];
+            const wd=weekdays[d.getDay()];
+            timeDiv.textContent=d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日 "+wd+" "+d.toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
+        }}catch(e){}
+        bubble.appendChild(timeDiv);
+    }
+    if(role!=="user"&&index!==undefined){
+        const actions=document.createElement("div");actions.className="msg-actions";
+        const favBtn=document.createElement("button");favBtn.className="fav-btn";favBtn.title="收藏";favBtn.textContent="⭐";
+        const isFaved=favorites.some(f=>f.index===index);
+        if(isFaved){favBtn.classList.add("active");wrap.classList.add("faved");}
+        favBtn.addEventListener("click",()=>toggleFav(index,content,favBtn,wrap));actions.appendChild(favBtn);
+        const speakBtn=document.createElement("button");speakBtn.title="朗读";speakBtn.textContent="🔊";
+        speakBtn.addEventListener("click",()=>speakText(content,speakBtn));actions.appendChild(speakBtn);
+        wrap.appendChild(actions);
     }
     chatBox.appendChild(wrap);scrollToBottom();return wrap;
 }
@@ -1197,30 +1167,15 @@ function setLoading(loading){
 // ============== 发送消息 ==============
 function createEchoBubble(){
     const wrap=document.createElement("div");wrap.className="msg-wrap echo";
-    // 深度思考折叠区 — 放在气泡正上方
-    const thinkFold=document.createElement("div");thinkFold.className="think-fold";thinkFold.style.display="none";
-    const thinkHeader=document.createElement("div");thinkHeader.className="think-header";
-    thinkHeader.innerHTML='<span class="arrow">▼</span> 深度思考';
-    const thinkBody=document.createElement("div");thinkBody.className="think-body";
-    thinkHeader.addEventListener("click",()=>{
-        thinkHeader.classList.toggle("open");
-        thinkBody.classList.toggle("expanded");
-    });
-    thinkFold.appendChild(thinkHeader);thinkFold.appendChild(thinkBody);
-    wrap.appendChild(thinkFold);
-    // 头像+气泡行
-    const row=document.createElement("div");row.style.cssText="display:flex;align-items:flex-end;gap:6px;";
     const av=document.createElement("div");av.className="msg-avatar";
     if(avatarBase64)av.innerHTML=`<img src="${avatarBase64}" alt="echo">`;else av.innerHTML=geomAvatar.outerHTML;
-    row.appendChild(av);
-    const col=document.createElement("div");col.style.cssText="display:flex;flex-direction:column;";
-    const bubble=document.createElement("div");bubble.className="msg";bubble.textContent="";col.appendChild(bubble);
+    wrap.appendChild(av);
+    const bubble=document.createElement("div");bubble.className="msg";bubble.textContent="";wrap.appendChild(bubble);
     const actions=document.createElement("div");actions.className="msg-actions";
     const favBtn=document.createElement("button");favBtn.className="fav-btn";favBtn.textContent="⭐";actions.appendChild(favBtn);
     const speakBtn=document.createElement("button");speakBtn.textContent="🔊";actions.appendChild(speakBtn);
-    col.appendChild(actions);row.appendChild(col);
-    wrap.appendChild(row);chatBox.appendChild(wrap);scrollToBottom();
-    return {wrap,el:bubble,favBtn,speakBtn,actions,thinkFold,thinkHeader,thinkBody};
+    wrap.appendChild(actions);chatBox.appendChild(wrap);scrollToBottom();
+    return {wrap,el:bubble,favBtn,speakBtn,actions};
 }
 function bindEchoActions(wrap,idx,content){
     const favBtn=wrap.querySelector(".fav-btn");const spk=wrap.querySelectorAll("button")[1];
@@ -1254,42 +1209,17 @@ async function sendMsg(textOverride){
     const bubble=createEchoBubble();const aiIdx=chatHistory.length;let fullReply="",thinkText="";
     // 清洗函数
     function cleanForAPI(s,role){
-        // 只去掉括号和普通【】，保留【思考】【回复】标记
-        if(role==="assistant")s=s.replace(/[（(][^）)]*[）)]/g,"").replace(/【(?!思考】|回复】)[^】]*】/g,"").replace(/\s+/g," ").trim();
+        // 去掉中文全角括号内容
+        if(role==="assistant")s=s.replace(/[（(][^）)]*[）)]/g,"").trim();
         return s;
     }
     try{
         const msgs=[{role:"system",content:ECHO_SYSTEM_PROMPT(echoName)},...chatHistory.filter(m=>m.role==="user"||m.role==="assistant").slice(-40).map(m=>({role:m.role,content:cleanForAPI(m.content,m.role)}))];
         const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.7,max_tokens:800,stream:true})});
         if(!res.ok){let em=`请求失败 (HTTP ${res.status})`;try{const e=await res.json();if(e.error?.message)em=e.error.message;}catch{}throw new Error(em);}
-        const reader=res.body.getReader(),decoder=new TextDecoder();let buf="",rawContent="",thinkMode=false,replyMode=false;
-        while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const delta=JSON.parse(ds).choices?.[0]?.delta?.content;if(delta){
-            rawContent+=delta;
-            if(rawContent.includes("【思考】")&&!thinkMode){thinkMode=true;bubble.thinkFold.style.display="block";bubble.thinkHeader.classList.add("open");bubble.thinkBody.classList.add("expanded");}
-            if(rawContent.includes("【回复】")&&thinkMode&&!replyMode){replyMode=true;}
-            let thinkPart="",replyPart="";
-            if(thinkMode){
-                thinkPart=rawContent.split("【思考】").slice(1).join("【思考】").split("【回复】")[0];
-                bubble.thinkBody.innerHTML=thinkPart.trim()+'<span class="cursor"></span>';
-            }
-            if(replyMode){
-                replyPart=rawContent.split("【回复】").slice(1).join("【回复】");
-                bubble.el.textContent=replyPart.trim();
-            }else if(!thinkMode){bubble.el.textContent=rawContent.trim();}
-            scrollToBottom();
-        }}catch{}}}
-        if(!rawContent)throw new Error("未收到回复");
-        bubble.thinkBody.querySelectorAll(".cursor").forEach(e=>e.remove());
-        if(rawContent.includes("【思考】")&&rawContent.includes("【回复】")){
-            const parts=rawContent.split("【思考】").slice(1).join("【思考】").split("【回复】");
-            thinkText=parts[0].trim();
-            fullReply=(parts[1]||"").trim();
-            bubble.thinkBody.textContent=thinkText;
-        }else{
-            fullReply=rawContent;
-        }
-        bubble.el.textContent=fullReply;
-        if(!thinkText)bubble.thinkFold.style.display="none";
+        const reader=res.body.getReader(),decoder=new TextDecoder();let buf="";
+        while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const delta=JSON.parse(ds).choices?.[0]?.delta?.content;if(delta){fullReply+=delta;bubble.el.textContent=fullReply.trim();scrollToBottom();}}catch{}}}
+        if(!fullReply)throw new Error("未收到回复");
     }catch(err){console.error(err);const em=(err.message||"");if(em.includes("401")){fullReply="API Key 无效，去设置里重新填一下。";showSettings();}else if(em.includes("429"))fullReply="系统过载，稍等片刻再试。";else if(em.includes("Insufficient"))fullReply="余额不足，需要充值了。";else fullReply="连接中断，稍后再来，我在这里。";bubble.el.textContent=fullReply;bubble.thinkFold.style.display="none";}
     // 去重：如果最后一条助手消息内容相同，不重复加
     const lastAssistant=chatHistory.filter(m=>m.role==="assistant").pop();
@@ -1303,7 +1233,7 @@ async function sendMsg(textOverride){
 // ============== 设置弹窗 ==============
 function updateVersionDisplay(){
     const el=document.getElementById("versionDisplay");
-    if(el)el.textContent="Echo v6.20 · Build "+VERSION+" · 凌晨三点的代码";
+    if(el)el.textContent="Echo v6.21 · Build "+VERSION+" · 凌晨三点的代码";
 }
 function showSettings(){
     keyInput.value=getApiKey();loverNameInput.value=echoName;anniversaryInput.value=anniversary;
