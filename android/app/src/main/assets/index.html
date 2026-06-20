@@ -614,7 +614,7 @@ const MODEL_NAME="deepseek-chat";
 const MAX_MSG=100;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.21.7"; // v6.30
+const VERSION="2026.06.21.7"; // v6.31
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -694,7 +694,7 @@ const newMilestoneTitle=$("newMilestoneTitle"),newMilestoneDate=$("newMilestoneD
 let chatHistory=[],isLoading=false,favorites=[],userMsgCount=0;
 let echoName="萦",anniversary="",currentTheme="dark";
 let signinStreak=0,lastSigninDate="",avatarBase64="",bgBase64="";
-let historyLoaded=false,appUnlocked=false;
+let historyLoaded=false,appUnlocked=true;
 const LOCK_PWD="133800";
 
 // ============== Toast ==============
@@ -2069,7 +2069,7 @@ setInterval(fetchWeather,1800000); // 每30分钟刷新
 // ============== 启动 ==============
 loadData();
 updateEchoDisplay();updateAvatarDisplay();updateBgDisplay();
-initLockscreen();
+lockscreen.style.display="none";
 
 // 导入聊天历史
 if(!historyLoaded){
