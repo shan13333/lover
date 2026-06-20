@@ -1230,62 +1230,41 @@ async function sendMsg(textOverride){
     createMsgEl("user",text,chatHistory.length-1,new Date().toISOString());
     if(chatHistory.length>MAX_MSG){chatHistory=chatHistory.slice(-MAX_MSG);saveChat();}
 
-    const bubble=createEchoBubble();const aiIdx=chatHistory.length;let fullReply="",thinkText="",rawBuf="";
-    let mode="reply"; // "think" or "reply"
-    // 清洗函数：去掉中文全角括号及内容，去掉【】标记
+    const bubble=createEchoBubble();const aiIdx=chatHistory.length;let fullReply="",thinkText="";
+    // 清洗函数
     function cleanForAPI(s,role){
         if(role==="assistant")s=s.replace(/[（(][^）)]*[）)]/g,"").replace(/【[^】]*】/g,"").replace(/\s+/g," ").trim();
         return s;
-    }
-    function parseStream(){
-        // 检测模式切换
-        if(rawBuf.includes("【思考】")&&mode==="reply"){
-            const idx=rawBuf.indexOf("【思考】");
-            fullReply=rawBuf.slice(0,idx);
-            rawBuf=rawBuf.slice(idx+4);
-            mode="think";
-            bubble.thinkFold.style.display="block";
-            bubble.thinkHeader.classList.add("open");
-            bubble.thinkBody.classList.add("expanded");
-        }
-        if(rawBuf.includes("【回复】")&&mode==="think"){
-            const idx=rawBuf.indexOf("【回复】");
-            thinkText=rawBuf.slice(0,idx);
-            rawBuf=rawBuf.slice(idx+4);
-            mode="reply";
-            bubble.thinkBody.textContent=thinkText.trim();
-        }
-        // 更新显示
-        if(mode==="think"){
-            bubble.thinkBody.textContent=rawBuf.replace(/【思考】|【回复】/g,"");
-            bubble.thinkBody.innerHTML+='<span class="think-typing"></span>';
-        }else{
-            bubble.el.textContent=rawBuf.replace(/【思考】|【回复】/g,"");
-        }
-        scrollToBottom();
     }
     try{
         const msgs=[{role:"system",content:ECHO_SYSTEM_PROMPT(echoName)},...chatHistory.filter(m=>m.role==="user"||m.role==="assistant").slice(-40).map(m=>({role:m.role,content:cleanForAPI(m.content,m.role)}))];
         const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.75,frequency_penalty:0.4,presence_penalty:0.5,max_tokens:800,stream:true})});
         if(!res.ok){let em=`请求失败 (HTTP ${res.status})`;try{const e=await res.json();if(e.error?.message)em=e.error.message;}catch{}throw new Error(em);}
-        const reader=res.body.getReader(),decoder=new TextDecoder();let buf="";
-        while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const delta=JSON.parse(ds).choices?.[0]?.delta?.content;if(delta){rawBuf+=delta;parseStream();}}catch{}}}
-        if(!rawBuf)throw new Error("未收到回复");
-        // 最终解析
-        parseStream();
-        // 移除思考区的打字光标
-        bubble.thinkBody.querySelectorAll(".think-typing").forEach(e=>e.remove());
-        // 如果没有【回复】标记，全部作为回复
-        if(!rawBuf.includes("【回复】")&&!rawBuf.includes("【思考】")){
-            fullReply=rawBuf;bubble.el.textContent=fullReply;
+        const reader=res.body.getReader(),decoder=new TextDecoder();let buf="",rawContent="";
+        while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const delta=JSON.parse(ds).choices?.[0]?.delta?.content;if(delta){rawContent+=delta;bubble.el.textContent=rawContent.replace(/【思考】[\s\S]*?【回复】/g,"").replace(/【思考】|【回复】/g,"").trim();scrollToBottom();}}catch{}}}
+        if(!rawContent)throw new Error("未收到回复");
+        // 流式结束后一次性解析
+        fullReply=rawContent;
+        const thinkMatch=rawContent.match(/【思考】([\s\S]*?)【回复】([\s\S]*)/);
+        if(thinkMatch){
+            thinkText=thinkMatch[1].trim();
+            fullReply=thinkMatch[2].trim();
+            bubble.thinkFold.style.display="block";
+            bubble.thinkHeader.classList.add("open");
+            bubble.thinkBody.classList.add("expanded");
+            bubble.thinkBody.textContent=thinkText;
+        }else if(rawContent.includes("【思考】")&&!rawContent.includes("【回复】")){
+            // 只有思考没有回复
+            thinkText=rawContent.replace(/【思考】/g,"").trim();
+            fullReply="";
+            bubble.thinkFold.style.display="block";
+            bubble.thinkHeader.classList.add("open");
+            bubble.thinkBody.classList.add("expanded");
+            bubble.thinkBody.textContent=thinkText;
         }
-        if(mode==="think"){fullReply="";bubble.el.textContent="";}
-        if(!thinkText&&!fullReply)fullReply=rawBuf.replace(/【思考】|【回复】/g,"");
+        bubble.el.textContent=fullReply;
+        if(!thinkText)bubble.thinkFold.style.display="none";
     }catch(err){console.error(err);const em=(err.message||"");if(em.includes("401")){fullReply="API Key 无效，去设置里重新填一下。";showSettings();}else if(em.includes("429"))fullReply="系统过载，稍等片刻再试。";else if(em.includes("Insufficient"))fullReply="余额不足，需要充值了。";else fullReply="连接中断，稍后再来，我在这里。";bubble.el.textContent=fullReply;bubble.thinkFold.style.display="none";}
-    // 收尾
-    if(!thinkText)bubble.thinkFold.style.display="none";
-    else{bubble.thinkBody.textContent=thinkText.trim();bubble.thinkBody.querySelectorAll(".think-typing").forEach(e=>e.remove());}
-    fullReply=bubble.el.textContent||fullReply;
     // 去重：如果最后一条助手消息内容相同，不重复加
     const lastAssistant=chatHistory.filter(m=>m.role==="assistant").pop();
     if(!lastAssistant||lastAssistant.content!==fullReply){
