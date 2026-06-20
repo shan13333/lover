@@ -142,6 +142,7 @@
         .msg-actions button:hover{background:rgba(128,128,160,0.2);}
         .msg-actions .fav-btn.active{background:rgba(240,192,96,0.2);box-shadow:0 0 0 2px var(--star-color);}
         .mem-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;margin:4px 0;background:var(--input-bg);border-radius:10px;font-size:12px;gap:8px;}.mem-item span{flex:1;line-height:1.4;}
+        .mem-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;margin:4px 0;background:var(--input-bg);border-radius:10px;font-size:12px;gap:8px;}.mem-item span{flex:1;line-height:1.4;}
 
         /* 系统消息 */
         .sys-msg{text-align:center;padding:4px 0;font-size:11px;opacity:.5;animation:msgIn .25s ease-out;}
@@ -419,6 +420,7 @@
 
             <div class="btn-row" style="margin-top:10px;">
                 <button class="btn btn-cancel" id="memoryPanelBtn">Mem Bank</button>
+                <button class="btn btn-cancel" id="memoryPanelBtn">Mem Bank</button>
                 <button class="btn btn-cancel" id="exportBtn">📥 导出</button>
                 <button class="btn btn-cancel" id="clearChatBtn">🗑 清空新对话</button>
                 <button class="btn btn-cancel" id="importTxtBtn">📄 导入TXT</button>
@@ -522,9 +524,38 @@ let memories=[];
 const PREFIX_MEM="echo_mem_";
 function loadMemories(){try{const d=localStorage.getItem(PREFIX_MEM+"memories");if(d)memories=JSON.parse(d);}catch(e){memories=[];}}
 function saveMemories(){try{localStorage.setItem(PREFIX_MEM+"memories",JSON.stringify(memories));}catch(e){}}
+function addMemory(content,btn){const txt=content.trim();if(!txt||txt.length<5)return;const exists=memories.some(m=>m.content===txt);if(exists){if(btn)toast("already remembered");return;}memories.push({content:txt,time:Date.now()});if(memories.length>50)memories.splice(0,memories.length-50);saveMemories();if(btn){btn.textContent="OK";setTimeout(()=>{btn.textContent="Mem";},800);}toast("Memorized");}
+function getMemoriesContext(){
+    if(memories.length===0)return"";
+    const recentMsgs=chatHistory.slice(-8).map(m=>m.content).join(" ");
+    const scored=memories.map((m,i)=>({...m,idx:i,score:relevanceScore(m.content,recentMsgs)}));
+    scored.sort((a,b)=>b.score-a.score);
+    const top=scored.slice(0,30).sort((a,b)=>a.idx-b.idx);
+    if(top.length===0)return"";
+    return "
+
+【MUST REMEMBER】
+"+top.map((m,i)=>(i+1)+". "+m.content).join("
+");
+}
+function relevanceScore(memory,context){
+    const mw=memory.toLowerCase();
+    const cw=context.toLowerCase();
+    let score=0;
+    const words=mw.split(/[\s,，。！？、]+/).filter(w=>w.length>1);
+    for(const w of words){if(cw.includes(w))score+=2;}
+    if(/[姓名叫是]|[0-9]+[岁年]|喜欢|讨厌|爱|怕|想|要/.test(mw))score+=3;
+    return score;
+}
+function autoExtractMemories(text){const lines=text.split(/\n|\r\n?/).filter(l=>l.trim());let added=0;for(const line of lines){const t=line.replace(/^[^:：]+[：:]\s*/,"").trim();if(t.length<10||t.length>200)continue;if(/^(ok|hi|hello|bye|thanks|haha|yes|no|good|nice)/i.test(t))continue;if(memories.some(m=>m.content===t))continue;memories.push({content:t,time:Date.now()});added++;}if(memories.length>50)memories.splice(0,memories.length-50);if(added>0){saveMemories();toast("Auto-extracted "+added+" memories");}}
+function deleteMemory(index){memories.splice(index,1);saveMemories();renderMemories();}
+function renderMemories(){const el=document.getElementById("memoryList");if(!el)return;if(memories.length===0){el.innerHTML="<p style=opacity:.5;text-align:center;padding:20px>No memories yet<br><small>Import TXT or click Mem button</small></p>";return;}el.innerHTML=memories.map((m,i)=>"<div class=mem-item><span>"+(i+1)+". "+m.content.replace(/</g,"&lt;")+"</span><button onclick=deleteMemory("+i+") style=background:none;border:none;color:#e06060;cursor:pointer;font-size:14px>X</button></div>").join("");}
+// === memory system ===
+let memories=[];
+const PREFIX_MEM="echo_mem_";
+function loadMemories(){try{const d=localStorage.getItem(PREFIX_MEM+"memories");if(d)memories=JSON.parse(d);}catch(e){memories=[];}}
+function saveMemories(){try{localStorage.setItem(PREFIX_MEM+"memories",JSON.stringify(memories));}catch(e){}}
 function addMemory(content,btn){const txt=content.trim();if(!txt||txt.length<5)return;const exists=memories.some(m=>m.content===txt);if(exists){if(btn)toast("已记住过了");return;}memories.push({content:txt,time:Date.now()});if(memories.length>800)memories.splice(0,memories.length-50);saveMemories();if(btn){btn.textContent="✓";setTimeout(()=>{btn.textContent="🧠";},800);}toast("🧠 已记住");}
-function getMemoriesContext(){if(memories.length===0)return"";return "\n\n[MEMORY BANK - you MUST remember these]\n"+memories.map((m,i)=>(i+1)+". "+m.content).join("\n");}
-function autoExtractMemories(text){const lines=text.split(/\n|\r\n?/).filter(l=>l.trim());let added=0;for(const line of lines){const t=line.replace(/^[^:：]+[：:]\s*/,"").trim();if(t.length<10||t.length>200)continue;if(/^(ok|hi|hello|bye|thanks|haha|yes|no|good|nice)/i.test(t))continue;if(memories.some(m=>m.content===t))continue;memories.push({content:t,time:Date.now()});added++;}if(memories.length>800)memories.splice(0,memories.length-50);if(added>0){saveMemories();toast("🧠 自动提取了 "+added+" 条记忆");}}
 function deleteMemory(index){memories.splice(index,1);saveMemories();renderMemories();}
 function renderMemories(){const el=document.getElementById("memoryList");if(!el)return;if(memories.length===0){el.innerHTML="<p style=opacity:.5;text-align:center;padding:20px>No memories yet<br><small>Import TXT or click Mem button</small></p>";return;}el.innerHTML=memories.map((m,i)=>"<div class=mem-item><span>"+(i+1)+". "+m.content.replace(/</g,"&lt;")+"</span><button onclick=deleteMemory("+i+") style=background:none;border:none;color:#e06060;cursor:pointer;font-size:14px>X</button></div>").join("");}
 // ⚠️ 每次提交务必更新：日期.序号 格式
@@ -1266,12 +1297,17 @@ document.getElementById("importTxtFile").addEventListener("change",function(){
         fullRender();updateEmptyHint();scrollToBottom(true);
         toast("导入 "+imported.length+" 条消息");
     setTimeout(()=>{autoExtractMemories(text);},500);
+    setTimeout(()=>{autoExtractMemories(text);},500);
     };
     reader.readAsText(file,"utf-8");
     this.value="";
 });
 
 // ============== 导出 ==============
+document.getElementById("memoryPanelBtn").addEventListener("click",()=>{hideSettings();setTimeout(()=>{renderMemories();document.getElementById("memoryModal").style.display="flex";},300);});
+document.getElementById("memoryClose").addEventListener("click",()=>{document.getElementById("memoryModal").style.display="none";});
+document.getElementById("memoryModal").addEventListener("click",e=>{if(e.target===e.currentTarget)document.getElementById("memoryModal").style.display="none";});
+
 document.getElementById("memoryPanelBtn").addEventListener("click",()=>{hideSettings();setTimeout(()=>{renderMemories();document.getElementById("memoryModal").style.display="flex";},300);});
 document.getElementById("memoryClose").addEventListener("click",()=>{document.getElementById("memoryModal").style.display="none";});
 document.getElementById("memoryModal").addEventListener("click",e=>{if(e.target===e.currentTarget)document.getElementById("memoryModal").style.display="none";});
@@ -1390,6 +1426,7 @@ setInterval(fetchWeather,1800000); // 每30分钟刷新
 
 // ============== 启动 ==============
 loadData();
+loadMemories();
 loadMemories();
 updateEchoDisplay();updateAvatarDisplay();updateBgDisplay();
 initLockscreen();
