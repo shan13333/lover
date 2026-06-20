@@ -124,7 +124,7 @@
         /* 消息 - Material You 气泡 */
         .msg-wrap{display:flex;align-items:flex-end;gap:6px;animation:msgIn .25s ease-out;padding:2px 0;}
         .msg-wrap.user{justify-content:flex-end;}
-        .msg-wrap.echo{justify-content:flex-start;}
+        .msg-wrap.echo{justify-content:flex-start;flex-direction:column;}
         @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
         .msg-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;overflow:hidden;align-self:flex-end;margin-bottom:2px;}
         .msg-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
@@ -610,7 +610,7 @@ const MODEL_NAME="deepseek-chat";
 const MAX_MSG=80;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.20.8"; // v6.18
+const VERSION="2026.06.20.9"; // v6.19 // v6.18
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -1287,7 +1287,7 @@ async function sendMsg(textOverride){
 // ============== 设置弹窗 ==============
 function updateVersionDisplay(){
     const el=document.getElementById("versionDisplay");
-    if(el)el.textContent="Echo v6.18 · Build "+VERSION+" · 凌晨三点的代码";
+    if(el)el.textContent="Echo v6.19 · Build "+VERSION+" · 凌晨三点的代码";
 }
 function showSettings(){
     keyInput.value=getApiKey();loverNameInput.value=echoName;anniversaryInput.value=anniversary;
