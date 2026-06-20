@@ -327,7 +327,7 @@
         .pwd-dot.error{background:#e06060;border-color:#e06060;animation:shake .4s ease-out;}
         @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
         .numpad{display:grid;grid-template-columns:repeat(3,68px);gap:10px;}
-        .numpad button{width:68px;height:68px;border-radius:50%;border:none;background:var(--quick-btn-bg);color:var(--bubble-echo-color);font-size:24px;font-weight:300;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;}
+        .numpad button{width:68px;height:68px;border-radius:50%;border:none;background:var(--quick-btn-bg);color:var(--bubble-echo-color);font-size:24px;font-weight:300;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
         .numpad button:active{background:var(--accent-light);transform:scale(.93);}
         .numpad .np-empty{background:transparent;pointer-events:none;}
         .numpad .np-del{font-size:13px;font-weight:500;}
@@ -614,7 +614,7 @@ const MODEL_NAME="deepseek-chat";
 const MAX_MSG=100;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.21.7"; // v6.29
+const VERSION="2026.06.21.7"; // v6.30
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -763,7 +763,7 @@ function initLockscreen(){
     lsAvatar.parentNode.insertBefore(thoughtEl,lsAvatar.parentNode.querySelector(".pwd-dots"));
     // 数字键盘
     document.getElementById("numpad").querySelectorAll("button[data-n]").forEach(btn=>{
-        btn.addEventListener("click",()=>{
+        btn.addEventListener("pointerdown",e=>{e.preventDefault();
             if(pwdInput.length>=6)return;
             pwdInput+=btn.dataset.n;
             pwdDots.children[pwdInput.length-1].classList.add("filled");
@@ -780,7 +780,7 @@ function initLockscreen(){
         });
     });
     // 删除键
-    document.querySelector(".np-del").addEventListener("click",()=>{
+    document.querySelector(".np-del").addEventListener("pointerdown",e=>{e.preventDefault();
         if(pwdInput.length>0){
             pwdDots.children[pwdInput.length-1].classList.remove("filled");
             pwdInput=pwdInput.slice(0,-1);
