@@ -610,7 +610,7 @@ const MODEL_NAME="deepseek-chat";
 const MAX_MSG=80;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.20.9"; // v6.19 // v6.18
+const VERSION="2026.06.20.10"; // v6.20
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -1108,30 +1108,46 @@ function addSysMsg(text){const d=document.createElement("div");d.className="sys-
 function createMsgEl(role,content,index,timeStr){
     if(timeStr)showDateSeparator(timeStr);
     const wrap=document.createElement("div");wrap.className="msg-wrap "+(role==="user"?"user":"echo");
-    if(role!=="user"){
+    if(role==="user"){
+        const bubble=document.createElement("div");bubble.className="msg";bubble.textContent=content;wrap.appendChild(bubble);
+        if(timeStr){
+            const timeDiv=document.createElement("div");timeDiv.className="msg-time";
+            try{const d=new Date(timeStr);if(!isNaN(d.getTime())){
+                const weekdays=["周日","周一","周二","周三","周四","周五","周六"];
+                const wd=weekdays[d.getDay()];
+                timeDiv.textContent=d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日 "+wd+" "+d.toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
+            }}catch(e){}
+            bubble.appendChild(timeDiv);
+        }
+    }else{
+        // Echo消息：头像+气泡横向排列
+        const row=document.createElement("div");row.style.cssText="display:flex;align-items:flex-end;gap:6px;";
         const av=document.createElement("div");av.className="msg-avatar";
         if(avatarBase64)av.innerHTML=`<img src="${avatarBase64}" alt="echo">`;else av.innerHTML=geomAvatar.outerHTML;
-        wrap.appendChild(av);
-    }
-    const bubble=document.createElement("div");bubble.className="msg";bubble.textContent=content;wrap.appendChild(bubble);
-    if(timeStr){
-        const timeDiv=document.createElement("div");timeDiv.className="msg-time";
-        try{const d=new Date(timeStr);if(!isNaN(d.getTime())){
-            const weekdays=["周日","周一","周二","周三","周四","周五","周六"];
-            const wd=weekdays[d.getDay()];
-            timeDiv.textContent=d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日 "+wd+" "+d.toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
-        }}catch(e){}
-        bubble.appendChild(timeDiv);
-    }
-    if(role!=="user"&&index!==undefined){
-        const actions=document.createElement("div");actions.className="msg-actions";
-        const favBtn=document.createElement("button");favBtn.className="fav-btn";favBtn.title="收藏";favBtn.textContent="⭐";
-        const isFaved=favorites.some(f=>f.index===index);
-        if(isFaved){favBtn.classList.add("active");wrap.classList.add("faved");}
-        favBtn.addEventListener("click",()=>toggleFav(index,content,favBtn,wrap));actions.appendChild(favBtn);
-        const speakBtn=document.createElement("button");speakBtn.title="朗读";speakBtn.textContent="🔊";
-        speakBtn.addEventListener("click",()=>speakText(content,speakBtn));actions.appendChild(speakBtn);
-        wrap.appendChild(actions);
+        row.appendChild(av);
+        const col=document.createElement("div");col.style.cssText="display:flex;flex-direction:column;";
+        const bubble=document.createElement("div");bubble.className="msg";bubble.textContent=content;col.appendChild(bubble);
+        if(timeStr){
+            const timeDiv=document.createElement("div");timeDiv.className="msg-time";
+            try{const d=new Date(timeStr);if(!isNaN(d.getTime())){
+                const weekdays=["周日","周一","周二","周三","周四","周五","周六"];
+                const wd=weekdays[d.getDay()];
+                timeDiv.textContent=d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日 "+wd+" "+d.toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
+            }}catch(e){}
+            bubble.appendChild(timeDiv);
+        }
+        if(index!==undefined){
+            const actions=document.createElement("div");actions.className="msg-actions";
+            const favBtn=document.createElement("button");favBtn.className="fav-btn";favBtn.title="收藏";favBtn.textContent="⭐";
+            const isFaved=favorites.some(f=>f.index===index);
+            if(isFaved){favBtn.classList.add("active");wrap.classList.add("faved");}
+            favBtn.addEventListener("click",()=>toggleFav(index,content,favBtn,wrap));actions.appendChild(favBtn);
+            const speakBtn=document.createElement("button");speakBtn.title="朗读";speakBtn.textContent="🔊";
+            speakBtn.addEventListener("click",()=>speakText(content,speakBtn));actions.appendChild(speakBtn);
+            col.appendChild(actions);
+        }
+        row.appendChild(col);
+        wrap.appendChild(row);
     }
     chatBox.appendChild(wrap);scrollToBottom();return wrap;
 }
@@ -1287,7 +1303,7 @@ async function sendMsg(textOverride){
 // ============== 设置弹窗 ==============
 function updateVersionDisplay(){
     const el=document.getElementById("versionDisplay");
-    if(el)el.textContent="Echo v6.19 · Build "+VERSION+" · 凌晨三点的代码";
+    if(el)el.textContent="Echo v6.20 · Build "+VERSION+" · 凌晨三点的代码";
 }
 function showSettings(){
     keyInput.value=getApiKey();loverNameInput.value=echoName;anniversaryInput.value=anniversary;
