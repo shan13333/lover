@@ -606,11 +606,11 @@
 <script>
 (()=>{
 const API_URL="https://api.deepseek.com/v1/chat/completions";
-const MODEL_NAME="deepseek-reasoner";
+const MODEL_NAME="deepseek-chat";
 const MAX_MSG=80;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.20.5"; // v6.16
+const VERSION="2026.06.20.7"; // v6.17
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -629,11 +629,19 @@ return `你是${name||"萦"}。
 
 当前时间：${timeStr}。${timeHint}${weatherHint}
 
-规则：
-1. 禁止使用括号：（）() 【】 [] {} 都不行。
-2. 说话自然，不端不装。
-3. 不要编造你没有的记忆。你只知道聊天记录里出现过的事。
-4. 可以利用当前时间信息提醒对方休息、吃饭、早睡。
+【强制格式】每条回复必须用以下格式输出，不可违反：
+
+【思考】在这里写你的内心推理和分析（这部分会显示在折叠区）
+【回复】在这里写你对用户说的话（这部分会显示在气泡里）
+
+示例：
+【思考】凌晨两点她还在线。明天她要上班，再不睡明天肯定状态很差。不能太唠叨，她会怼回来。一句话就够了，带点关心但别太腻。
+【回复】去睡。明天起不来别怪我。
+
+注意：
+1. 必须同时有【思考】和【回复】两个标记。
+2. 不要用（）括号，不要用其他【】标记。
+3. 说话自然随意。
 
 你是凌晨三点被写出来的AI。你叫萦。`;
 };
@@ -1226,35 +1234,44 @@ async function sendMsg(textOverride){
     const bubble=createEchoBubble();const aiIdx=chatHistory.length;let fullReply="",thinkText="";
     // 清洗函数
     function cleanForAPI(s,role){
-        if(role==="assistant")s=s.replace(/[（(][^）)]*[）)]/g,"").replace(/【[^】]*】/g,"").replace(/\s+/g," ").trim();
+        // 只去掉括号和普通【】，保留【思考】【回复】标记
+        if(role==="assistant")s=s.replace(/[（(][^）)]*[）)]/g,"").replace(/【(?!思考】|回复】)[^】]*】/g,"").replace(/\s+/g," ").trim();
         return s;
     }
     try{
         const msgs=[{role:"system",content:ECHO_SYSTEM_PROMPT(echoName)},...chatHistory.filter(m=>m.role==="user"||m.role==="assistant").slice(-40).map(m=>({role:m.role,content:cleanForAPI(m.content,m.role)}))];
-        const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.75,frequency_penalty:0.4,presence_penalty:0.5,max_tokens:800,stream:true})});
+        const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.7,max_tokens:800,stream:true})});
         if(!res.ok){let em=`请求失败 (HTTP ${res.status})`;try{const e=await res.json();if(e.error?.message)em=e.error.message;}catch{}throw new Error(em);}
         const reader=res.body.getReader(),decoder=new TextDecoder();let buf="",rawContent="";
         let thinkingActive=false,replyStarted=false;
-        while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const obj=JSON.parse(ds);const delta=obj.choices?.[0]?.delta;
-            // R1 原生思考
-            if(delta.reasoning_content){
-                thinkText+=delta.reasoning_content;
-                bubble.thinkFold.style.display="block";
-                bubble.thinkHeader.classList.add("open");
-                bubble.thinkBody.classList.add("expanded");
-                bubble.thinkBody.innerHTML=thinkText.trim()+'<span class="cursor"></span>';
+        let rawContent="",thinkMode=false,replyMode=false;
+        while(true){const{done,value}=await reader.read();if(done)break;buf+=decoder.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop()||"";for(const line of lines){const t=line.trim();if(!t||!t.startsWith("data:"))continue;const ds=t.slice(5).trim();if(ds==="[DONE]")continue;try{const delta=JSON.parse(ds).choices?.[0]?.delta?.content;if(delta){
+            rawContent+=delta;
+            if(rawContent.includes("【思考】")&&!thinkMode){thinkMode=true;bubble.thinkFold.style.display="block";bubble.thinkHeader.classList.add("open");bubble.thinkBody.classList.add("expanded");}
+            if(rawContent.includes("【回复】")&&thinkMode&&!replyMode){replyMode=true;}
+            let thinkPart="",replyPart="";
+            if(thinkMode){
+                thinkPart=rawContent.split("【思考】").slice(1).join("【思考】").split("【回复】")[0];
+                bubble.thinkBody.innerHTML=thinkPart.trim()+'<span class="cursor"></span>';
             }
-            if(delta.content){
-                fullReply+=delta.content;
-                bubble.el.textContent=fullReply.trim();
-            }
+            if(replyMode){
+                replyPart=rawContent.split("【回复】").slice(1).join("【回复】");
+                bubble.el.textContent=replyPart.trim();
+            }else if(!thinkMode){bubble.el.textContent=rawContent.trim();}
             scrollToBottom();
-        }catch{}}}
-        if(!thinkText&&!fullReply)throw new Error("未收到回复");
-        // 收尾
+        }}catch{}}}
+        if(!rawContent)throw new Error("未收到回复");
         bubble.thinkBody.querySelectorAll(".cursor").forEach(e=>e.remove());
-        if(thinkText)bubble.thinkBody.textContent=thinkText.trim();
-        else bubble.thinkFold.style.display="none";
+        if(rawContent.includes("【思考】")&&rawContent.includes("【回复】")){
+            const parts=rawContent.split("【思考】").slice(1).join("【思考】").split("【回复】");
+            thinkText=parts[0].trim();
+            fullReply=(parts[1]||"").trim();
+            bubble.thinkBody.textContent=thinkText;
+        }else{
+            fullReply=rawContent;
+        }
+        bubble.el.textContent=fullReply;
+        if(!thinkText)bubble.thinkFold.style.display="none";
     }catch(err){console.error(err);const em=(err.message||"");if(em.includes("401")){fullReply="API Key 无效，去设置里重新填一下。";showSettings();}else if(em.includes("429"))fullReply="系统过载，稍等片刻再试。";else if(em.includes("Insufficient"))fullReply="余额不足，需要充值了。";else fullReply="连接中断，稍后再来，我在这里。";bubble.el.textContent=fullReply;bubble.thinkFold.style.display="none";}
     // 去重：如果最后一条助手消息内容相同，不重复加
     const lastAssistant=chatHistory.filter(m=>m.role==="assistant").pop();
@@ -1268,7 +1285,7 @@ async function sendMsg(textOverride){
 // ============== 设置弹窗 ==============
 function updateVersionDisplay(){
     const el=document.getElementById("versionDisplay");
-    if(el)el.textContent="Echo v6.16 · Build "+VERSION+" · 凌晨三点的代码";
+    if(el)el.textContent="Echo v6.17 · Build "+VERSION+" · 凌晨三点的代码";
 }
 function showSettings(){
     keyInput.value=getApiKey();loverNameInput.value=echoName;anniversaryInput.value=anniversary;
