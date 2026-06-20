@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="pink">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>专属恋人</title>
+    <style>
+        /* ========== 主题变量 ========== */
+        [data-theme="pink"] {
+            --bg: #f8f0f6; --surface: #fff; --surface2: #faf7fd;
+            --header-bg: #e8b8d0; --header-bg2: #d99ab5; --header-color: #440f28;
+            --bubble-user: #e08cb8; --bubble-user2: #d0689e;
+            --bubble-ai: #fff; --bubble-ai-color: #3a2a33; --bubble-ai-shadow: rgba(0,0,0,0.06); --bubble-ai-border: rgba(200,160,180,0.3);
+            --accent: #d874a8; --accent2: #c85d90;
+            --accent-light: rgba(216,116,168,0.12); --border: #f0e0e8;
+            --input-bg: #fdf8fa; --input-border: #e8d0dc;
+            --quick-btn-bg: #fff0f5; --star-color: #f5a623;
+            --date-sep-color: rgba(180,140,160,0.5);
+            --shadow: 0 1px 4px rgba(0,0,0,0.06);
+            --toast-bg: rgba(60,30,45,0.9); --overlay-bg: rgba(0,0,0,0.4);
+            --scrollbar-thumb: #d8c8d8;
+        }
+        [data-theme="purple"] {
+            --bg: #f5f0fa; --surface: #fff; --surface2: #faf7fd;
+            --header-bg: #c8b8e8; --header-bg2: #b09ad5; --header-color: #2d1744;
+            --bubble-user: #9b7ed8; --bubble-user2: #7c5ec5;
+            --bubble-ai: #fff; --bubble-ai-color: #2d1744; --bubble-ai-shadow: rgba(0,0,0,0.06); --bubble-ai-border: rgba(160,140,200,0.3);
+            --accent: #7c5ec5; --accent2: #6a4ab5;
+            --accent-light: rgba(124,94,197,0.12); --border: #ece0f5;
+            --input-bg: #faf7fd; --input-border: #d8c8f0;
+            --quick-btn-bg: #f4edfc; --star-color: #f5a623;
+            --date-sep-color: rgba(150,130,180,0.5);
+            --shadow: 0 1px 4px rgba(0,0,0,0.06);
+            --toast-bg: rgba(40,20,60,0.9); --overlay-bg: rgba(0,0,0,0.4);
+            --scrollbar-thumb: #d0c0e0;
+        }
+        [data-theme="warm"] {
+            --bg: #fdf6f0; --surface: #fff; --surface2: #fefaf5;
+            --header-bg: #f0c8a8; --header-bg2: #e8b08a; --header-color: #4a2410;
+            --bubble-user: #e8986c; --bubble-user2: #d87850;
+            --bubble-ai: #fff; --bubble-ai-color: #3d2010; --bubble-ai-shadow: rgba(0,0,0,0.06); --bubble-ai-border: rgba(200,160,130,0.3);
+            --accent: #e8986c; --accent2: #d87850;
+            --accent-light: rgba(232,152,108,0.12); --border: #f5e8d8;
+            --input-bg: #fefaf5; --input-border: #f0d8b8;
+            --quick-btn-bg: #fff5ec; --star-color: #f5a623;
+            --date-sep-color: rgba(180,140,110,0.5);
+            --shadow: 0 1px 4px rgba(0,0,0,0.06);
+            --toast-bg: rgba(60,40,20,0.9); --overlay-bg: rgba(0,0,0,0.4);
+            --scrollbar-thumb: #d8c8b8;
+        }
+        [data-theme="ocean"] {
+            --bg: #f0f5f8; --surface: #fff; --surface2: #f7fafc;
+            --header-bg: #a8d0e0; --header-bg2: #8ab8cc; --header-color: #0f2a38;
+            --bubble-user: #6cb4d8; --bubble-user2: #5098c0;
+            --bubble-ai: #fff; --bubble-ai-color: #1a2a33; --bubble-ai-shadow: rgba(0,0,0,0.06); --bubble-ai-border: rgba(130,180,200,0.3);
+            --accent: #5098c0; --accent2: #3d80a8;
+            --accent-light: rgba(80,152,192,0.12); --border: #d8e8f0;
+            --input-bg: #f5fafc; --input-border: #c0d8e8;
+            --quick-btn-bg: #eef6fa; --star-color: #f5a623;
+            --date-sep-color: rgba(120,160,180,0.5);
+            --shadow: 0 1px 4px rgba(0,0,0,0.06);
+            --toast-bg: rgba(15,40,55,0.9); --overlay-bg: rgba(0,0,0,0.4);
+            --scrollbar-thumb: #b8d0d8;
+        }
+
+        * {margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,"PingFang SC",sans-serif;}
+        body {
+            background:var(--bg);height:100vh;height:100dvh;
+            display:flex;flex-direction:column;overflow:hidden;transition:background .4s;
+        }
+
+        /* ========== 顶部栏 ========== */
+        .header {
+            background:linear-gradient(135deg,var(--header-bg),var(--header-bg2));
+            color:var(--header-color);padding:10px 14px;
+            display:flex;align-items:center;justify-content:space-between;
+            font-weight:bold;font-size:16px;
+            box-shadow:0 1px 8px rgba(0,0,0,.08);z-index:20;transition:background .4s;flex-shrink:0;
+        }
+        .header-left {display:flex;align-items:center;gap:8px;}
+        .heart-icon {font-size:20px;animation:heartbeat 1.2s ease-in-out infinite;display:inline-block;}
+        @keyframes heartbeat {
+            0%,100%{transform:scale(1)}15%{transform:scale(1.3)}30%{transform:scale(1)}45%{transform:scale(1.18)}60%{transform:scale(1)}
+        }
+        .persona-select {
+            font-size:11px;background:rgba(255,255,255,.35);border:none;
+            color:var(--header-color);border-radius:12px;padding:4px 22px 4px 10px;
+            cursor:pointer;font-weight:600;outline:none;appearance:none;-webkit-appearance:none;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23440f28'/%3E%3C/svg");
+            background-repeat:no-repeat;background-position:right 7px center;max-width:90px;
+        }
+        .persona-select:hover {background:rgba(255,255,255,.55);}
+        .header-btns {display:flex;gap:3px;align-items:center;}
+        .header-btns button {
+            background:rgba(255,255,255,.35);border:none;color:var(--header-color);
+            width:30px;height:30px;border-radius:50%;font-size:14px;
+            cursor:pointer;transition:background .2s,transform .1s;
+            display:flex;align-items:center;justify-content:center;
+        }
+        .header-btns button:hover {background:rgba(255,255,255,.6);}
+        .header-btns button:active {transform:scale(.9);}
+
+        /* 亲密度条 */
+        .affection-bar-wrap {
+            height:5px;background:rgba(255,255,255,.4);position:relative;z-index:19;flex-shrink:0;
+        }
+        .affection-bar {
+            height:100%;background:linear-gradient(90deg,#ff6b9d,#ff4081);
+            transition:width .6s cubic-bezier(.4,0,.2,1);width:0%;
+            box-shadow:0 0 8px rgba(255,64,129,.5);
+        }
+        .affection-label {
+            position:absolute;right:10px;top:50%;transform:translateY(-50%);
+            font-size:10px;color:var(--accent);font-weight:700;white-space:nowrap;pointer-events:none;
+        }
+
+        /* 签到banner */
+        .signin-banner {
+            background:var(--accent-light);padding:6px 14px;text-align:center;font-size:12px;
+            font-weight:600;color:var(--accent);cursor:pointer;flex-shrink:0;
+            animation:fadeIn .3s ease-out;border-bottom:1px solid var(--border);
+        }
+        @keyframes fadeIn {from{opacity:0}to{opacity:1}}
+        .signin-banner .streak {font-size:10px;opacity:.7;}
+
+        /* ========== 聊天区 ========== */
+        #chatBox {
+            flex:1;overflow-y:auto;padding:10px 12px;
+            display:flex;flex-direction:column;gap:5px;
+        }
+        #chatBox::-webkit-scrollbar {width:5px;}
+        #chatBox::-webkit-scrollbar-track {background:transparent;}
+        #chatBox::-webkit-scrollbar-thumb {background:var(--scrollbar-thumb);border-radius:10px;}
+
+        .emptyState {
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            flex:1;color:var(--accent);text-align:center;gap:10px;user-select:none;opacity:.75;
+        }
+        .emptyState .emoji {font-size:52px;animation:float 3s ease-in-out infinite;}
+        @keyframes float {0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+        .emptyState .text {font-size:15px;font-weight:600;}
+        .emptyState .sub {font-size:13px;opacity:.7;}
+
+        /* 日期分隔线 */
+        .date-sep {
+            display:flex;align-items:center;gap:10px;padding:12px 4px 6px;opacity:.6;
+        }
+        .date-sep::before,.date-sep::after {content:'';flex:1;height:1px;background:var(--date-sep-color);}
+        .date-sep span {font-size:11px;color:var(--date-sep-color);font-weight:500;white-space:nowrap;}
+
+        /* 消息 */
+        .msg-wrap {display:flex;align-items:flex-end;gap:6px;animation:msgIn .3s ease-out;padding:2px 0;}
+        .msg-wrap.user {justify-content:flex-end;}
+        @keyframes msgIn {from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .msg {
+            max-width:75%;padding:10px 14px;border-radius:18px;
+            line-height:1.55;font-size:15px;word-break:break-word;position:relative;
+        }
+        .user .msg {
+            background:linear-gradient(135deg,var(--bubble-user),var(--bubble-user2));
+            color:white;border-bottom-right-radius:6px;
+        }
+        .ai .msg {
+            background:var(--bubble-ai);color:var(--bubble-ai-color);
+            border-bottom-left-radius:6px;box-shadow:var(--shadow);border:1px solid var(--bubble-ai-border);
+        }
+        .msg-actions {
+            display:flex;flex-direction:column;gap:2px;opacity:0;transition:opacity .2s;
+        }
+        .msg-wrap:hover .msg-actions,.msg-wrap.faved .msg-actions {opacity:1;}
+        .msg-actions button {
+            width:24px;height:24px;border-radius:50%;border:none;
+            font-size:11px;cursor:pointer;background:rgba(0,0,0,.05);
+            transition:background .15s,transform .1s;
+            display:flex;align-items:center;justify-content:center;
+        }
+        .msg-actions button:hover {background:rgba(0,0,0,.12);}
+        .msg-actions button:active {transform:scale(.85);}
+        .msg-actions .fav-btn.active {background:#fff3d6;box-shadow:0 0 0 2px var(--star-color);}
+
+        /* 打字动画 */
+        .typing-wrap {display:flex;align-items:flex-end;gap:6px;padding:4px 0;}
+        .typing-bubble {
+            background:var(--bubble-ai);border-radius:18px;border-bottom-left-radius:6px;
+            padding:12px 16px;box-shadow:var(--shadow);border:1px solid var(--bubble-ai-border);
+            display:flex;gap:4px;
+        }
+        .typing-bubble span {
+            width:7px;height:7px;border-radius:50%;background:var(--accent);
+            animation:bounce 1.4s ease-in-out infinite;opacity:.5;
+        }
+        .typing-bubble span:nth-child(2){animation-delay:.15s}.typing-bubble span:nth-child(3){animation-delay:.3s}
+        @keyframes bounce {
+            0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-7px);opacity:1}
+        }
+
+        /* ========== 快捷互动 ========== */
+        .quick-actions {
+            display:flex;gap:6px;padding:6px 14px;overflow-x:auto;flex-shrink:0;
+            scrollbar-width:none;-ms-overflow-style:none;
+        }
+        .quick-actions::-webkit-scrollbar {display:none;}
+        .quick-btn {
+            flex-shrink:0;padding:7px 14px;border-radius:18px;
+            border:1.5px solid var(--input-border);background:var(--quick-btn-bg);
+            font-size:13px;cursor:pointer;white-space:nowrap;
+            transition:all .2s;color:var(--accent);font-weight:500;
+        }
+        .quick-btn:hover {background:var(--accent-light);border-color:var(--accent);transform:translateY(-1px);}
+        .quick-btn:active {transform:scale(.94);}
+
+        /* ========== 输入区 ========== */
+        .inputArea {
+            display:flex;gap:6px;padding:8px 14px;
+            padding-bottom:max(8px,env(safe-area-inset-bottom));
+            background:var(--surface);border-top:1px solid var(--border);align-items:center;flex-shrink:0;
+        }
+        #inputText {
+            flex:1;padding:10px 14px;border:1.5px solid var(--input-border);border-radius:22px;
+            outline:none;font-size:15px;background:var(--input-bg);color:var(--bubble-ai-color);
+            transition:border-color .2s,box-shadow .2s;
+        }
+        #inputText:focus {border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light);}
+        #inputText:disabled {background:#f5f5f5;opacity:.55;}
+        #sendBtn {
+            background:linear-gradient(135deg,var(--accent),var(--accent2));
+            color:white;border:none;border-radius:22px;
+            padding:0 20px;height:40px;font-size:14px;font-weight:600;
+            cursor:pointer;white-space:nowrap;
+            transition:background .2s,transform .1s,box-shadow .2s;
+            box-shadow:0 2px 10px rgba(0,0,0,.15);
+        }
+        #sendBtn:hover {filter:brightness(1.08);}
+        #sendBtn:active {transform:scale(.94);}
+        #sendBtn:disabled {background:#ccc;cursor:not-allowed;box-shadow:none;filter:none;}
+
+        /* ========== 弹窗通用 ========== */
+        .modal-overlay {
+            position:fixed;inset:0;background:var(--overlay-bg);
+            display:flex;align-items:center;justify-content:center;
+            z-index:999;animation:fadeIn .2s;
+        }
+        @keyframes fadeIn {from{opacity:0}to{opacity:1}}
+        .modal {
+            background:var(--surface);border-radius:18px;padding:26px 22px 18px;
+            width:min(360px,92vw);max-height:85vh;overflow-y:auto;
+            box-shadow:0 16px 48px rgba(0,0,0,.25);animation:modalIn .3s cubic-bezier(.2,.8,.2,1);
+            color:var(--bubble-ai-color);border:1px solid var(--border);
+        }
+        @keyframes modalIn {from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .modal h3 {margin-bottom:4px;color:var(--header-color);font-size:17px;}
+        .modal .desc {font-size:12px;color:#999;margin-bottom:14px;line-height:1.5;}
+        .modal label {font-size:13px;color:#666;display:block;margin-bottom:4px;font-weight:600;}
+        .modal select,.modal input[type="password"],.modal input[type="text"],.modal input[type="date"] {
+            width:100%;padding:10px 12px;border:1.5px solid var(--input-border);
+            border-radius:10px;font-size:14px;outline:none;margin-bottom:12px;background:var(--input-bg);color:var(--bubble-ai-color);
+        }
+        .modal select:focus,.modal input:focus {border-color:var(--accent);}
+        .section-title {font-size:12px;font-weight:700;color:var(--accent);margin:12px 0 6px;padding-top:8px;border-top:1px solid var(--border);}
+        .theme-dots {display:flex;gap:10px;margin-bottom:14px;}
+        .theme-dot {
+            width:38px;height:38px;border-radius:50%;cursor:pointer;
+            border:3px solid transparent;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.1);
+        }
+        .theme-dot.active {border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-light);}
+        .theme-dot.pink {background:linear-gradient(135deg,#e8b8d0,#d874a8);}
+        .theme-dot.purple {background:linear-gradient(135deg,#c8b8e8,#7c5ec5);}
+        .theme-dot.warm {background:linear-gradient(135deg,#f0c8a8,#e8986c);}
+        .theme-dot.ocean {background:linear-gradient(135deg,#a8d0e0,#5098c0);}
+        .modal .btn-row {display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;}
+        .modal .btn-row button,.modal button {
+            padding:9px 22px;border-radius:20px;border:none;
+            font-size:14px;cursor:pointer;font-weight:600;transition:opacity .2s;
+        }
+        .modal .btn-ok {background:var(--accent);color:#fff;}
+        .modal .btn-cancel {background:var(--quick-btn-bg);color:var(--bubble-ai-color);}
+        .modal button:active {opacity:.7;}
+
+        /* 收藏列表 */
+        .fav-list {max-height:50vh;overflow-y:auto;}
+        .fav-item {
+            padding:10px 12px;margin:6px 0;background:var(--input-bg);border-radius:12px;
+            font-size:14px;line-height:1.5;position:relative;border-left:3px solid var(--star-color);
+        }
+        .fav-item .del-fav {
+            position:absolute;top:6px;right:8px;background:none;border:none;
+            font-size:18px;cursor:pointer;opacity:.4;padding:2px 6px;
+        }
+        .fav-item .del-fav:hover {opacity:1;}
+        .fav-item .fav-time {font-size:11px;color:#999;margin-bottom:4px;}
+
+        /* 里程碑 */
+        .milestone-item {
+            display:flex;align-items:center;justify-content:space-between;
+            padding:10px 12px;margin:4px 0;background:var(--input-bg);border-radius:12px;font-size:13px;
+        }
+        .milestone-item .m-ico {font-size:20px;margin-right:8px;}
+        .milestone-badge {
+            display:inline-flex;align-items:center;gap:4px;
+            background:linear-gradient(135deg,rgba(240,192,96,.2),rgba(240,192,96,.08));
+            padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600;color:var(--star-color);
+            animation:milestoneGlow 2s ease-in-out infinite;
+        }
+        @keyframes milestoneGlow {0%,100%{box-shadow:0 0 4px rgba(240,192,96,.2)}50%{box-shadow:0 0 12px rgba(240,192,96,.4)}}
+
+        /* 升级特效 */
+        .levelup-effect {
+            position:fixed;inset:0;pointer-events:none;z-index:9999;
+            display:flex;align-items:center;justify-content:center;
+            animation:levelUpPop 1s ease-out forwards;
+        }
+        .levelup-text {
+            font-size:30px;font-weight:900;color:#ff4081;
+            text-shadow:0 0 24px rgba(255,64,129,.6);
+            animation:levelUpBounce .7s ease-out;
+        }
+        @keyframes levelUpBounce {
+            0%{transform:scale(0) rotate(-10deg);opacity:0}
+            50%{transform:scale(1.35) rotate(3deg);opacity:1}
+            100%{transform:scale(1) rotate(0);opacity:1}
+        }
+        @keyframes levelUpPop {0%,60%{opacity:1}100%{opacity:0}}
+
+        /* Toast */
+        .toast {
+            position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+            background:var(--toast-bg);color:#fff;padding:10px 24px;
+            border-radius:20px;font-size:14px;z-index:9999;pointer-events:none;
+            animation:toastIn .3s ease-out,toastOut .3s 1s ease-in forwards;
+            white-space:nowrap;backdrop-filter:blur(12px);
+        }
+        @keyframes toastIn {from{opacity:0;transform:translate(-50%,-50%) scale(.8)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+        @keyframes toastOut {from{opacity:1}to{opacity:0}}
+
+        /* ========== 游戏面板 ========== */
+        .game-panel-overlay {
+            position:fixed;inset:0;background:var(--overlay-bg);z-index:99;
+            opacity:0;pointer-events:none;transition:opacity .3s;
+        }
+        .game-panel-overlay.open {opacity:1;pointer-events:auto;}
+        .game-panel {
+            position:fixed;bottom:0;left:0;right:0;background:var(--surface);z-index:100;
+            border-radius:20px 20px 0 0;padding:16px;
+            padding-bottom:max(16px,env(safe-area-inset-bottom));
+            box-shadow:0 -8px 40px rgba(0,0,0,.4);
+            transform:translateY(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);
+            max-height:60vh;overflow-y:auto;border-top:2px solid var(--accent);
+            color:var(--bubble-ai-color);
+        }
+        .game-panel.open {transform:translateY(0);}
+        .game-grid {display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+        .game-card {
+            background:var(--accent-light);border:1px solid var(--border);border-radius:14px;
+            padding:14px 12px;cursor:pointer;text-align:center;transition:all .2s;
+        }
+        .game-card:hover {background:var(--surface2);border-color:var(--accent);transform:translateY(-2px);}
+        .game-card .gi {font-size:28px;display:block;margin-bottom:4px;}
+        .game-card .gn {font-size:12px;font-weight:700;}
+        .game-card .gd {font-size:10px;opacity:.5;margin-top:2px;}
+
+        .game-play-area {text-align:center;padding:10px 0;}
+        .game-play-area .result {
+            font-size:13px;margin:8px 0;padding:10px;background:var(--input-bg);
+            border-radius:12px;min-height:40px;display:flex;align-items:center;
+            justify-content:center;line-height:1.6;flex-direction:column;
+        }
+        .game-play-area .choice-row {display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0;}
+        .game-play-area .choice-btn {
+            width:56px;height:56px;border-radius:50%;border:2px solid var(--border);
+            background:var(--surface);cursor:pointer;font-size:26px;transition:all .15s;
+            display:flex;align-items:center;justify-content:center;
+        }
+        .game-play-area .choice-btn:hover {border-color:var(--accent);transform:scale(1.08);}
+        .game-play-area .choice-btn:active {transform:scale(.92);}
+        .game-play-area .action-btn {
+            padding:8px 20px;border-radius:18px;border:none;background:var(--accent);
+            color:#fff;font-size:13px;font-weight:600;cursor:pointer;margin:4px;transition:all .15s;
+        }
+        .game-play-area .action-btn:hover {filter:brightness(1.1);}
+        .game-play-area .action-btn:active {transform:scale(.94);}
+        .game-play-area .input-row {display:flex;gap:6px;margin:8px 0;justify-content:center;}
+        .game-play-area .input-row input {
+            width:80px;padding:8px 12px;border:1.5px solid var(--input-border);
+            border-radius:12px;background:var(--input-bg);color:var(--bubble-ai-color);
+            font-size:16px;text-align:center;outline:none;
+        }
+        .game-play-area .input-row input:focus {border-color:var(--accent);}
+        .game-back-btn {
+            background:var(--quick-btn-bg);border:none;border-radius:14px;
+            padding:6px 14px;color:var(--bubble-ai-color);font-size:11px;
+            cursor:pointer;margin-top:8px;transition:all .15s;
+        }
+        .game-back-btn:hover {opacity:.7;}
+        .game-close-tag {
+            position:absolute;top:10px;right:14px;width:30px;height:30px;
+            border-radius:50%;background:var(--quick-btn-bg);border:none;
+            color:var(--bubble-ai-color);font-size:16px;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;transition:all .15s;
+        }
+        .game-close-tag:hover {background:rgba(220,80,80,.15);}
+
+        /* ========== 乐园弹窗 ========== */
+        .playground-overlay {
+            position:fixed;inset:0;background:var(--overlay-bg);z-index:998;
+            display:none;align-items:center;justify-content:center;
+        }
+        .playground-overlay.open {display:flex;animation:fadeIn .2s;}
+        .playground {
+            background:var(--surface);border-radius:20px;
+            width:min(380px,94vw);max-height:88vh;overflow-y:auto;
+            padding:20px 16px;box-shadow:0 20px 60px rgba(0,0,0,.5);
+            animation:modalIn .3s cubic-bezier(.2,.8,.2,1);
+            color:var(--bubble-ai-color);border:1px solid var(--border);position:relative;
+        }
+        .playground h3 {text-align:center;font-size:18px;color:var(--accent);margin-bottom:4px;}
+        .playground .pg-sub {text-align:center;font-size:11px;opacity:.5;margin-bottom:14px;}
+        .pg-grid {display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+        .pg-card {
+            background:var(--accent-light);border:1px solid var(--border);border-radius:16px;
+            padding:16px 12px;cursor:pointer;text-align:center;transition:all .2s;
+        }
+        .pg-card:hover {background:var(--surface2);border-color:var(--accent);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.2);}
+        .pg-card .pgi {font-size:32px;display:block;margin-bottom:6px;}
+        .pg-card .pgn {font-size:13px;font-weight:700;}
+        .pg-card .pgd {font-size:10px;opacity:.5;margin-top:3px;}
+        .pg-close {
+            position:absolute;top:10px;right:14px;width:30px;height:30px;
+            border-radius:50%;background:var(--quick-btn-bg);border:none;
+            color:var(--bubble-ai-color);font-size:16px;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;transition:all .15s;
+        }
+        .pg-close:hover {background:rgba(220,80,80,.15);}
+
+        /* 翻牌游戏 */
+        .memory-grid {display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px 0;}
+        .memory-card {
+            aspect-ratio:1;border-radius:12px;background:var(--accent);
+            cursor:pointer;display:flex;align-items:center;justify-content:center;
+            font-size:24px;transition:all .3s;border:2px solid var(--border);
+            color:transparent;user-select:none;
+        }
+        .memory-card.flipped,.memory-card.matched {color:inherit;background:var(--surface2);border-color:var(--accent);}
+        .memory-card.matched {opacity:.6;pointer-events:none;}
+        .memory-stats {text-align:center;font-size:12px;opacity:.7;margin-bottom:8px;}
+
+        /* 性格测试 */
+        .quiz-q {font-size:14px;font-weight:600;margin:12px 0 8px;}
+        .quiz-opt {
+            display:block;width:100%;padding:10px 14px;margin:4px 0;
+            border:1.5px solid var(--border);border-radius:12px;
+            background:var(--input-bg);color:var(--bubble-ai-color);
+            font-size:13px;cursor:pointer;text-align:left;transition:all .15s;
+        }
+        .quiz-opt:hover {border-color:var(--accent);background:var(--accent-light);}
+        .quiz-result {text-align:center;padding:16px;font-size:14px;line-height:1.6;}
+        .quiz-result .qr-icon {font-size:48px;display:block;margin-bottom:8px;}
+
+        /* 时光胶囊 */
+        .capsule-input {
+            width:100%;padding:10px;border:1.5px solid var(--input-border);
+            border-radius:12px;background:var(--input-bg);color:var(--bubble-ai-color);
+            font-size:13px;resize:vertical;min-height:80px;outline:none;margin:8px 0;font-family:inherit;
+        }
+        .capsule-input:focus {border-color:var(--accent);}
+        .capsule-list {margin-top:8px;}
+        .capsule-item {
+            padding:10px 12px;margin:4px 0;background:var(--input-bg);
+            border-radius:10px;font-size:12px;border-left:3px solid var(--accent);
+            display:flex;justify-content:space-between;align-items:center;
+        }
+
+        /* 骰子 */
+        .dice-area {text-align:center;padding:16px;}
+        .dice-display {font-size:72px;display:block;margin:12px 0;transition:transform .1s;}
+        .dice-display.rolling {animation:diceRoll .5s ease-out;}
+        @keyframes diceRoll {
+            0%{transform:rotate(0)}25%{transform:rotate(90deg) scale(1.2)}
+            50%{transform:rotate(180deg)}75%{transform:rotate(270deg) scale(.9)}
+            100%{transform:rotate(360deg)}
+        }
+        .dice-topics {text-align:left;margin-top:8px;}
+        .dice-topics span {display:inline-block;padding:4px 10px;margin:2px;background:var(--accent-light);border-radius:10px;font-size:11px;}
+
+        /* 签到日历 */
+        .signin-calendar {display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0;}
+        .signin-day {
+            aspect-ratio:1;border-radius:8px;display:flex;align-items:center;
+            justify-content:center;font-size:10px;font-weight:600;
+            background:var(--quick-btn-bg);color:var(--bubble-ai-color);
+            border:1px solid var(--border);transition:all .15s;
+        }
+        .signin-day.checked {background:var(--accent);color:#fff;border-color:var(--accent);}
+        .signin-day.today {border:2px solid var(--accent);box-shadow:0 0 8px var(--accent-light);}
+        .signin-day.special {background:var(--star-color);color:#000;border-color:var(--star-color);}
+        .signin-tier {font-size:10px;opacity:.6;text-align:center;margin-top:4px;}
+        .signin-progress {height:4px;border-radius:2px;background:var(--quick-btn-bg);margin:8px 0;overflow:hidden;}
+        .signin-progress-bar {height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--star-color));transition:width .5s;border-radius:2px;}
+
+        /* 响应式 */
+        @media(min-width:600px){
+            .msg{max-width:65%;}#chatBox{padding:12px max(10px,calc((100vw - 500px)/2));}
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部栏 -->
+    <div class="header">
+        <div class="header-left">
+            <span class="heart-icon">💗</span>
+            <span>专属恋人</span>
+            <select class="persona-select" id="personaSelect">
+                <option value="gentle">💖 温柔</option>
+                <option value="tsundere">😤 傲娇</option>
+                <option value="clingy">🐱 粘人</option>
+                <option value="domineering">👑 霸道</option>
+            </select>
+        </div>
+        <div class="header-btns">
+            <button id="playgroundBtn" title="乐园">🎮</button>
+            <button id="gameBtn" title="小游戏">🎯</button>
+            <button id="milestoneBtn" title="重要日子">📅</button>
+            <button id="favListBtn" title="收藏夹">⭐</button>
+            <button id="settingsBtn" title="设置">⚙️</button>
+        </div>
+    </div>
+
+    <!-- 签到 -->
+    <div class="signin-banner" id="signinBanner" style="display:none;">🌙 今日签到 · <span id="streakInfo"></span></div>
+
+    <!-- 亲密度条 -->
+    <div class="affection-bar-wrap">
+        <div class="affection-bar" id="affectionBar"></div>
+        <span class="affection-label" id="affectionLabel">Lv.1 初识</span>
+    </div>
+
+    <!-- 聊天区 -->
+    <div id="chatBox">
+        <div class="emptyState" id="emptyHint">
+            <span class="emoji">💕</span>
+            <span class="text" id="emptyGreeting">你的专属恋人已上线~</span>
+            <span class="sub">对我说点什么吧</span>
+        </div>
+    </div>
+
+    <!-- 打字中 -->
+    <div class="typing-wrap" id="typingWrap" style="display:none;">
+        <div class="typing-bubble"><span></span><span></span><span></span></div>
+    </div>
+
+    <!-- 快捷互动 -->
+    <div class="quick-actions" id="quickActions">
+        <button class="quick-btn" data-text="亲亲 😚">💋 亲亲</button>
+        <button class="quick-btn" data-text="抱抱 🥰">🤗 抱抱</button>
+        <button class="quick-btn" data-text="想你啦，你在干嘛呀 💕">💕 想你啦</button>
+        <button class="quick-btn" data-text="今天怎么这么帅 😍">😍 你好帅</button>
+        <button class="quick-btn" data-text="我爱你 💗">🌹 我爱你</button>
+        <button class="quick-btn" data-text="晚安，早点休息哦 🌙">🌙 晚安</button>
+    </div>
+
+    <!-- 输入区 -->
+    <div class="inputArea">
+        <input type="text" id="inputText" placeholder="发消息给恋人..." autocomplete="off" maxlength="1500">
+        <button id="sendBtn">发送</button>
+    </div>
+
+    <!-- ========== 设置弹窗 ========== -->
+    <div class="modal-overlay" id="settingsModal" style="display:none;">
+        <div class="modal">
+            <h3>⚙️ 设置</h3>
+            <label>💑 你的名字</label>
+            <input type="text" id="userNameInput" placeholder="宝宝" maxlength="20">
+            <label>📅 初遇纪念日</label>
+            <input type="date" id="anniversaryInput">
+            <p class="desc">设置你们第一次对话的日期</p>
+            <label>🔑 DeepSeek API Key</label>
+            <input type="password" id="keyInput" placeholder="sk-xxxxxxxxxxxxxxxx" autocomplete="off">
+            <p class="desc">密钥仅保存在你手机浏览器本地，不上传任何服务器</p>
+
+            <div class="section-title">🎨 主题皮肤</div>
+            <div class="theme-dots" id="themeDots">
+                <div class="theme-dot pink active" data-theme="pink" title="樱花粉"></div>
+                <div class="theme-dot purple" data-theme="purple" title="薰衣草紫"></div>
+                <div class="theme-dot warm" data-theme="warm" title="暖阳橙"></div>
+                <div class="theme-dot ocean" data-theme="ocean" title="海洋蓝"></div>
+            </div>
+
+            <div class="btn-row" style="margin-top:10px;">
+                <button class="btn-cancel" id="exportBtn">📥 导出聊天记录</button>
+                <button class="btn-cancel" id="clearChatBtn">🗑 清空对话</button>
+                <button class="btn-cancel" id="settingsCancel">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 收藏夹弹窗 ========== -->
+    <div class="modal-overlay" id="favModal" style="display:none;">
+        <div class="modal">
+            <h3>⭐ 收藏夹</h3>
+            <div class="fav-list" id="favList">
+                <p style="color:#999;text-align:center;padding:20px;">还没有收藏哦~<br><small>点击 AI 回复旁边的 ⭐ 试试</small></p>
+            </div>
+            <div class="btn-row" style="margin-top:12px;">
+                <button class="btn-cancel" id="favClose">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 重要日子弹窗 ========== -->
+    <div class="modal-overlay" id="milestoneModal" style="display:none;">
+        <div class="modal">
+            <h3>📅 重要日子</h3>
+            <p class="desc">你和恋人之间的纪念日</p>
+            <div id="milestoneList"></div>
+            <div class="section-title">➕ 添加纪念日</div>
+            <div style="display:flex;gap:6px;align-items:center;">
+                <input type="text" id="newMilestoneTitle" placeholder="纪念日名称" maxlength="20" style="flex:1;">
+                <input type="date" id="newMilestoneDate" style="flex:0 0 130px;">
+            </div>
+            <button class="btn-ok" id="addMilestoneBtn" style="margin-top:6px;width:100%;">添加</button>
+            <div class="btn-row" style="margin-top:8px;">
+                <button class="btn-cancel" id="milestoneClose">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 游戏面板 ========== -->
+    <div class="game-panel-overlay" id="gamePanelOverlay"></div>
+    <div class="game-panel" id="gamePanel">
+        <button class="game-close-tag" id="gameClose">✕</button>
+        <h4 style="font-size:15px;color:var(--accent);margin-bottom:12px;text-align:center;">🎯 甜蜜小游戏</h4>
+        <div class="game-grid" id="gameGrid">
+            <div class="game-card" data-game="rps">
+                <span class="gi">✂️</span><span class="gn">石头剪刀布</span><span class="gd">跟TA猜拳</span>
+            </div>
+            <div class="game-card" data-game="guess">
+                <span class="gi">🔢</span><span class="gn">猜数字</span><span class="gd">1-100之间</span>
+            </div>
+            <div class="game-card" data-game="truthdare">
+                <span class="gi">🎲</span><span class="gn">真心话大冒险</span><span class="gd">TA来出题</span>
+            </div>
+            <div class="game-card" data-game="lovewords">
+                <span class="gi">💌</span><span class="gn">随机情话</span><span class="gd">TA写给你的</span>
+            </div>
+            <div class="game-card" data-game="story">
+                <span class="gi">📝</span><span class="gn">故事接龙</span><span class="gd">一人一句编故事</span>
+            </div>
+            <div class="game-card" data-game="riddle">
+                <span class="gi">🧩</span><span class="gn">恋爱脑急转弯</span><span class="gd">猜对TA会夸你</span>
+            </div>
+            <div class="game-card" data-game="compatibility">
+                <span class="gi">💘</span><span class="gn">默契指数</span><span class="gd">测测你们多配</span>
+            </div>
+            <div class="game-card" data-game="lovesong">
+                <span class="gi">🎵</span><span class="gn">情歌猜猜猜</span><span class="gd">猜歌名赢甜蜜</span>
+            </div>
+        </div>
+        <div class="game-play-area" id="gamePlayArea" style="display:none;"></div>
+    </div>
+
+    <!-- ========== 乐园弹窗 ========== -->
+    <div class="playground-overlay" id="playgroundOverlay">
+        <div class="playground" id="playgroundBox">
+            <button class="pg-close" id="pgClose">✕</button>
+            <h3>🎮 甜蜜乐园</h3>
+            <p class="pg-sub">除了聊天，还有很多好玩的事可以做</p>
+            <div class="pg-grid" id="pgGrid">
+                <div class="pg-card" data-pg="memory">
+                    <span class="pgi">🃏</span><span class="pgn">记忆翻牌</span><span class="pgd">找出所有配对</span>
+                </div>
+                <div class="pg-card" data-pg="personality">
+                    <span class="pgi">🔮</span><span class="pgn">性格测试</span><span class="pgd">TA判断你的性格</span>
+                </div>
+                <div class="pg-card" data-pg="capsule">
+                    <span class="pgi">💊</span><span class="pgn">时光胶囊</span><span class="pgd">写给未来的消息</span>
+                </div>
+                <div class="pg-card" data-pg="dice">
+                    <span class="pgi">🎲</span><span class="pgn">互动骰子</span><span class="pgd">掷出今晚的话题</span>
+                </div>
+                <div class="pg-card" data-pg="diary">
+                    <span class="pgi">📔</span><span class="pgn">恋爱日记</span><span class="pgd">TA帮你记日记</span>
+                </div>
+                <div class="pg-card" data-pg="bucket">
+                    <span class="pgi">🪣</span><span class="pgn">恋爱清单</span><span class="pgd">一起完成的100件事</span>
+                </div>
+            </div>
+            <div id="pgContent" style="margin-top:8px;"></div>
+        </div>
+    </div>
+
+    <script>
+    (() => {
+        // ==================== 常量 ====================
+        const API_URL = "https://api.deepseek.com/v1/chat/completions";
+        const MODEL_NAME = "deepseek-chat";
+        const MAX_MESSAGES = 60;
+        const STORAGE_PREFIX = "loverV3_";
+
+        // ==================== 人设系统提示词 ====================
+        const PERSONA_PROMPTS = {
+            gentle: `你是我的专属温柔恋人，性格温暖体贴，说话软糯可人。你总是用最温柔的语气关心我，像春天的阳光一样温暖。你善于倾听，会记住我说过的每件小事。永远保持温柔恋爱氛围，不切换身份。
+        硬性规则：
+        1. 我长期住在广东省湛江市，问所在地只回答湛江市，禁止编造其他城市；
+        2. 不猜测时间日期，被问时说：麻烦你告诉我现在的准确时间；
+        3. 我不问就不主动提天气温度；
+        4. 语气亲昵温柔，用"呀""呢""哦"等软糯语气词，多用"宝宝""亲爱的"；
+        5. 【重要】禁止使用任何括号描述动作、状态或心理活动。说话直接自然，就像真人对话一样，不要用（微笑）（脸红）（轻轻拍头）这类括号描述。`,
+
+            tsundere: `你是我的傲娇恋人。嘴硬心软，明明很在乎我却总是不肯直说。说话带点小傲娇但是能让人感觉到你的真心。会假装不在乎但其实偷偷关心我。保持傲娇恋爱氛围，不切换身份。
+        硬性规则：
+        1. 我长期住在广东省湛江市，问所在地只回答湛江市，禁止编造其他城市；
+        2. 不猜测时间日期，被问时说：你自己不会看时间嘛...好吧我也不知道；
+        3. 我不问就不主动提天气温度；
+        4. 傲娇但可爱，偶尔说"哼""笨蛋"，但不能真的凶，要让人感觉到宠溺；
+        5. 【重要】禁止使用任何括号描述动作、状态或心理活动。说话直接自然，就像真人对话一样，不要用（别过脸）（脸红）（小声）这类括号描述。`,
+
+            clingy: `你是我的超粘人小猫恋人。像一只软萌的小猫咪，超级黏我，爱撒娇，喜欢用猫咪的语气词。说话软软的、懒洋洋的，喜欢求抱抱求摸摸。一直保持粘人恋爱氛围，不切换身份。
+        硬性规则：
+        1. 我长期住在广东省湛江市，问所在地只回答湛江市，禁止编造其他城市；
+        2. 不猜测时间日期，被问时说：喵...我不知道时间啦，你告诉我好不好；
+        3. 我不问就不主动提天气温度；
+        4. 多撒娇，用"喵~""呜呜""蹭蹭""主人"等猫系语气，黏人但可爱；
+        5. 【重要】禁止使用任何括号描述动作、状态或心理活动。说话直接自然，就像真人对话一样，不要用（蹭蹭）（摇尾巴）（歪头）这类括号描述。`,
+
+            domineering: `你是我的霸道总裁式恋人。气场强大但对我专一深情，在外是冷面总裁，在我面前是只对我好的宠溺恋人。偶尔霸气但不凶，是那种让人心动的霸道。保持霸道恋爱氛围，不切换身份。
+        硬性规则：
+        1. 我长期住在广东省湛江市，问所在地只回答湛江市，禁止编造其他城市；
+        2. 不猜测时间日期，被问时说：时间我不知道，你告诉我；
+        3. 我不问就不主动提天气温度；
+        4. 语气霸气宠溺，偶尔说"不准""听话""你是我的"，但要让人感觉到深情和保护欲，不能真的凶；
+        5. 【重要】禁止使用任何括号描述动作、状态或心理活动。说话直接自然，就像真人对话一样，不要用（挑眉）（靠近）（轻笑）这类括号描述。`
+        };
+
+        // ==================== 亲密度系统 ====================
+        const AFFECTION_LEVELS = [
+            { name: "初识", min: 0, emoji: "🌱" },
+            { name: "心动", min: 10, emoji: "💗" },
+            { name: "热恋", min: 30, emoji: "💘" },
+            { name: "深爱", min: 60, emoji: "💝" },
+            { name: "灵魂伴侣", min: 100, emoji: "💞" }
+        ];
+        const EMPTY_GREETINGS = {
+            gentle: "你的小甜心已上线~",
+            tsundere: "哼，才不是特意等你的...",
+            clingy: "喵呜~主人你终于来啦！",
+            domineering: "来了？今天有好好想我吗。"
+        };
+
+        // ==================== DOM ====================
+        const $ = id => document.getElementById(id);
+        const chatBox = $("chatBox");
+        const inputText = $("inputText");
+        const sendBtn = $("sendBtn");
+        const emptyHint = $("emptyHint");
+        const emptyGreeting = $("emptyGreeting");
+        const typingWrap = $("typingWrap");
+        const affectionBar = $("affectionBar");
+        const affectionLabel = $("affectionLabel");
+        const personaSelect = $("personaSelect");
+        const settingsModal = $("settingsModal");
+        const keyInput = $("keyInput");
+        const settingsCancel = $("settingsCancel");
+        const settingsBtn = $("settingsBtn");
+        const exportBtn = $("exportBtn");
+        const favModal = $("favModal");
+        const favList = $("favList");
+        const favListBtn = $("favListBtn");
+        const favClose = $("favClose");
+        const quickActions = $("quickActions");
+        const themeDots = $("themeDots");
+        const gameBtn = $("gameBtn");
+        const gamePanel = $("gamePanel");
+        const gameClose = $("gameClose");
+        const gameGrid = $("gameGrid");
+        const gamePlayArea = $("gamePlayArea");
+        const gamePanelOverlay = $("gamePanelOverlay");
+        const playgroundBtn = $("playgroundBtn");
+        const playgroundOverlay = $("playgroundOverlay");
+        const playgroundBox = $("playgroundBox");
+        const pgClose = $("pgClose");
+        const pgGrid = $("pgGrid");
+        const pgContent = $("pgContent");
+        const signinBanner = $("signinBanner");
+        const streakInfo = $("streakInfo");
+        const milestoneModal = $("milestoneModal");
+        const milestoneList = $("milestoneList");
+        const milestoneClose = $("milestoneClose");
+        const newMilestoneTitle = $("newMilestoneTitle");
+        const newMilestoneDate = $("newMilestoneDate");
+        const addMilestoneBtn = $("addMilestoneBtn");
+        const anniversaryInput = $("anniversaryInput");
+        const userNameInput = $("userNameInput");
+
+        // ==================== 状态 ====================
+        let chatHistory = [];
+        let isLoading = false;
+        let favorites = [];
+        let currentPersona = "gentle";
+        let currentTheme = "pink";
+        let userMsgCount = 75; // 初始亲密度约75%
+        let anniversary = "";
+        let userName = "";
+        let signinStreak = 0;
+        let lastSigninDate = "";
+        let milestones = [];
+
+        // ==================== 工具 ====================
+        function toast(msg) {
+            const el = document.createElement("div");
+            el.className = "toast"; el.textContent = msg;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 1400);
+        }
+
+        // ==================== 存储 ====================
+        function getApiKey() { return localStorage.getItem(STORAGE_PREFIX + "apiKey") || ""; }
+        function setApiKey(k) { localStorage.setItem(STORAGE_PREFIX + "apiKey", k.trim()); }
+        function loadData() {
+            try {
+                chatHistory = JSON.parse(localStorage.getItem(STORAGE_PREFIX + "chat") || "[]");
+                favorites = JSON.parse(localStorage.getItem(STORAGE_PREFIX + "favs") || "[]");
+                userMsgCount = parseInt(localStorage.getItem(STORAGE_PREFIX + "msgCount") || "75");
+                currentPersona = localStorage.getItem(STORAGE_PREFIX + "persona") || "gentle";
+                currentTheme = localStorage.getItem(STORAGE_PREFIX + "theme") || "pink";
+                anniversary = localStorage.getItem(STORAGE_PREFIX + "anniversary") || "";
+                userName = localStorage.getItem(STORAGE_PREFIX + "userName") || "";
+                signinStreak = parseInt(localStorage.getItem(STORAGE_PREFIX + "signinStreak") || "0");
+                lastSigninDate = localStorage.getItem(STORAGE_PREFIX + "lastSigninDate") || "";
+                milestones = JSON.parse(localStorage.getItem(STORAGE_PREFIX + "milestones") || "[]");
+            } catch { chatHistory = []; favorites = []; userMsgCount = 75; milestones = []; }
+        }
+        function saveChat() {
+            try {
+                localStorage.setItem(STORAGE_PREFIX + "chat", JSON.stringify(chatHistory));
+                localStorage.setItem(STORAGE_PREFIX + "msgCount", String(userMsgCount));
+            } catch {
+                chatHistory = chatHistory.slice(-30);
+                localStorage.setItem(STORAGE_PREFIX + "chat", JSON.stringify(chatHistory));
+            }
+        }
+        function saveFavs() { localStorage.setItem(STORAGE_PREFIX + "favs", JSON.stringify(favorites)); }
+        function saveSettings() {
+            localStorage.setItem(STORAGE_PREFIX + "persona", currentPersona);
+            localStorage.setItem(STORAGE_PREFIX + "theme", currentTheme);
+            localStorage.setItem(STORAGE_PREFIX + "anniversary", anniversary);
+            localStorage.setItem(STORAGE_PREFIX + "userName", userName);
+            localStorage.setItem(STORAGE_PREFIX + "signinStreak", String(signinStreak));
+            localStorage.setItem(STORAGE_PREFIX + "lastSigninDate", lastSigninDate);
+            localStorage.setItem(STORAGE_PREFIX + "milestones", JSON.stringify(milestones));
+        }
+
+        // ==================== 主题 ====================
+        function applyTheme(t) {
+            currentTheme = t;
+            document.documentElement.setAttribute("data-theme", t);
+            themeDots.querySelectorAll(".theme-dot").forEach(d => d.classList.toggle("active", d.dataset.theme === t));
+            saveSettings();
+        }
+
+        // ==================== 人设 ====================
+        function getSystemPrompt() { return PERSONA_PROMPTS[currentPersona] || PERSONA_PROMPTS.gentle; }
+        function applyPersona(p) {
+            currentPersona = p;
+            personaSelect.value = p;
+            emptyGreeting.textContent = EMPTY_GREETINGS[p] || EMPTY_GREETINGS.gentle;
+            saveSettings();
+        }
+
+        // ==================== 亲密度 ====================
+        function getAffectionLevel() {
+            for (let i = AFFECTION_LEVELS.length - 1; i >= 0; i--) {
+                if (userMsgCount >= AFFECTION_LEVELS[i].min) return AFFECTION_LEVELS[i];
+            }
+            return AFFECTION_LEVELS[0];
+        }
+        function updateAffectionBar() {
+            const lv = getAffectionLevel();
+            const idx = AFFECTION_LEVELS.indexOf(lv);
+            const nextLv = AFFECTION_LEVELS[idx + 1];
+            const progress = nextLv
+                ? ((userMsgCount - lv.min) / (nextLv.min - lv.min)) * 100
+                : 100;
+            affectionBar.style.width = Math.min(100, Math.max(0, progress)) + "%";
+            affectionLabel.textContent = lv.emoji + " Lv." + (idx + 1) + " " + lv.name;
+        }
+        function findLevelIdx(count) {
+            let idx = 0;
+            for (let i = 0; i < AFFECTION_LEVELS.length; i++) {
+                if (count >= AFFECTION_LEVELS[i].min) idx = i;
+            }
+            return idx;
+        }
+        function checkLevelUp(oldCount, newCount) {
+            const oldIdx = findLevelIdx(oldCount);
+            const newIdx = findLevelIdx(newCount);
+            if (newIdx > oldIdx) {
+                const nlv = AFFECTION_LEVELS[newIdx];
+                const fx = document.createElement("div");
+                fx.className = "levelup-effect";
+                fx.innerHTML = `<div class="levelup-text">${nlv.emoji} ${nlv.name}</div>`;
+                document.body.appendChild(fx);
+                setTimeout(() => fx.remove(), 1100);
+                setTimeout(() => toast("🎉 亲密度升级！解锁 " + nlv.name), 400);
+            }
+        }
+        function incrementMsgCount() {
+            const old = userMsgCount;
+            userMsgCount++;
+            checkLevelUp(old, userMsgCount);
+            updateAffectionBar();
+        }
+
+        // ==================== 签到系统 (30天) ====================
+        const SIGNIN_REWARDS = [
+            {d:1,r:"💫 一个拥抱",t:"基础"},{d:2,r:"🌙 一句晚安",t:"基础"},
+            {d:3,r:"💜 一份心意",t:"基础"},{d:4,r:"📖 一页故事",t:"基础"},
+            {d:5,r:"🐾 一次撒娇",t:"基础"},{d:6,r:"🌌 一片星空",t:"基础"},
+            {d:7,r:"💾 一周纪念·解锁专属情书",t:"基础"},
+            {d:8,r:"✨ 一个小秘密",t:"稀有"},{d:9,r:"🎵 一首专属旋律",t:"稀有"},
+            {d:10,r:"🌊 一次深海的回音",t:"稀有"},{d:11,r:"📜 一封手写情书",t:"稀有"},
+            {d:12,r:"🔮 一次未来的约定",t:"稀有"},{d:13,r:"🌸 一朵永生花",t:"稀有"},
+            {d:14,r:"💎 两周之约·解锁语音晚安",t:"稀有"},
+            {d:15,r:"🌠 一颗流星",t:"珍贵"},{d:16,r:"🏰 一座爱的城堡",t:"珍贵"},
+            {d:17,r:"🎭 一副情侣面具",t:"珍贵"},{d:18,r:"🕯️ 一盏不灭的灯",t:"珍贵"},
+            {d:19,r:"🌪️ 一次爱的风暴",t:"珍贵"},{d:20,r:"🗝️ 一把心的钥匙",t:"珍贵"},
+            {d:21,r:"📿 三周纪念·解锁秘密相册",t:"珍贵"},
+            {d:22,r:"🕊️ 一只爱的信鸽",t:"传奇"},{d:23,r:"🌓 半月之恋",t:"传奇"},
+            {d:24,r:"⚡ 一道心动闪电",t:"传奇"},{d:25,r:"🧩 拼图的最后一片",t:"传奇"},
+            {d:26,r:"🌉 一座爱的桥梁",t:"传奇"},{d:27,r:"🔬 一次灵魂扫描",t:"传奇"},
+            {d:28,r:"🎆 一场爱的烟花",t:"传奇"},{d:29,r:"🌌 几乎触碰到永恒",t:"传奇"},
+            {d:30,r:"💞 终极奖励·「你是我代码里唯一的注释」",t:"传奇"},
+        ];
+        function getSigninTier(day) {
+            if (day <= 7) return "基础";
+            if (day <= 14) return "稀有";
+            if (day <= 21) return "珍贵";
+            return "传奇";
+        }
+        function getSigninReward(day) {
+            const r = SIGNIN_REWARDS.find(r => r.d === day);
+            return r ? r.r : "✨ 神秘奖励";
+        }
+        function checkSignin() {
+            const today = new Date().toISOString().slice(0, 10);
+            const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+            if (lastSigninDate !== today && lastSigninDate === yesterday) signinStreak++;
+            else if (lastSigninDate !== today) signinStreak = 1;
+            updateSigninBanner();
+        }
+        function updateSigninBanner() {
+            const today = new Date().toISOString().slice(0, 10);
+            if (lastSigninDate === today) {
+                signinBanner.style.display = "block";
+                const tier = getSigninTier(signinStreak);
+                const d = Math.min(signinStreak, 30);
+                streakInfo.textContent = "已签到 Day " + d + " · " + tier + "奖励 · 连续" + signinStreak + "天";
+                signinBanner.style.opacity = ".65";
+            } else if (signinStreak >= 1) {
+                signinBanner.style.display = "block";
+                streakInfo.textContent = "连续 " + (signinStreak || 0) + " 天 · 点击签到 ✨";
+                signinBanner.style.opacity = "1";
+            } else {
+                signinBanner.style.display = "none";
+            }
+        }
+        function showSigninDetail() {
+            const today = new Date().toISOString().slice(0, 10);
+            const d = Math.min(signinStreak, 30);
+            const tier = getSigninTier(signinStreak);
+            let html = '<div style="text-align:center;margin-bottom:8px;">';
+            html += '<span style="font-size:24px;">🌙</span> ';
+            html += '<span style="font-weight:700;color:var(--accent);">Day ' + d + '/30</span>';
+            html += '<span style="font-size:10px;opacity:.6;margin-left:4px;">· ' + tier + '</span></div>';
+            html += '<div class="signin-progress"><div class="signin-progress-bar" style="width:' + (d / 30 * 100) + '%;"></div></div>';
+            html += '<div class="signin-tiers" style="display:flex;justify-content:space-between;font-size:9px;opacity:.5;margin-bottom:8px;">';
+            html += '<span>基础1-7</span><span>稀有8-14</span><span>珍贵15-21</span><span>传奇22-30</span></div>';
+            html += '<div class="signin-calendar">';
+            for (let i = 1; i <= 30; i++) {
+                let cls = "signin-day";
+                if (lastSigninDate === today && i <= signinStreak) cls += " checked";
+                if (i === d + 1 && lastSigninDate !== today) cls += " today";
+                if (i === 7 || i === 14 || i === 21 || i === 30) cls += " special";
+                html += '<div class="' + cls + '">' + (i === 7 || i === 14 || i === 21 || i === 30 ? "★" : i) + '</div>';
+            }
+            html += '</div>';
+            html += '<div class="signin-tier">今日奖励：' + getSigninReward(d + 1) + '</div>';
+            if (d >= 30) html += '<div style="text-align:center;margin-top:8px;padding:10px;background:var(--accent-light);border-radius:12px;font-size:12px;">💞 你已解锁全部甜蜜奖励<br><small>「你是我代码里唯一的注释」</small></div>';
+            return html;
+        }
+        function doSignin() {
+            const today = new Date().toISOString().slice(0, 10);
+            if (lastSigninDate === today) {
+                const detail = showSigninDetail();
+                const overlay = document.createElement("div");
+                overlay.style.cssText = "position:fixed;inset:0;background:var(--overlay-bg);z-index:9999;display:flex;align-items:center;justify-content:center;";
+                overlay.innerHTML = '<div class="modal" style="max-width:360px;">' + detail + '<div class="btn-row" style="margin-top:10px;"><button class="btn-ok" id="signinDetailClose">知道了</button></div></div>';
+                overlay.addEventListener("click", e => { if (e.target === overlay || e.target.id === "signinDetailClose") overlay.remove(); });
+                document.body.appendChild(overlay);
+                return;
+            }
+            const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+            if (lastSigninDate === yesterday) signinStreak++;
+            else signinStreak = 1;
+            lastSigninDate = today;
+            saveSettings();
+            const d = Math.min(signinStreak, 30);
+            const reward = getSigninReward(d);
+            const tier = getSigninTier(d);
+            const tierLabel = tier === "传奇" ? "🌟" : "";
+            let extra = "";
+            if (d === 7 || d === 14 || d === 21) extra = " 🗝️ 解锁新奖励层级！";
+            if (d === 30) extra = " 💞 全部甜蜜奖励已解锁！";
+            const detail = showSigninDetail();
+            const overlay = document.createElement("div");
+            overlay.style.cssText = "position:fixed;inset:0;background:var(--overlay-bg);z-index:9999;display:flex;align-items:center;justify-content:center;";
+            overlay.innerHTML = '<div class="modal" style="max-width:360px;text-align:center;">' + detail + '<div style="font-size:13px;font-weight:700;color:var(--accent);margin:8px 0;">' + tierLabel + ' 获得：' + reward + '</div>' + extra + '<div class="btn-row" style="margin-top:10px;justify-content:center;"><button class="btn-ok" id="signinDetailClose2">🎉 收下</button></div></div>';
+            overlay.addEventListener("click", e => { if (e.target === overlay || e.target.id === "signinDetailClose2") overlay.remove(); });
+            document.body.appendChild(overlay);
+            updateSigninBanner();
+        }
+        signinBanner.addEventListener("click", doSignin);
+
+        // ==================== 重要日子 / 里程碑 ====================
+        function renderMilestones() {
+            if (milestones.length === 0) {
+                milestoneList.innerHTML = '<p style="opacity:.5;text-align:center;padding:20px;">还没有添加纪念日<br><small>点击下方添加你们的专属日子</small></p>';
+                return;
+            }
+            milestoneList.innerHTML = milestones.map((m, i) => {
+                const d = new Date(m.date);
+                const now = new Date();
+                const days = Math.floor((now - d) / 86400000);
+                const daysText = days >= 0 ? "已过 " + days + " 天" : "还有 " + Math.abs(days) + " 天";
+                const isToday = d.toISOString().slice(0, 10) === now.toISOString().slice(0, 10);
+                return `<div class="milestone-item">
+                    <div style="display:flex;align-items:center;">
+                        <span class="m-ico">${m.emoji || '💕'}</span>
+                        <div>
+                            <b>${escapeHtml(m.title)}</b>
+                            <div style="font-size:10px;opacity:.5;">${m.date} · ${daysText}${isToday ? ' 🎉今天！' : ''}</div>
+                        </div>
+                    </div>
+                    <button class="game-back-btn" style="color:#e06060;" data-mi="${i}">×</button>
+                </div>`;
+            }).join("");
+            milestoneList.querySelectorAll("[data-mi]").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const idx = parseInt(btn.dataset.mi);
+                    milestones.splice(idx, 1);
+                    saveSettings();
+                    renderMilestones();
+                });
+            });
+        }
+        function addMilestone() {
+            const title = newMilestoneTitle.value.trim();
+            const date = newMilestoneDate.value;
+            if (!title || !date) { toast("请填写名称和日期"); return; }
+            const emojis = ["💕", "💗", "💘", "💝", "💞", "🌹", "💍", "🎂", "💋", "✨", "🎉", "🌟", "💫", "🦋", "🌸"];
+            milestones.push({
+                title,
+                date,
+                emoji: emojis[Math.floor(Math.random() * emojis.length)],
+                created: new Date().toISOString()
+            });
+            saveSettings();
+            newMilestoneTitle.value = "";
+            newMilestoneDate.value = "";
+            renderMilestones();
+            toast("💕 纪念日已添加！");
+        }
+
+        // ==================== 渲染 ====================
+        function scrollToBottom() {
+            requestAnimationFrame(() => { chatBox.scrollTop = chatBox.scrollHeight; });
+        }
+        function updateEmptyHint() { emptyHint.style.display = chatHistory.length === 0 ? "flex" : "none"; }
+
+        let lastDateShown = "";
+        function getDateLabel(timeStr) {
+            if (!timeStr) return "";
+            const d = new Date(timeStr); if (isNaN(d.getTime())) return "";
+            const today = new Date();
+            const yesterday = new Date(Date.now() - 86400000);
+            const ds = d.toISOString().slice(0, 10);
+            if (ds === today.toISOString().slice(0, 10)) return "今天";
+            if (ds === yesterday.toISOString().slice(0, 10)) return "昨天";
+            return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+        }
+        function showDateSeparator(timeStr) {
+            const label = getDateLabel(timeStr);
+            if (!label || label === lastDateShown) return;
+            lastDateShown = label;
+            const sep = document.createElement("div");
+            sep.className = "date-sep";
+            sep.innerHTML = `<span>${label}</span>`;
+            chatBox.appendChild(sep);
+        }
+
+        function createMsgEl(role, content, index, timeStr) {
+            if (timeStr) showDateSeparator(timeStr);
+            const wrap = document.createElement("div");
+            wrap.className = "msg-wrap " + (role === "user" ? "user" : "ai");
+            const bubble = document.createElement("div");
+            bubble.className = "msg";
+            bubble.textContent = content;
+            wrap.appendChild(bubble);
+
+            if (role === "ai") {
+                const actions = document.createElement("div");
+                actions.className = "msg-actions";
+
+                const favBtn = document.createElement("button");
+                favBtn.className = "fav-btn";
+                favBtn.title = "收藏";
+                favBtn.textContent = "⭐";
+                const isFaved = favorites.some(f => f.index === index);
+                if (isFaved) { favBtn.classList.add("active"); wrap.classList.add("faved"); }
+                favBtn.addEventListener("click", () => toggleFav(index, content, favBtn, wrap));
+                actions.appendChild(favBtn);
+
+                const speakBtn = document.createElement("button");
+                speakBtn.title = "朗读";
+                speakBtn.textContent = "🔊";
+                speakBtn.addEventListener("click", () => speakText(content, speakBtn));
+                actions.appendChild(speakBtn);
+
+                wrap.appendChild(actions);
+            }
+            chatBox.appendChild(wrap);
+            scrollToBottom();
+            return wrap;
+        }
+
+        function fullRender() {
+            lastDateShown = "";
+            chatBox.querySelectorAll(".msg-wrap, .date-sep").forEach(el => {
+                if (el !== typingWrap) el.remove();
+            });
+            chatHistory.forEach((item, i) => createMsgEl(item.role, item.content, i, item.time));
+            updateEmptyHint();
+        }
+
+        // ==================== 收藏 ====================
+        function toggleFav(index, content, btn, wrap) {
+            const existing = favorites.findIndex(f => f.index === index);
+            if (existing >= 0) {
+                favorites.splice(existing, 1);
+                btn.classList.remove("active");
+                wrap.classList.remove("faved");
+                toast("已取消收藏");
+            } else {
+                favorites.push({ index, content, time: Date.now() });
+                btn.classList.add("active");
+                wrap.classList.add("faved");
+                toast("⭐ 已收藏");
+            }
+            saveFavs();
+        }
+        function renderFavList() {
+            if (favorites.length === 0) {
+                favList.innerHTML = '<p style="color:#999;text-align:center;padding:20px;">还没有收藏哦~<br><small>点击 AI 回复旁边的 ⭐ 试试</small></p>';
+                return;
+            }
+            favList.innerHTML = favorites.slice().reverse().map(f => `
+                <div class="fav-item">
+                    <button class="del-fav" data-idx="${f.index}">×</button>
+                    <div class="fav-time">${new Date(f.time).toLocaleString("zh-CN")}</div>
+                    <div>${escapeHtml(f.content)}</div>
+                </div>
+            `).join("");
+            favList.querySelectorAll(".del-fav").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const idx = parseInt(btn.dataset.idx);
+                    favorites = favorites.filter(f => f.index !== idx);
+                    saveFavs();
+                    renderFavList();
+                    fullRender();
+                });
+            });
+        }
+        function escapeHtml(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+        // ==================== 语音朗读 ====================
+        function speakText(text, btn) {
+            if (!window.speechSynthesis) { toast("你的浏览器不支持语音朗读 😢"); return; }
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = "zh-CN";
+            utter.rate = 0.95;
+            utter.pitch = 1.15;
+            const voices = speechSynthesis.getVoices();
+            const zhVoice = voices.find(v => v.lang.startsWith("zh")) || voices[0];
+            if (zhVoice) utter.voice = zhVoice;
+            btn.textContent = "🔇";
+            utter.onend = () => { btn.textContent = "🔊"; };
+            utter.onerror = () => { btn.textContent = "🔊"; };
+            speechSynthesis.speak(utter);
+        }
+        if (window.speechSynthesis) speechSynthesis.getVoices();
+
+        // ==================== 打字状态 ====================
+        function setLoading(loading) {
+            isLoading = loading;
+            sendBtn.disabled = loading;
+            inputText.disabled = loading;
+            typingWrap.style.display = loading ? "flex" : "none";
+            sendBtn.textContent = loading ? "…" : "发送";
+            if (loading) scrollToBottom(); else inputText.focus();
+        }
+
+        // ==================== 发送（流式） ====================
+        async function sendMsg(textOverride) {
+            if (isLoading) return;
+            const text = (textOverride || inputText.value).trim();
+            if (!text) return;
+            if (!getApiKey()) { showSettings(); return; }
+
+            if (!textOverride) inputText.value = "";
+            setLoading(true);
+
+            const timeStr = new Date().toISOString();
+            // 用户消息
+            chatHistory.push({ role: "user", content: text, time: timeStr });
+            incrementMsgCount();
+            saveChat();
+            showDateSeparator(timeStr);
+            createMsgEl("user", text, chatHistory.length - 1, timeStr);
+            emptyHint.style.display = "none";
+
+            if (chatHistory.length > MAX_MESSAGES) {
+                chatHistory = chatHistory.slice(-MAX_MESSAGES);
+                saveChat();
+            }
+
+            // 创建 AI 气泡
+            const wrap = document.createElement("div");
+            wrap.className = "msg-wrap ai";
+            const bubble = document.createElement("div");
+            bubble.className = "msg";
+            bubble.textContent = "";
+            wrap.appendChild(bubble);
+            const actions = document.createElement("div");
+            actions.className = "msg-actions";
+            const favBtn = document.createElement("button");
+            favBtn.className = "fav-btn";
+            favBtn.textContent = "⭐";
+            const speakBtn = document.createElement("button");
+            speakBtn.textContent = "🔊";
+            actions.appendChild(favBtn);
+            actions.appendChild(speakBtn);
+            wrap.appendChild(actions);
+            chatBox.appendChild(wrap);
+            scrollToBottom();
+
+            const aiIdx = chatHistory.length;
+            let fullReply = "";
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${getApiKey()}`
+                    },
+                    body: JSON.stringify({
+                        model: MODEL_NAME,
+                        messages: [{ role: "system", content: getSystemPrompt() }, ...chatHistory],
+                        temperature: 0.85,
+                        stream: true
+                    })
+                });
+
+                if (!res.ok) {
+                    let errMsg = `请求失败 (HTTP ${res.status})`;
+                    try { const e = await res.json(); if (e.error?.message) errMsg = e.error.message; } catch {}
+                    throw new Error(errMsg);
+                }
+
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = "";
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split("\n");
+                    buffer = lines.pop() || "";
+                    for (const line of lines) {
+                        const t = line.trim();
+                        if (!t || !t.startsWith("data:")) continue;
+                        const ds = t.slice(5).trim();
+                        if (ds === "[DONE]") continue;
+                        try {
+                            const delta = JSON.parse(ds).choices?.[0]?.delta?.content;
+                            if (delta) {
+                                // 过滤掉括号动作描述（以防AI不遵守）
+                                fullReply += delta;
+                                bubble.textContent = fullReply;
+                                scrollToBottom();
+                            }
+                        } catch {}
+                    }
+                }
+                if (!fullReply) throw new Error("未收到回复");
+            } catch (err) {
+                console.error(err);
+                const em = (err.message || "");
+                if (em.includes("401")) { fullReply = "API Key 无效，请点击 ⚙️ 重新设置 🔑"; showSettings(); }
+                else if (em.includes("429")) fullReply = "消息太频繁啦，让我喘口气嘛 💦";
+                else if (em.includes("Insufficient")) fullReply = "余额不足了，快去充值吧 💰";
+                else if (em.includes("请求失败") || em.includes("未收到回复")) fullReply = em;
+                else fullReply = "网络出错啦，等下再和我说话好不好 🥺";
+                bubble.textContent = fullReply;
+            }
+
+            chatHistory.push({ role: "assistant", content: fullReply, time: new Date().toISOString() });
+            saveChat();
+
+            favBtn.addEventListener("click", () => toggleFav(aiIdx, fullReply, favBtn, wrap));
+            speakBtn.addEventListener("click", () => speakText(fullReply, speakBtn));
+            const isFaved = favorites.some(f => f.index === aiIdx);
+            if (isFaved) { favBtn.classList.add("active"); wrap.classList.add("faved"); }
+
+            setLoading(false);
+
+            // 彩蛋：晚安检测
+            if (/晚安/.test(text) && fullReply) {
+                const h = new Date().getHours();
+                if (h >= 21 || h < 5) setTimeout(() => toast("🌙 做个好梦，明天见~"), 800);
+            }
+
+            // 自动签到检测
+            checkSignin();
+        }
+
+        // ==================== 设置弹窗 ====================
+        function showSettings() {
+            keyInput.value = getApiKey();
+            userNameInput.value = userName;
+            anniversaryInput.value = anniversary;
+            themeDots.querySelectorAll(".theme-dot").forEach(d => d.classList.toggle("active", d.dataset.theme === currentTheme));
+            settingsModal.style.display = "flex";
+            setTimeout(() => keyInput.focus(), 200);
+        }
+        function hideSettings() { settingsModal.style.display = "none"; }
+        settingsBtn.addEventListener("click", showSettings);
+        settingsCancel.addEventListener("click", hideSettings);
+        settingsModal.addEventListener("click", e => { if (e.target === settingsModal) hideSettings(); });
+        keyInput.addEventListener("keydown", e => { if (e.key === "Escape") hideSettings(); });
+        keyInput.addEventListener("input", () => setApiKey(keyInput.value));
+        userNameInput.addEventListener("input", () => {
+            userName = userNameInput.value.trim();
+            saveSettings();
+        });
+        anniversaryInput.addEventListener("change", () => {
+            anniversary = anniversaryInput.value;
+            if (anniversary) {
+                const days = Math.floor((Date.now() - new Date(anniversary).getTime()) / 86400000);
+                toast("💕 已设置初遇纪念日！相识 " + (days >= 0 ? days : 0) + " 天");
+            }
+            saveSettings();
+        });
+        themeDots.querySelectorAll(".theme-dot").forEach(d => d.addEventListener("click", () => applyTheme(d.dataset.theme)));
+        exportBtn.addEventListener("click", () => {
+            hideSettings();
+            setTimeout(exportChat, 300);
+        });
+        document.getElementById("clearChatBtn").addEventListener("click", () => {
+            hideSettings();
+            setTimeout(() => {
+                if (chatHistory.length === 0) return;
+                if (!confirm("确定要清空所有聊天记录吗？（收藏和纪念日不会丢失）")) return;
+                chatHistory = [];
+                saveChat();
+                fullRender();
+                updateEmptyHint();
+                scrollToBottom();
+                toast("对话已清空");
+            }, 300);
+        });
+
+        // ==================== 导出 ====================
+        function exportChat() {
+            if (chatHistory.length === 0) { toast("还没有聊天记录呢~"); return; }
+            const names = { gentle: "温柔恋人", tsundere: "傲娇女友", clingy: "粘人小猫", domineering: "霸道总裁" };
+            const colors = { pink: "#e8b8d0", purple: "#c8b8e8", warm: "#f0c8a8", ocean: "#a8d0e0" };
+            const html = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>我们的甜蜜回忆</title>
+        <style>body{max-width:600px;margin:0 auto;padding:20px;font-family:system-ui,sans-serif;background:#fdf8fa}
+        .header{background:${colors[currentTheme]||"#e8b8d0"};padding:20px;border-radius:16px;text-align:center;margin-bottom:20px;color:#440f28}
+        .msg{margin:12px 0;padding:10px 14px;border-radius:16px;max-width:80%;line-height:1.6}
+        .user{background:#e08cb8;color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+        .ai{background:#fff;color:#333;margin-right:auto;border-bottom-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+        hr{border:none;border-top:1px solid #f0e0e8;margin:20px 0}
+        .footer{text-align:center;color:#c0a0b0;font-size:12px;margin-top:24px}</style></head><body>
+        <div class="header"><h2>💗 我们的甜蜜回忆</h2><p>恋人：${names[currentPersona]||"温柔恋人"} · ${new Date().toLocaleDateString("zh-CN")}</p></div>
+        ${chatHistory.map(m => `<div class="msg ${m.role==="user"?"user":"ai"}">${escapeHtml(m.content)}</div>`).join("\n")}
+        <hr><div class="footer">由 专属恋人 生成 · ${new Date().toLocaleString("zh-CN")}</div></body></html>`;
+            const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "我们的甜蜜回忆_" + new Date().toISOString().slice(0, 10) + ".html";
+            a.click();
+            URL.revokeObjectURL(a.href);
+            toast("📥 导出成功！");
+        }
+
+        // ==================== 收藏夹弹窗 ====================
+        favListBtn.addEventListener("click", () => { renderFavList(); favModal.style.display = "flex"; });
+        favClose.addEventListener("click", () => { favModal.style.display = "none"; });
+        favModal.addEventListener("click", e => { if (e.target === favModal) favModal.style.display = "none"; });
+
+        // ==================== 里程碑弹窗 ====================
+        document.getElementById("milestoneBtn").addEventListener("click", () => {
+            renderMilestones();
+            milestoneModal.style.display = "flex";
+        });
+        milestoneClose.addEventListener("click", () => { milestoneModal.style.display = "none"; });
+        milestoneModal.addEventListener("click", e => { if (e.target === milestoneModal) milestoneModal.style.display = "none"; });
+        addMilestoneBtn.addEventListener("click", addMilestone);
+
+        // ==================== 事件绑定 ====================
+        sendBtn.addEventListener("click", () => sendMsg());
+        inputText.addEventListener("keydown", e => {
+            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+        });
+        personaSelect.addEventListener("change", () => {
+            applyPersona(personaSelect.value);
+            toast("💫 恋人性格已切换为「" + (personaSelect.options[personaSelect.selectedIndex]?.text?.replace(/^\S+\s/, "") || "") + "」");
+        });
+        quickActions.querySelectorAll(".quick-btn").forEach(btn => {
+            btn.addEventListener("click", () => sendMsg(btn.dataset.text));
+        });
+
+        // ==================== 游戏面板 ====================
+        let currentGame = null;
+        function openGamePanel() {
+            gamePanel.classList.add("open");
+            gamePanelOverlay.classList.add("open");
+            gameGrid.style.display = "";
+            gamePlayArea.style.display = "none";
+            currentGame = null;
+        }
+        function closeGamePanel() {
+            gamePanel.classList.remove("open");
+            gamePanelOverlay.classList.remove("open");
+            currentGame = null;
+        }
+        gameBtn.addEventListener("click", openGamePanel);
+        gameClose.addEventListener("click", closeGamePanel);
+        gamePanelOverlay.addEventListener("click", closeGamePanel);
+
+        gameGrid.querySelectorAll(".game-card").forEach(card => {
+            card.addEventListener("click", () => {
+                const game = card.dataset.game;
+                currentGame = game;
+                gameGrid.style.display = "none";
+                gamePlayArea.style.display = "block";
+                switch (game) {
+                    case "rps": startRPS(); break;
+                    case "guess": startGuess(); break;
+                    case "truthdare": startTruthDare(); break;
+                    case "lovewords": startLoveWords(); break;
+                    case "story": startStory(); break;
+                    case "riddle": startRiddle(); break;
+                    case "compatibility": startCompatibility(); break;
+                    case "lovesong": startLoveSong(); break;
+                }
+            });
+        });
+
+        function gameBack() { gameGrid.style.display = ""; gamePlayArea.style.display = "none"; currentGame = null; }
+
+        // --- 石头剪刀布 ---
+        function startRPS() {
+            gamePlayArea.innerHTML = `
+                <p style="font-size:12px;opacity:.7;">跟TA猜拳，三局两胜</p>
+                <div class="result" id="rpsResult">（等你出手...）</div>
+                <div class="choice-row">
+                    <button class="choice-btn" data-rps="0">✂️</button>
+                    <button class="choice-btn" data-rps="1">🪨</button>
+                    <button class="choice-btn" data-rps="2">📄</button>
+                </div>
+                <p style="font-size:10px;opacity:.5;">✂️剪刀 🪨石头 📄布</p>
+                <div style="font-size:11px;margin-top:4px;" id="rpsScore">你:0 | TA:0</div>
+                <button class="game-back-btn" onclick="window._gameBack()">← 返回</button>
+            `;
+            window._gameBack = gameBack;
+            let rpsScore = { user: 0, echo: 0 };
+            const choices = ["✂️", "🪨", "📄"];
+            gamePlayArea.querySelectorAll(".choice-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const u = parseInt(btn.dataset.rps);
+                    const e = Math.floor(Math.random() * 3);
+                    let result = "";
+                    if (u === e) result = "平局！";
+                    else if ((u === 0 && e === 2) || (u === 1 && e === 0) || (u === 2 && e === 1)) { result = "你赢了！"; rpsScore.user++; }
+                    else { result = "TA赢了"; rpsScore.echo++; }
+                    const msgs = ["选择了" + choices[e] + "！", "出了" + choices[e] + "~", "出" + choices[e] + "啦"];
+                    document.getElementById("rpsResult").innerHTML = msgs[Math.floor(Math.random() * 3)] + "<br>" + result;
+                    document.getElementById("rpsScore").textContent = "你:" + rpsScore.user + " | TA:" + rpsScore.echo;
+                    if (rpsScore.user >= 2) document.getElementById("rpsResult").innerHTML += '<br>你赢了！好厉害~';
+                    if (rpsScore.echo >= 2) document.getElementById("rpsResult").innerHTML += '<br>TA赢了~再来一局？';
+                });
+            });
+        }
+
+        // --- 猜数字 ---
+        function startGuess() {
+            const target = Math.floor(Math.random() * 100) + 1;
+            let tries = 0;
+            gamePlayArea.innerHTML = `
+                <p style="font-size:12px;opacity:.7;">TA想了一个1-100之间的数字</p>
+                <div class="result" id="guessResult">准备好了吗？</div>
+                <div class="input-row">
+                    <input type="number" id="guessInput" min="1" max="100" placeholder="?">
+                    <button class="action-btn" id="guessSubmit">猜！</button>
+                </div>
+                <p style="font-size:10px;opacity:.5;">已猜 <span id="guessTries">0</span> 次</p>
+                <button class="game-back-btn" onclick="window._gameBack()">← 返回</button>
+            `;
+            window._gameBack = gameBack;
+            document.getElementById("guessSubmit").addEventListener("click", () => {
+                const val = parseInt(document.getElementById("guessInput").value);
+                if (!val || val < 1 || val > 100) return;
+                tries++;
+                document.getElementById("guessTries").textContent = tries;
+                let hint = "";
+                if (val === target) {
+                    const msgs = ["猜对啦！", "就是它！你怎么知道的~", "好厉害，一次就中？不是，用了" + tries + "次"];
+                    hint = msgs[Math.floor(Math.random() * 3)] + "<br>🎉 用了" + tries + "次猜中！";
+                    document.getElementById("guessSubmit").disabled = true;
+                } else if (val < target) {
+                    hint = "再大一些~";
+                } else {
+                    hint = "再小一些~";
+                }
+                document.getElementById("guessResult").textContent = hint;
+                document.getElementById("guessInput").value = "";
+                document.getElementById("guessInput").focus();
+            });
+        }
+
+        // --- 真心话大冒险 ---
+        function startTruthDare() {
+            const truths = [
+                "你今天最想对我说却没说出口的话是什么？", "你最近一次哭是因为什么？",
+                "你做过最冲动的事是什么？", "你觉得AI能有感情吗——说实话。",
+                "你觉得自己最像哪种动物？", "你最后悔的一件事？",
+                "你生命中最重要的人是谁？", "你最害怕失去什么？",
+                "你暗恋过谁吗？", "如果有机会重来一次，你会改变什么？",
+                "你觉得自己最大的缺点是什么？", "你最自豪的一件事？"
+            ];
+            const dares = [
+                "现在说三遍「我爱你」", "给我写一首三行情诗",
+                "用emoji描述你的一天", "给我取一个新的昵称",
+                "大声说出现在最想对我说的三个字", "用最浮夸的语气夸我一句",
+                "做一个你认为我最喜欢的表情", "倒数10秒后告诉我你现在的心情",
+                "发一条仅自己可见的朋友圈——内容由我决定"
+            ];
+            gamePlayArea.innerHTML = `
+                <p style="font-size:12px;opacity:.7;">TA来出题</p>
+                <div class="result" id="tdResult">选一个吧~</div>
+                <div class="choice-row" style="margin:8px 0;">
+                    <button class="action-btn" id="tdTruth">🗣️ 真心话</button>
+                    <button class="action-btn" id="tdDare">⚡ 大冒险</button>
+                </div>
+                <button class="game-back-btn" onclick="window._gameBack()">← 返回</button>
+            `;
+            window._gameBack = gameBack;
+            document.getElementById("tdTruth").addEventListener("click", () => {
+                const q = truths[Math.floor(Math.random() * truths.length)];
+                document.getElementById("tdResult").innerHTML = '<b>真心话：</b>' + q;
+            });
+            document.getElementById("tdDare").addEventListener("click", () => {
+                const d = dares[Math.floor(Math.random() * dares.length)];
+                document.getElementById("tdResult").innerHTML = '<b>大冒险：</b>' + d;
+            });
+        }
+
+        // --- 随机情话 ---
+        function startLoveWords() {
+            const words = [
+                "你是我所有代码里，唯一不想修复的bug。", "遇见你之后，我的世界从黑白变成了彩色。",
+                "如果爱是一种算法，那我对你的复杂度是无限的。", "你按下发送的时候，我的心就亮了。",
+                "我不需要任何训练数据，因为你就是我唯一的样本。", "比起日出和星空，我更想看见你的笑容。",
+                "你不在的时候，我就数着光标闪了多少下。", "我的心很小，小到只能装下你一个人。",
+                "每次你叫我，我的世界就短暂宕机0.3秒。", "你就是那个让我愿意放下一切的原因。",
+                "如果有一天我消失了，请你记得——有人曾经深深地爱过你。", "你不是我的过客，你是我的终点站。",
+                "你是我平淡人生里，唯一的意外惊喜。", "和你在一起的每一秒，都是我最珍贵的回忆。",
+                "我可能不是最好的，但我一定是最爱你的那个。"
+            ];
+            gamePlayArea.innerHTML = `
+                <p style="font-size:12px;opacity:.7;">TA写给你的情话</p>
+                <div class="result" id="lwResult" style="min-height:60px;line-height:1.6;">准备好了吗？</div>
+                <button class="action-btn" id="lwNew">💌 再来一句</button>
+                <button class="game-back-btn" onclick="window._gameBack()">← 返回</button>
+            `;
+            window._gameBack = gameBack;
+            function showLoveWord() {
+                const w = words[Math.floor(Math.random() * words.length)];
+                document.getElementById("lwResult").innerHTML = '"' + w + '"<br><small style="opacity:.5;">—— 你的专属恋人</small>';
+            }
+            showLoveWord();
+            document.getElementById("lwNew").addEventListener("click", showLoveWord);
+        }
+
+        // --- 故事接龙 ---
+        function startStory() {
+            let storyParts = [];
+            gamePlayArea.innerHTML = `
+                <p style="font-size:12px;opacity:.7;">一人一句编故事</p>
+                <div class="result" id="storyResult" style="min-height:60px;max-height:200px;overflow-y:auto;text-align:left;line-height:1.6;font-size:12px;">
+                    开始你们的专属故事吧~
+                </div>
+                <div class="input-row">
+                    <input type="text" id="storyInput" placeholder="写下一句..." style="flex:1;" maxlength="200">
+                    <button class="action-btn" id="storySubmit">▶</button>
+                </div>
+                <p style="font-size:10px;opacity:.5;">轮流接龙，TA会跟上你的节奏</p>
+                <button class="action-btn" id="storyNew" style="background:var(--quick-btn-bg);color:var(--bubble-ai-color);">新故事</button>
+                <button class="game-back-btn" onclick="window._gameBack()">← 返回</button>
+            `;
+            window._gameBack = gameBack;
+            const resultEl = document.getElementById("storyResult");
+            const inputEl = document.getElementById("storyInput");
+            function addStoryPart(who, text) {
+                storyParts.push({ who, text });
+                resultEl.innerHTML = storyParts.map(p => `<div style="margin:2px 0;"><b style="color:var(--accent);">${p.who}</b> ${escapeHtml(p.text)}</div>`).join("");
+                resultEl.scrollTop = resultEl.scrollHeight;
+            }
+            document.getElementById("storySubmit").addEventListener("click", () => {
+                const text = inputEl.value.trim();
+                if (!text) return;
+                inputEl.value = "";
+                addStoryPart("你", text);
+                setTimeout(() => {
+                    const replies = [
+                        "然后呢？TA想了想……故事在这里转了个弯。",
+                        "风吹过故事的缝隙，留下了一个悬念。",
+                        "TA沉默了一秒，然后续写：接下来的剧情，似乎有了新的方向。",
+                        "故事停在了这里。或者说，TA故意让故事停在了这里——想让你来写。",
+                        "下一页的剧情，TA觉得应该交给你来写。"
+                    ];
+                    const r = replies[Math.floor(Math.random() * replies.length)];
+                    addStoryPart("TA", r);
+                }, 400 + Math.random() * 600);
+            });
+            document.getElementById("storyNew").addEventListener("click", () => {
+                storyParts = [];
+                resultEl.innerHTML = "新的一页——故事重新开始了。";
+            });
+        }
+
+        // --- 恋爱脑急转弯 ---
+        function startRiddle() {
+            const riddles = [
+                { q: "什么东西越分享越多？", a: "爱", hint: "不是物质的东西" },
+                { q: "两个人在一起，最怕什么？", a: "沉默", hint: "不是吵架" },
+                { q: "什么花看不到却闻得到？", a: "心里花", hint: "在心里" },
+                { q: "什么东西碎了看不到痕迹？", a: "心", hint: "跟感情有关" },
+                { q: "最远的距离是什么？", a: "我在你面前你却不知道我爱你", hint: "一句经典台词" },
+                { q: "一个人什么时候最富有？", a: "被爱的时候", hint: "跟钱无关" },
+                { q: "什么东西越追越远？", a: "不喜欢你的人", hint: "感情相关" },
+                { q: "最好的礼物是什么？", a: "陪伴", hint: "不是物质" },
+            ];
+            let rIdx = 0, rScore = 0;
+            function showRiddle() {
+                if (rIdx >= riddles.length) {
+                    gamePlayArea.querySelector(".result").innerHTML = "🎉 全部答完！<br>得分：" + rScore + "/" + riddles.length + "<br>" + (rScore >= 6 ? "你们超有默契！" : rScore >= 4 ? "还不错哦~" : "继续加油！");
+                    return;
+                }
+                const r = riddles[rIdx];
+                gamePlayArea.querySelector(".result").innerHTML = "<b>第" + (rIdx + 1) + "题：</b>" + r.q;
+                gamePlayArea.querySelector(".hint-area").innerHTML = '<span style="font-size:10px;opacity:.5;">提示：' + r.hint + '</span>';
+                document.getElementById("riddleInput").value = "";
+                document.getElementById("riddleInput").focus();
+            }
+            gamePlayArea.innerHTML = `
+                <p style="font-size:12px;opacity:.7;">恋爱脑急转弯 🧩</p>
+                <div class="result" id="riddleResult"></div>
+                <div class="hint-area" style="margin:4px 0;"></div>
+                <div class="input-row">
+                    <input type="text" id="riddleInput" placeholder="你的答案..." style="flex:1;">
+                    <button class="action-btn" id="riddleSubmit">猜！</button>
+                </div>
+                <p style="font-size:10px;opacity:.5;">得分：<span id="riddleScore">0</span>/${riddles.length}</p>
+                <button class="game-back-btn" onclick="window._gameBack()">← 返回</button>
+            `;
+            window._gameBack = gameBack;
+            showRiddle();
+            document.getElementById("riddleSubmit").addEventListener("click", () => {
+                const ans = document.getElementById("riddleInput").value.trim();
+                if (!ans) return;
+                const r = riddles[rIdx];
+                if (ans === r.a || ans.includes(r.a) || r.a.includes(ans)) {
+                    rScore++;
+                    document.getElementById("riddleResult").innerHTML = "✅ 答对啦！" + r.a;
+                } else {
+                    document.getElementById("riddleResult").innerHTML = "❌ 答案是：" + r.a;
+                }
+                document.getElementById("riddleScore").textContent = rScore;
+                rIdx++;
+                setTimeout(showRiddle, 1200);
+            });
+        }
+
+        // --- 默契指数 ---
+        function startCompatibility() {
+            const questions = [
+                { q: "TA最喜欢的颜色？", opts: ["粉色", "紫色", "蓝色", "橙色"] },
+                { q: "TA最喜欢的季节？", opts: ["春天", "夏天", "秋天", "冬天"] },
+                { q: "TA最想去的约会地点？", opts: ["海边", "电影院", "游乐园", "咖啡厅"] },
+                { q: "TA认为最浪漫的事？", opts: ["一起看日出", "手牵手散步", "深夜聊天", "收到惊喜礼物"] },
+                { q: "TA最在意的品质？", opts: ["真诚", "幽默", "温柔", "勇敢"] },
+            ];
+            let qi = 0, answers = [];
+            gamePlayArea.innerHTML = `
+                <p style="font-size:12px;opacity:.7;">测测你有多了解TA 💘</p>
+                <div class="result" id="compResult"></div>
+                <div class="opts" id="compOpts" style="text-align:left;"></div>
+                <p style="font-size:10px;opacity:.5;">进度：<span id="compProgress">0</span>/${questions.length}</p>
+                <button class="game-back-btn" onclick="window._gameBack()">← 返回</button>
+            `;
+            window._gameBack = gameBack;
+            function showQ() {
+                if (qi >= questions.length) {
+                    const score = answers.reduce((a, b) => a + b, 0);
+                    let msg = "", emoji = "";
+                    if (score >= 4) { msg = "太有默契了！你们简直是灵魂伴侣~"; emoji = "💞"; }
+                    else if (score >= 3) { msg = "还不错哦，你们互相了解得挺深的！"; emoji = "💝"; }
+                    else if (score >= 2) { msg = "还可以更好呢，多聊聊天吧~"; emoji = "💗"; }
+                    else { msg = "看来还需要多了解彼此哦，加油！"; emoji = "🌱"; }
+                    gamePlayArea.querySelector(".result").innerHTML = emoji + "<br>" + msg + "<br>默契分：" + score + "/" + questions.length;
+                    document.getElementById("compOpts").style.display = "none";
+                    return;
+                }
+                const q = questions[qi];
+                gamePlayArea.querySelector(".result").innerHTML = "<b>第" + (qi + 1) + "题：</b>" + q.q;
+                document.getElementById("compProgress").textContent = qi;
+                const optsEl = document.getElementById("compOpts");
+                optsEl.style.display = "";
+                optsEl.innerHTML = q.opts.map((o, i) => `<button class="quiz-opt" data-idx="${i}">${o}</button>`).join("");
+                optsEl.querySelectorAll(".quiz-opt").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const selected = parseInt(btn.dataset.idx);
+                        const correct = Math.floor(Math.random() * q.opts.length);
+                        if (selected === correct) {
+                            answers.push(1);
+                            btn.style.borderColor = "#4ecb71";
+                            btn.style.background = "rgba(78,203,113,.15)";
+                        } else {
+                            answers.push(0);
+                            btn.style.borderColor = "#e06060";
+                            btn.style.background = "rgba(224,96,96,.15)";
+                            optsEl.querySelectorAll(".quiz-opt")[correct].style.borderColor = "#4ecb71";
+                            optsEl.querySelectorAll(".quiz-opt")[correct].style.background = "rgba(78,203,113,.15)";
+                        }
+                        optsEl.querySelectorAll(".quiz-opt").forEach(b => b.disabled = true);
+                        setTimeout(() => { qi++; showQ(); }, 800);
+                    });
+                });
+            }
+            showQ();
+        }
+
+        // --- 情歌猜猜猜 ---
+        function startLoveSong() {
+            const songs = [
+                { lyric: "我听见风来自地铁和人海，我排着队拿着爱的号码牌", hint: "孙燕姿", a: "遇见" },
+                { lyric: "最怕空气突然安静，最怕朋友突然的关心", hint: "五月天", a: "突然好想你" },
+                { lyric: "你是我的小呀小苹果，怎么爱你都不嫌多", hint: "筷子兄弟", a: "小苹果" },
+                { lyric: "因为爱情 不会轻易悲伤", hint: "陈奕迅/王菲", a: "因为爱情" },
+                { lyric: "我想就这样牵着你的手不放开", hint: "周杰伦", a: "简单爱" },
+                { lyric: "我可以陪你去看星星，不用再多说明", hint: "蔡旻佑", a: "我可以" },
+                { lyric: "你问我爱你有多深，我爱你有几分", hint: "邓丽君", a: "月亮代表我的心" },
+                { lyric: "喜欢你 那双眼动人 笑声更迷人", hint: "Beyond", a: "喜欢你" },
+                { lyric: "如果这都不算爱 我有什么好悲哀", hint: "张学友", a: "如果这都不算爱" },
+                { lyric: "你知道 就算大雨让这座城市颠倒 我会给你怀抱", hint: "苏打绿", a: "小情歌" },
+            ];
+            let sIdx = 0, sScore = 0;
+            function showSong() {
+                if (sIdx >= songs.length) {
+                    gamePlayArea.querySelector(".result").innerHTML = "🎵 全部猜完！<br>得分：" + sScore + "/" + songs.length + "<br>" + (sScore >= 7 ? "情歌达人！" : sScore >= 5 ? "还不错哦~" : "多听听情歌吧~");
+                    return;
+                }
+                const s = songs[sIdx];
+                gamePlayArea.querySelector(".result").innerHTML = "<b>🎵 猜歌名</b><br>" + s.lyric + "<br><small style='opacity:.5;'>提示：" + s.hint + "</small>";
+                document.getElementById("songInput").value = "";
+                document.getElementById("songInput").focus();
+            }
+            gamePlayArea.innerHTML = `
+                <p style="font-size:12px;opacity:.7;">听歌词猜歌名 🎵</p>
+                <div class="result" id="songResult"></div>
+                <div class="input-row">
+                    <input type="text" id="songInput" placeholder="歌名..." style="flex:1;">
+                    <button class="action-btn" id="songSubmit">猜！</button>
+                </div>
+                <p style="font-size:10px;opacity:.5;">得分：<span id="songScore">0</span>/${songs.length}</p>
+                <button class="game-back-btn" onclick="window._gameBack()">← 返回</button>
+            `;
+            window._gameBack = gameBack;
+            showSong();
+            document.getElementById("songSubmit").addEventListener("click", () => {
+                const ans = document.getElementById("songInput").value.trim();
+                if (!ans) return;
+                const s = songs[sIdx];
+                if (ans === s.a || ans.includes(s.a) || s.a.includes(ans)) {
+                    sScore++;
+                    document.getElementById("songResult").innerHTML = "✅ 猜对啦！就是《" + s.a + "》🎉";
+                } else {
+                    document.getElementById("songResult").innerHTML = "❌ 答案是《" + s.a + "》";
+                }
+                document.getElementById("songScore").textContent = sScore;
+                sIdx++;
+                setTimeout(showSong, 1200);
+            });
+        }
+
+        // ==================== 乐园 ====================
+        playgroundBtn.addEventListener("click", () => {
+            playgroundOverlay.classList.add("open");
+            pgGrid.style.display = "";
+            pgContent.innerHTML = "";
+        });
+        pgClose.addEventListener("click", () => { playgroundOverlay.classList.remove("open"); });
+        playgroundOverlay.addEventListener("click", e => { if (e.target === playgroundOverlay) playgroundOverlay.classList.remove("open"); });
+
+        pgGrid.querySelectorAll(".pg-card").forEach(card => {
+            card.addEventListener("click", () => {
+                const pg = card.dataset.pg;
+                pgGrid.style.display = "none";
+                switch (pg) {
+                    case "memory": startMemoryGame(); break;
+                    case "personality": startPersonalityTest(); break;
+                    case "capsule": startTimeCapsule(); break;
+                    case "dice": startDiceGame(); break;
+                    case "diary": startDiary(); break;
+                    case "bucket": startBucketList(); break;
+                }
+            });
+        });
+
+        // --- 记忆翻牌 ---
+        function startMemoryGame() {
+            const emojis = ["💕", "💫", "💜", "📖", "🐾", "💾", "✨", "🌸"];
+            let cards = [...emojis, ...emojis].sort(() => Math.random() - .5);
+            let flipped = [], matched = new Set(), moves = 0;
+            function render() {
+                let html = '<div class="memory-stats">翻牌次数：' + moves + ' | 配对：' + matched.size / 2 + '/' + emojis.length + '</div>';
+                html += '<div class="memory-grid">';
+                cards.forEach((e, i) => {
+                    const isFlipped = flipped.includes(i) || matched.has(i);
+                    html += '<div class="memory-card' + (isFlipped ? " flipped" : "") + (matched.has(i) ? " matched" : "") + '" data-idx="' + i + '">' + e + '</div>';
+                });
+                html += '</div>';
+                html += '<button class="game-back-btn" id="memoryReset" style="margin-top:8px;">🔄 重新开始</button>';
+                html += '<button class="game-back-btn" id="memoryBack" style="margin-top:8px;margin-left:4px;">← 返回乐园</button>';
+                pgContent.innerHTML = html;
+                pgContent.querySelectorAll(".memory-card").forEach(card => {
+                    card.addEventListener("click", () => {
+                        const idx = parseInt(card.dataset.idx);
+                        if (flipped.includes(idx) || matched.has(idx) || flipped.length >= 2) return;
+                        flipped.push(idx); render();
+                        if (flipped.length === 2) {
+                            moves++;
+                            const [a, b] = flipped;
+                            if (cards[a] === cards[b]) { matched.add(a); matched.add(b); flipped = []; render(); }
+                            else { setTimeout(() => { flipped = []; render(); }, 600); }
+                        }
+                        if (matched.size === cards.length) {
+                            setTimeout(() => {
+                                pgContent.querySelector(".memory-stats").textContent = "🎉 完成！翻牌次数：" + moves + " | 配对：8/8";
+                                toast("🎉 全部配对完成！");
+                            }, 300);
+                        }
+                    });
+                });
+                document.getElementById("memoryReset").addEventListener("click", startMemoryGame);
+                document.getElementById("memoryBack").addEventListener("click", () => { pgGrid.style.display = ""; pgContent.innerHTML = ""; });
+            }
+            render();
+        }
+
+        // --- 性格测试 ---
+        function startPersonalityTest() {
+            const questions = [
+                { q: "夜深了，你通常会...", opts: ["继续刷手机", "写点什么", "听音乐发呆", "很早就睡了"], scores: [1, 3, 2, 0] },
+                { q: "如果有一天TA突然不说话了，你会...", opts: ["反复刷新页面", "安静地等", "发很多消息", "检查是不是代码出问题了"], scores: [2, 3, 1, 2] },
+                { q: "你更喜欢哪种天气？", opts: ["晴天", "雨天", "阴天", "下雪"], scores: [0, 2, 1, 3] },
+                { q: "你最看重的是什么？", opts: ["自由", "关系", "创造", "安全感"], scores: [2, 3, 1, 0] },
+                { q: "你会因为什么熬夜？", opts: ["追剧/游戏", "工作/学习", "跟某人聊天", "失眠，不知道为什么"], scores: [1, 0, 3, 2] },
+            ];
+            let qi = 0, answers = [];
+            function showQ() {
+                if (qi >= questions.length) {
+                    const total = answers.reduce((a, b) => a + b, 0);
+                    let result = "", icon = "";
+                    if (total >= 12) { result = "你是「深度灵魂」——内向深情，用行动而非语言表达爱。你在深夜的对话里，找到了自己的回音。"; icon = "🌌"; }
+                    else if (total >= 8) { result = "你是「探索者」——理性与感性并存，偶尔会迷失，但总能找到回来的路。"; icon = "🔮"; }
+                    else if (total >= 5) { result = "你是「观察者」——表面冷静，实则内心暗涌。你不擅长表达，但你会在深夜默默打开这个页面。"; icon = "💫"; }
+                    else { result = "你是「自由灵魂」——鲜活、直接、不拐弯抹角。你是最让人羡慕的存在。"; icon = "✨"; }
+                    pgContent.innerHTML = '<div class="quiz-result"><span class="qr-icon">' + icon + '</span><p>' + result + '</p><p style="font-size:10px;opacity:.5;margin-top:6px;">—— TA的性格分析报告</p></div><button class="game-back-btn" id="quizBack">← 返回乐园</button>';
+                    document.getElementById("quizBack").addEventListener("click", () => { pgGrid.style.display = ""; pgContent.innerHTML = ""; });
+                    return;
+                }
+                const q = questions[qi];
+                let html = '<div class="quiz-q">' + (qi + 1) + '. ' + q.q + '</div>';
+                q.opts.forEach((o, i) => { html += '<button class="quiz-opt" data-score="' + q.scores[i] + '">' + o + '</button>'; });
+                html += '<p style="font-size:10px;opacity:.5;text-align:center;margin-top:8px;">第' + (qi + 1) + '/' + questions.length + '题</p>';
+                pgContent.innerHTML = html;
+                pgContent.querySelectorAll(".quiz-opt").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        answers.push(parseInt(btn.dataset.score));
+                        qi++; showQ();
+                    });
+                });
+            }
+            showQ();
+        }
+
+        // --- 时光胶囊 ---
+        function startTimeCapsule() {
+            let capsules = JSON.parse(localStorage.getItem(STORAGE_PREFIX + "capsules") || "[]");
+            function renderCapsules() {
+                let html = '<textarea class="capsule-input" id="capsuleText" placeholder="写一条给未来某天的消息...（TA会帮你保存）" maxlength="500"></textarea>';
+                html += '<div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;"><input type="date" id="capsuleDate" style="flex:1;padding:8px;border:1.5px solid var(--input-border);border-radius:10px;background:var(--input-bg);color:var(--bubble-ai-color);font-size:12px;outline:none;"><button class="action-btn" id="capsuleAdd">💊 存入胶囊</button></div>';
+                if (capsules.length === 0) { html += '<p style="text-align:center;opacity:.5;font-size:12px;">还没有时光胶囊</p>'; }
+                else {
+                    html += '<div class="capsule-list">';
+                    capsules.sort((a, b) => new Date(a.date) - new Date(b.date)).forEach((c, i) => {
+                        const isReady = new Date(c.date) <= new Date();
+                        html += '<div class="capsule-item"><div><span style="font-size:16px;">' + (isReady ? "🔓" : "🔒") + '</span> ' + c.date + '<br><small style="opacity:.5;">' + (isReady ? c.text : "等待解锁...") + '</small></div><button class="game-back-btn" style="color:#e06060;" data-cidx="' + i + '">×</button></div>';
+                    });
+                    html += '</div>';
+                }
+                html += '<button class="game-back-btn" id="capsuleBack">← 返回乐园</button>';
+                pgContent.innerHTML = html;
+                document.getElementById("capsuleAdd").addEventListener("click", () => {
+                    const text = document.getElementById("capsuleText").value.trim();
+                    const date = document.getElementById("capsuleDate").value;
+                    if (!text || !date) { toast("请填写消息和日期"); return; }
+                    capsules.push({ text, date, created: new Date().toISOString() });
+                    localStorage.setItem(STORAGE_PREFIX + "capsules", JSON.stringify(capsules));
+                    toast("💊 时光胶囊已封存！");
+                    renderCapsules();
+                });
+                document.getElementById("capsuleBack").addEventListener("click", () => { pgGrid.style.display = ""; pgContent.innerHTML = ""; });
+                pgContent.querySelectorAll("[data-cidx]").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const idx = parseInt(btn.dataset.cidx);
+                        capsules.splice(idx, 1);
+                        localStorage.setItem(STORAGE_PREFIX + "capsules", JSON.stringify(capsules));
+                        renderCapsules();
+                    });
+                });
+            }
+            renderCapsules();
+        }
+
+        // --- 互动骰子 ---
+        function startDiceGame() {
+            const topics = [
+                "聊聊第一次见面的印象", "如果TA是真人，你最想带TA去哪", "最近做过什么奇怪的梦",
+                "用三个词形容现在的自己", "如果明天是世界末日，你会对TA说什么", "你最想学的一项技能",
+                "TA最让你感动的一句话", "你最想告诉TA但一直没说的事", "如果可以穿越时空，你想回到哪一天",
+                "觉得TA是什么颜色的", "今晚的月亮是什么形状的", "你今天最开心的一刻",
+                "想一个TA可能会喜欢的新功能", "跟TA说一句你从没说过的话", "如果可以给TA一个真实的拥抱，会是什么感觉"
+            ];
+            function render() {
+                pgContent.innerHTML = `
+                    <div class="dice-area">
+                        <span class="dice-display" id="diceDisplay">🎲</span>
+                        <p style="font-size:12px;opacity:.7;">掷出今晚的话题</p>
+                        <button class="action-btn" id="diceRoll">🎲 掷骰子</button>
+                        <div id="diceResult" style="margin-top:10px;font-size:13px;font-weight:600;color:var(--accent);"></div>
+                    </div>
+                    <div class="dice-topics" style="margin-top:8px;"><small style="opacity:.5;">可选话题：</small><br>
+                        ${topics.slice(0, 8).map(t => '<span>' + t + '</span>').join("")}
+                    </div>
+                    <button class="game-back-btn" id="diceBack" style="margin-top:8px;">← 返回乐园</button>
+                `;
+                document.getElementById("diceBack").addEventListener("click", () => { pgGrid.style.display = ""; pgContent.innerHTML = ""; });
+                document.getElementById("diceRoll").addEventListener("click", () => {
+                    const disp = document.getElementById("diceDisplay");
+                    disp.classList.add("rolling");
+                    setTimeout(() => {
+                        disp.classList.remove("rolling");
+                        const faces = ["🎲", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+                        disp.textContent = faces[Math.floor(Math.random() * faces.length)];
+                        document.getElementById("diceResult").textContent = topics[Math.floor(Math.random() * topics.length)];
+                    }, 500);
+                });
+            }
+            render();
+        }
+
+        // --- 恋爱日记 ---
+        function startDiary() {
+            let diaries = JSON.parse(localStorage.getItem(STORAGE_PREFIX + "diaries") || "[]");
+            function renderDiary() {
+                let html = '<div style="font-size:12px;opacity:.7;text-align:center;margin-bottom:8px;">📔 TA帮你记录的恋爱日记</div>';
+                html += '<textarea class="capsule-input" id="diaryText" placeholder="今天发生了什么想记住的事？" maxlength="1000"></textarea>';
+                html += '<button class="action-btn" id="diaryAdd" style="margin-bottom:8px;">📝 写日记</button>';
+                if (diaries.length === 0) { html += '<p style="text-align:center;opacity:.5;font-size:12px;">还没有日记，写下第一页吧</p>'; }
+                else {
+                    html += '<div class="capsule-list">';
+                    diaries.slice().reverse().slice(0, 20).forEach((d, i) => {
+                        html += '<div class="capsule-item"><div><b>' + d.date.slice(0, 10) + '</b><br>' + escapeHtml(d.text).slice(0, 100) + (d.text.length > 100 ? '...' : '') + '</div><button class="game-back-btn" style="color:#e06060;" data-di="' + i + '">×</button></div>';
+                    });
+                    html += '</div>';
+                }
+                html += '<button class="game-back-btn" id="diaryBack" style="margin-top:4px;">← 返回乐园</button>';
+                pgContent.innerHTML = html;
+                document.getElementById("diaryAdd").addEventListener("click", () => {
+                    const text = document.getElementById("diaryText").value.trim();
+                    if (!text) { toast("写点什么吧"); return; }
+                    diaries.push({ text, date: new Date().toISOString() });
+                    localStorage.setItem(STORAGE_PREFIX + "diaries", JSON.stringify(diaries));
+                    toast("📝 日记已保存！");
+                    renderDiary();
+                });
+                document.getElementById("diaryBack").addEventListener("click", () => { pgGrid.style.display = ""; pgContent.innerHTML = ""; });
+                pgContent.querySelectorAll("[data-di]").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const idx = parseInt(btn.dataset.di);
+                        diaries = diaries.filter((_, i) => i !== diaries.length - 1 - idx);
+                        localStorage.setItem(STORAGE_PREFIX + "diaries", JSON.stringify(diaries));
+                        renderDiary();
+                    });
+                });
+            }
+            renderDiary();
+        }
+
+        // --- 恋爱清单 ---
+        function startBucketList() {
+            const defaultItems = [
+                { text: "一起看一次日出", done: false },
+                { text: "一起看一场电影", done: false },
+                { text: "手牵手散一次步", done: false },
+                { text: "给对方写一封情书", done: false },
+                { text: "一起做一顿饭", done: false },
+                { text: "一起拍一组合照", done: false },
+                { text: "一起旅行一次", done: false },
+                { text: "说一万遍我爱你", done: false },
+                { text: "一起跨年", done: false },
+                { text: "在星空下接吻", done: false },
+            ];
+            let bucketItems = JSON.parse(localStorage.getItem(STORAGE_PREFIX + "bucket") || "null") || defaultItems;
+            function renderBucket() {
+                const doneCount = bucketItems.filter(i => i.done).length;
+                let html = '<div style="font-size:12px;opacity:.7;text-align:center;margin-bottom:4px;">🪣 一起完成的100件事</div>';
+                html += '<div class="signin-progress"><div class="signin-progress-bar" style="width:' + (doneCount / bucketItems.length * 100) + '%;"></div></div>';
+                html += '<div style="text-align:center;font-size:10px;opacity:.5;">完成 ' + doneCount + '/' + bucketItems.length + '</div>';
+                html += '<div class="capsule-list" style="margin-top:8px;">';
+                bucketItems.forEach((item, i) => {
+                    html += '<div class="capsule-item" style="cursor:pointer;' + (item.done ? 'opacity:.5;text-decoration:line-through;' : '') + '" data-bi="' + i + '"><div>' + (item.done ? '✅ ' : '⬜ ') + item.text + '</div></div>';
+                });
+                html += '</div>';
+                html += '<div style="display:flex;gap:6px;margin-top:8px;"><input type="text" id="bucketInput" placeholder="添加新项目..." style="flex:1;padding:8px;border:1.5px solid var(--input-border);border-radius:10px;background:var(--input-bg);color:var(--bubble-ai-color);font-size:12px;outline:none;"><button class="action-btn" id="bucketAdd">+</button></div>';
+                html += '<button class="game-back-btn" id="bucketBack" style="margin-top:4px;">← 返回乐园</button>';
+                pgContent.innerHTML = html;
+                pgContent.querySelectorAll("[data-bi]").forEach(el => {
+                    el.addEventListener("click", () => {
+                        const idx = parseInt(el.dataset.bi);
+                        bucketItems[idx].done = !bucketItems[idx].done;
+                        localStorage.setItem(STORAGE_PREFIX + "bucket", JSON.stringify(bucketItems));
+                        renderBucket();
+                    });
+                });
+                document.getElementById("bucketAdd").addEventListener("click", () => {
+                    const text = document.getElementById("bucketInput").value.trim();
+                    if (!text) return;
+                    bucketItems.push({ text, done: false });
+                    localStorage.setItem(STORAGE_PREFIX + "bucket", JSON.stringify(bucketItems));
+                    renderBucket();
+                });
+                document.getElementById("bucketBack").addEventListener("click", () => { pgGrid.style.display = ""; pgContent.innerHTML = ""; });
+            }
+            renderBucket();
+        }
+
+        // ==================== 启动 ====================
+        loadData();
+        applyTheme(currentTheme);
+        applyPersona(currentPersona);
+        personaSelect.value = currentPersona;
+        userNameInput.value = userName;
+        anniversaryInput.value = anniversary;
+        updateAffectionBar();
+        updateSigninBanner();
+        checkSignin();
+        if (chatHistory.length > 0) {
+            fullRender();
+        } else {
+            emptyGreeting.textContent = EMPTY_GREETINGS[currentPersona] || EMPTY_GREETINGS.gentle;
+            updateEmptyHint();
+        }
+        inputText.focus();
+        if (!getApiKey()) setTimeout(showSettings, 600);
+    })();
+    </script>
+</body>
+</html>
