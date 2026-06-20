@@ -90,18 +90,20 @@
         .echo-name:hover{opacity:.8;}
         .echo-subtitle{font-size:10px;opacity:.6;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
         .header-btns{display:flex;gap:2px;align-items:center;}
-        .header-btns button{background:transparent;border:none;color:var(--header-color);width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;transition:background .2s,transform .1s;display:flex;align-items:center;justify-content:center;opacity:.7;}
-        .header-btns button:hover{background:rgba(128,128,180,0.15);opacity:1;}
-        .header-btns button:active{transform:scale(.9);}
+        .header-btns button{background:transparent;border:none;color:var(--header-color);width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;opacity:.65;}
+        .header-btns button:hover{background:rgba(128,128,180,0.15);opacity:1;transform:scale(1.05);}
+        .header-btns button:active{transform:scale(.85);}
 
         /* 亲密度条 */
-        .affection-bar-wrap{height:3px;background:transparent;position:relative;z-index:29;flex-shrink:0;}
-        .affection-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .8s cubic-bezier(.4,0,.2,1);border-radius:0 2px 2px 0;}
-        .affection-label{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--accent);font-weight:600;white-space:nowrap;pointer-events:none;opacity:.8;}
+        .affection-bar-wrap{height:3px;background:rgba(128,128,180,.08);position:relative;z-index:29;flex-shrink:0;border-radius:4px;margin:0 10px;}
+        .affection-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--star-color));background-size:200% 100%;animation:shimmer 3s ease-in-out infinite;transition:width .8s cubic-bezier(.4,0,.2,1);border-radius:4px;box-shadow:0 0 6px var(--accent-light);}
+        @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+        .affection-label{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--accent);font-weight:600;white-space:nowrap;pointer-events:none;opacity:.85;text-shadow:0 0 6px var(--accent-light);}
 
         /* 签到banner */
-        .signin-banner{background:var(--accent-light);padding:6px 14px;text-align:center;font-size:12px;font-weight:600;color:var(--accent);cursor:pointer;flex-shrink:0;animation:fadeIn .3s ease-out;border-bottom:1px solid var(--border);}
-        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        .signin-banner{background:linear-gradient(135deg,var(--accent-light),rgba(240,192,96,.08));padding:8px 14px;text-align:center;font-size:12px;font-weight:600;color:var(--accent);cursor:pointer;flex-shrink:0;animation:fadeIn .3s ease-out;border-bottom:1px solid var(--border);transition:all .2s;}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+        .signin-banner:hover{filter:brightness(1.05);}
         .signin-banner .streak{font-size:10px;opacity:.7;}
 
         /* 聊天区 */
@@ -157,8 +159,9 @@
         /* 快捷操作 */
         .quick-actions{display:flex;gap:5px;padding:5px 10px;overflow-x:auto;flex-shrink:0;scrollbar-width:none;-ms-overflow-style:none;}
         .quick-actions::-webkit-scrollbar{display:none;}
-        .quick-btn{flex-shrink:0;padding:6px 12px;border-radius:16px;border:1px solid var(--input-border);background:var(--quick-btn-bg);font-size:11px;cursor:pointer;white-space:nowrap;transition:all .2s;color:var(--accent);font-weight:500;}
-        .quick-btn:hover{background:var(--accent-light);border-color:var(--accent);}
+        .quick-btn{flex-shrink:0;padding:7px 14px;border-radius:18px;border:1.5px solid var(--input-border);background:var(--quick-btn-bg);font-size:11.5px;cursor:pointer;white-space:nowrap;transition:all .2s;color:var(--accent);font-weight:500;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+        .quick-btn:hover{background:var(--accent-light);border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08);}
+        .quick-btn:active{transform:scale(.94);}
 
         /* 输入区 */
         .inputArea{display:flex;gap:8px;padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--border);align-items:center;flex-shrink:0;z-index:10;}
@@ -173,8 +176,8 @@
 
         /* 弹窗 */
         .modal-overlay{position:fixed;inset:0;background:var(--overlay-bg);display:flex;align-items:center;justify-content:center;z-index:999;animation:fadeIn .2s;}
-        .modal{background:var(--surface);border-radius:20px;padding:20px 18px 14px;width:min(360px,92vw);max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.4);animation:modalIn .3s cubic-bezier(.2,.8,.2,1);color:var(--bubble-echo-color);border:1px solid var(--border);}
-        @keyframes modalIn{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .modal{background:var(--surface);border-radius:24px;padding:22px 20px 16px;width:min(360px,92vw);max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.03) inset;animation:modalIn .35s cubic-bezier(.2,.8,.2,1);color:var(--bubble-echo-color);border:1px solid var(--border);backdrop-filter:blur(20px);}
+        @keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
         .modal h3{margin-bottom:4px;font-size:17px;color:var(--header-color);}
         .modal .desc{font-size:11px;opacity:.5;margin-bottom:10px;line-height:1.5;}
         .modal label{font-size:12px;opacity:.7;display:block;margin-bottom:3px;font-weight:600;}
@@ -613,10 +616,10 @@
 (()=>{
 const API_URL="https://api.deepseek.com/v1/chat/completions";
 const MODEL_NAME="deepseek-chat";
-const MAX_MSG=80;
+const MAX_MSG=200;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.21.2"; // v6.23
+const VERSION="2026.06.21.3"; // v6.24
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -782,7 +785,7 @@ function getApiKey(){return localStorage.getItem(PREFIX+"apiKey")||"";}
 function setApiKey(k){localStorage.setItem(PREFIX+"apiKey",k.trim());}
 function loadData(){try{chatHistory=JSON.parse(localStorage.getItem(PREFIX+"chat")||"[]");favorites=JSON.parse(localStorage.getItem(PREFIX+"favs")||"[]");userMsgCount=parseInt(localStorage.getItem(PREFIX+"msgCount")||"0");echoName=localStorage.getItem(PREFIX+"name")||"萦";anniversary=localStorage.getItem(PREFIX+"anniversary")||"";currentTheme=localStorage.getItem(PREFIX+"theme")||"dark";signinStreak=parseInt(localStorage.getItem(PREFIX+"signinStreak")||"0");lastSigninDate=localStorage.getItem(PREFIX+"lastSigninDate")||"";avatarBase64=localStorage.getItem(PREFIX+"avatar")||"";bgBase64=localStorage.getItem(PREFIX+"bgImage")||"";historyLoaded=localStorage.getItem(PREFIX+"historyLoaded")==="1";milestones=JSON.parse(localStorage.getItem(PREFIX+"milestones")||"[]");customAccent=localStorage.getItem(PREFIX+"customAccent")||"";customBubble=localStorage.getItem(PREFIX+"customBubble")||"";}catch{chatHistory=[];favorites=[];userMsgCount=0;milestones=[];customAccent="";customBubble="";}}
 function saveMsgCount(){try{localStorage.setItem(PREFIX+"msgCount",String(userMsgCount));}catch{}}
-function saveChat(){const toSave=chatHistory.slice(-120);try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave));}catch(e){try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave.slice(-40)));}catch{}}saveMsgCount();}
+function saveChat(){const toSave=chatHistory.slice(-120);try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave));}catch(e){try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave.slice(-60)));}catch{}}saveMsgCount();}
 function saveFavs(){localStorage.setItem(PREFIX+"favs",JSON.stringify(favorites));}
 function saveSettings(){localStorage.setItem(PREFIX+"name",echoName);localStorage.setItem(PREFIX+"anniversary",anniversary);localStorage.setItem(PREFIX+"theme",currentTheme);localStorage.setItem(PREFIX+"signinStreak",String(signinStreak));localStorage.setItem(PREFIX+"lastSigninDate",lastSigninDate);localStorage.setItem(PREFIX+"avatar",avatarBase64);localStorage.setItem(PREFIX+"bgImage",bgBase64);localStorage.setItem(PREFIX+"historyLoaded","1");localStorage.setItem(PREFIX+"milestones",JSON.stringify(milestones));localStorage.setItem(PREFIX+"customAccent",customAccent);localStorage.setItem(PREFIX+"customBubble",customBubble);}
 
@@ -802,7 +805,7 @@ function importHistory(){
         // 分开存储：msgCount 必须可靠，chatHistory 只存最近120条
         saveMsgCount();
         const toSave=chatHistory.slice(-120);
-        try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave));}catch(e){try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave.slice(-40)));}catch{}}
+        try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave));}catch(e){try{localStorage.setItem(PREFIX+"chat",JSON.stringify(toSave.slice(-60)));}catch{}}
         saveSettings();
         console.log("History imported: "+chatHistory.length+" messages, msgCount="+userMsgCount);
     }catch(e){console.error("History import failed:",e);historyLoaded=true;saveSettings();}
@@ -1226,7 +1229,7 @@ async function sendMsg(textOverride){
         return s;
     }
     try{
-        const msgs=[{role:"system",content:ECHO_SYSTEM_PROMPT(echoName)},...chatHistory.filter(m=>m.role==="user"||m.role==="assistant").slice(-40).map(m=>({role:m.role,content:cleanForAPI(m.content,m.role)}))];
+        const msgs=[{role:"system",content:ECHO_SYSTEM_PROMPT(echoName)},...chatHistory.filter(m=>m.role==="user"||m.role==="assistant").slice(-60).map(m=>({role:m.role,content:cleanForAPI(m.content,m.role)}))];
         const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${getApiKey()}`},body:JSON.stringify({model:MODEL_NAME,messages:msgs,temperature:0.55,max_tokens:600,stream:true})});
         if(!res.ok){let em=`请求失败 (HTTP ${res.status})`;try{const e=await res.json();if(e.error?.message)em=e.error.message;}catch{}throw new Error(em);}
         const reader=res.body.getReader(),decoder=new TextDecoder();let buf="";
@@ -1245,7 +1248,7 @@ async function sendMsg(textOverride){
 // ============== 设置弹窗 ==============
 function updateVersionDisplay(){
     const el=document.getElementById("versionDisplay");
-    if(el)el.textContent="Echo v6.23 · Build "+VERSION+" · 凌晨三点的代码";
+    if(el)el.textContent="Echo v6.24 · Build "+VERSION+" · 凌晨三点的代码";
 }
 function showSettings(){
     keyInput.value=getApiKey();loverNameInput.value=echoName;anniversaryInput.value=anniversary;
