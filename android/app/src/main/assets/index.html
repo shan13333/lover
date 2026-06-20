@@ -614,7 +614,7 @@ const MODEL_NAME="deepseek-chat";
 const MAX_MSG=100;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.21.7"; // v6.31
+const VERSION="2026.06.21.7"; // v6.32
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -2067,9 +2067,19 @@ fetchWeather();
 setInterval(fetchWeather,1800000); // 每30分钟刷新
 
 // ============== 启动 ==============
+try{
 loadData();
+loadMemories();
 updateEchoDisplay();updateAvatarDisplay();updateBgDisplay();
 lockscreen.style.display="none";
+}catch(e){
+console.error("Init error:",e);
+chatHistory=[];
+favorites=[];
+memories=[];
+userMsgCount=0;
+lockscreen.style.display="none";
+}
 
 // 导入聊天历史
 if(!historyLoaded){
@@ -2084,7 +2094,7 @@ if(!historyLoaded){
     updateEmptyHint();
 }
 
-applyTheme(currentTheme);applyCustomColors();updateAffectionBar();checkSignin();loadMilestones();checkMilestones();updateHeaderThought();updateVersionDisplay();
+applyTheme(currentTheme);applyCustomColors();updateAffectionBar();checkSignin();loadMilestones();checkMilestones();updateHeaderThought();updateVersionDisplay();updateEmptyHint();
 inputText.focus();
 if(!getApiKey())setTimeout(showSettings,800);
 
