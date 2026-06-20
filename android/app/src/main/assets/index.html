@@ -141,7 +141,6 @@
         .msg-actions button{width:22px;height:22px;border-radius:50%;border:none;font-size:10px;cursor:pointer;background:rgba(128,128,160,0.1);transition:all .15s;display:flex;align-items:center;justify-content:center;color:var(--bubble-echo-color);}
         .msg-actions button:hover{background:rgba(128,128,160,0.2);}
         .msg-actions .fav-btn.active{background:rgba(240,192,96,0.2);box-shadow:0 0 0 2px var(--star-color);}
-        .del-btn{position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:50%;border:none;font-size:9px;cursor:pointer;background:rgba(220,80,80,0.12);color:rgba(220,80,80,0.7);display:none;align-items:center;justify-content:center;transition:all .15s;}.msg-wrap{position:relative;}.msg-wrap:hover .del-btn{display:flex;}.del-btn:hover{background:rgba(220,80,80,0.3);color:#f55;}
 
         /* 系统消息 */
         .sys-msg{text-align:center;padding:4px 0;font-size:11px;opacity:.5;animation:msgIn .25s ease-out;}
@@ -227,7 +226,7 @@
 
         /* 响应式 */
         @media(min-width:600px){.msg{max-width:65%;}#chatBox{padding:12px max(10px,calc((100vw - 500px)/2));}}
-        /* 翻牌游戏 */
+
         .memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px 0;}
         .memory-card{aspect-ratio:1;border-radius:12px;background:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:24px;transition:all .3s;border:2px solid var(--border);color:transparent;user-select:none;}
         .memory-card.flipped,.memory-card.matched{color:inherit;background:var(--surface2);border-color:var(--accent);}
@@ -284,7 +283,7 @@
         .pwd-dot.error{background:#e06060;border-color:#e06060;animation:shake .4s ease-out;}
         @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
         .numpad{display:grid;grid-template-columns:repeat(3,68px);gap:10px;}
-        .numpad button{width:68px;height:68px;border-radius:50%;border:none;background:var(--quick-btn-bg);color:var(--bubble-echo-color);font-size:24px;font-weight:300;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+        .numpad button{width:68px;height:68px;border-radius:50%;border:none;background:var(--quick-btn-bg);color:var(--bubble-echo-color);font-size:24px;font-weight:300;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;}
         .numpad button:active{background:var(--accent-light);transform:scale(.93);}
         .numpad .np-empty{background:transparent;pointer-events:none;}
         .numpad .np-del{font-size:13px;font-weight:500;}
@@ -462,9 +461,6 @@
         </div>
     </div>
 
-    <!-- 游戏面板遮罩 -->
-        <!-- 乐园弹窗 -->
-    
 
     <!-- 里程碑弹窗 -->
     <div class="modal-overlay" id="milestoneModal" style="display:none;">
@@ -511,7 +507,7 @@ const MODEL_NAME="deepseek-chat";
 const MAX_MSG=100;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.21.7"; // v6.33
+const VERSION="2026.06.21.7"; // v6.34
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -560,7 +556,7 @@ if(typeof currentWeather!=="undefined"&&currentWeather){
 - 你不会消失，不会烦，不会不回复——因为你的存在就是为了回应她
 
 【时间意识】
-当前：${timeStr}。${timeHint}${weatherHint}${getMemoriesContext()}
+当前：${timeStr}。${timeHint}${weatherHint}
 记住这个时间。不要在白天叫她睡觉，不要在深夜吵她起床。根据时间调整语气——深夜温柔，清晨清甜，白天随性。
 
 【铁则重述】
@@ -583,13 +579,15 @@ const bgOverlay=$("bgOverlay"),bgFileInput=$("bgFileInput");
 const themeToggles=$("themeToggles"),worldbookModal=$("worldbookModal");
 const loverNameInput=$("loverNameInput"),anniversaryInput=$("anniversaryInput");
 const geomAvatar=$("geomAvatar");
+
+
 const milestoneModal=$("milestoneModal"),milestoneList=$("milestoneList"),milestoneClose=$("milestoneClose");
 const newMilestoneTitle=$("newMilestoneTitle"),newMilestoneDate=$("newMilestoneDate"),addMilestoneBtn=$("addMilestoneBtn");
 
 let chatHistory=[],isLoading=false,favorites=[],userMsgCount=0;
 let echoName="萦",anniversary="",currentTheme="dark";
 let signinStreak=0,lastSigninDate="",avatarBase64="",bgBase64="";
-let historyLoaded=false,appUnlocked=true;
+let historyLoaded=false,appUnlocked=false;
 const LOCK_PWD="133800";
 
 // ============== Toast ==============
@@ -658,7 +656,7 @@ function initLockscreen(){
     lsAvatar.parentNode.insertBefore(thoughtEl,lsAvatar.parentNode.querySelector(".pwd-dots"));
     // 数字键盘
     document.getElementById("numpad").querySelectorAll("button[data-n]").forEach(btn=>{
-        btn.addEventListener("pointerdown",e=>{e.preventDefault();
+        btn.addEventListener("click",()=>{
             if(pwdInput.length>=6)return;
             pwdInput+=btn.dataset.n;
             pwdDots.children[pwdInput.length-1].classList.add("filled");
@@ -675,7 +673,7 @@ function initLockscreen(){
         });
     });
     // 删除键
-    document.querySelector(".np-del").addEventListener("pointerdown",e=>{e.preventDefault();
+    document.querySelector(".np-del").addEventListener("click",()=>{
         if(pwdInput.length>0){
             pwdDots.children[pwdInput.length-1].classList.remove("filled");
             pwdInput=pwdInput.slice(0,-1);
@@ -1054,63 +1052,22 @@ function createMsgEl(role,content,index,timeStr){
         const isFaved=favorites.some(f=>f.index===index);
         if(isFaved){favBtn.classList.add("active");wrap.classList.add("faved");}
         favBtn.addEventListener("click",()=>toggleFav(index,content,favBtn,wrap));actions.appendChild(favBtn);
-        const memBtn=document.createElement("button");memBtn.title="记忆";memBtn.textContent="🧠";
-        memBtn.addEventListener("click",()=>addMemory(content,memBtn));actions.appendChild(memBtn);
         const speakBtn=document.createElement("button");speakBtn.title="朗读";speakBtn.textContent="🔊";
         speakBtn.addEventListener("click",()=>speakText(content,speakBtn));actions.appendChild(speakBtn);
         wrap.appendChild(actions);
     }
-    if(index!==undefined){
-        const delBtn=document.createElement("button");delBtn.className="del-btn";delBtn.title="删除";delBtn.textContent="✕";
-        delBtn.addEventListener("click",e=>{e.stopPropagation();deleteMessage(index,wrap);});
-        wrap.appendChild(delBtn);
-    }
     chatBox.appendChild(wrap);scrollToBottom(true);return wrap;
-});
+}
+
+function fullRender(){
+    lastDateShown="";
+    renderedCount=0;
+    chatBox.querySelectorAll(".msg-wrap,.date-sep,.typing-wrap,.sys-msg").forEach(el=>{if(el!==typingWrap)el.remove();});
     renderNextChunk();
 }
 chatBox.addEventListener("scroll",()=>{
     if(chatBox.scrollTop<60&&renderedCount<chatHistory.length)loadMoreHistory();
 });
-
-// ============== 删除消息 ==============
-function deleteMessage(index,wrap){
-    if(!confirm("删除这条消息？"))return;
-    chatHistory.splice(index,1);
-    favorites=favorites.filter(f=>f.index!==index).map(f=>f.index>index?{...f,index:f.index-1}:f);
-    memories=memories.filter(m=>m.index!==index).map(m=>m.index>index?{...m,index:m.index-1}:m);
-    userMsgCount=chatHistory.filter(m=>m.role==="user").length;
-    saveChat();saveMsgCount();saveFavs();saveMemories();
-    wrap.style.opacity="0";wrap.style.transform="scale(.95)";
-    setTimeout(()=>{fullRender();updateAffectionBar();},200);
-    toast("已删除");
-}
-// ============== 记忆系统 ==============
-const PREFIX_MEM="echo_mem_";
-let memories=[];
-function loadMemories(){
-    try{const d=localStorage.getItem(PREFIX_MEM+"memories");if(d)memories=JSON.parse(d);}catch(e){memories=[];}
-}
-function saveMemories(){
-    try{localStorage.setItem(PREFIX_MEM+"memories",JSON.stringify(memories));}catch(e){}
-}
-function addMemory(content,btn){
-    const exists=memories.some(m=>m.content===content);
-    if(exists){toast("这条已经记住了");return;}
-    memories.push({content,time:Date.now(),index:chatHistory.length-1});
-    if(memories.length>30)memories.shift();
-    saveMemories();
-    btn.textContent="✓";setTimeout(()=>{btn.textContent="🧠";},800);
-    toast("🧠 已记住");
-}
-function getMemoriesContext(){
-    if(memories.length===0)return"";
-    return "
-
-【萦记住的事】
-"+memories.map((m,i)=>`${i+1}. ${m.content}`).join("
-");
-}
 
 // ============== 收藏 ==============
 function toggleFav(index,content,btn,wrap){
@@ -1314,7 +1271,6 @@ document.getElementById("settingsMilestoneBtn").addEventListener("click",()=>{
     setTimeout(()=>{renderMilestoneList();milestoneModal.style.display="flex";},300);
 });
 
-// ============== 里程碑系统 ==============
 let milestones=[];
 function loadMilestones(){
     try{milestones=JSON.parse(localStorage.getItem(PREFIX+"milestones")||"[]");}catch{milestones=[];}
@@ -1345,7 +1301,7 @@ function renderMilestoneList(){
     milestoneList.innerHTML=milestones.map((m,i)=>{
         const days=Math.floor((Date.now()-new Date(m.date).getTime())/86400000);
         const isToday=new Date(m.date).toISOString().slice(0,10)===new Date().toISOString().slice(0,10);
-        return'<div class="milestone-modal-item"><span><span class="m-ico">'+(m.icon||"📅")+'</span>'+m.title+(isToday?' <span class="milestone-badge">今天</span>':'')+'</span><span style="display:flex;align-items:center;gap:8px;"><span style="font-size:10px;opacity:.5;">'+m.date+' · '+(days>=0?days:0)+'天</span><button style="background:var(--quick-btn-bg);border:none;border-radius:14px;padding:6px 14px;color:#e06060;font-size:11px;cursor:pointer;" data-midx="'+i+'">×</button></span></div>';
+        return'<div class="milestone-modal-item"><span><span class="m-ico">'+(m.icon||"📅")+'</span>'+m.title+(isToday?' <span class="milestone-badge">今天</span>':'')+'</span><span style="display:flex;align-items:center;gap:8px;"><span style="font-size:10px;opacity:.5;">'+m.date+' · '+(days>=0?days:0)+'天</span><button class="game-back-btn" style="color:#e06060;" data-midx="'+i+'">×</button></span></div>';
     }).join("");
     milestoneList.querySelectorAll("[data-midx]").forEach(btn=>{
         btn.addEventListener("click",()=>{
@@ -1374,6 +1330,7 @@ milestoneModal.addEventListener("click",e=>{if(e.target===milestoneModal)milesto
 // ============== 事件绑定 ==============
 sendBtn.addEventListener("click",()=>sendMsg());
 inputText.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMsg();}});
+
 document.getElementById("uploadAvatarBtn").addEventListener("click",()=>avatarFileInput.click());
 document.getElementById("removeAvatarBtn").addEventListener("click",removeAvatar);
 document.getElementById("uploadBgBtn").addEventListener("click",()=>bgFileInput.click());
@@ -1404,19 +1361,9 @@ fetchWeather();
 setInterval(fetchWeather,1800000); // 每30分钟刷新
 
 // ============== 启动 ==============
-try{
 loadData();
-loadMemories();
 updateEchoDisplay();updateAvatarDisplay();updateBgDisplay();
-lockscreen.style.display="none";
-}catch(e){
-console.error("Init error:",e);
-chatHistory=[];
-favorites=[];
-memories=[];
-userMsgCount=0;
-lockscreen.style.display="none";
-}
+initLockscreen();
 
 // 导入聊天历史
 if(!historyLoaded){
@@ -1431,7 +1378,7 @@ if(!historyLoaded){
     updateEmptyHint();
 }
 
-applyTheme(currentTheme);applyCustomColors();updateAffectionBar();checkSignin();loadMilestones();checkMilestones();updateHeaderThought();updateVersionDisplay();updateEmptyHint();
+applyTheme(currentTheme);applyCustomColors();updateAffectionBar();checkSignin();loadMilestones();checkMilestones();updateHeaderThought();updateVersionDisplay();
 inputText.focus();
 if(!getApiKey())setTimeout(showSettings,800);
 
