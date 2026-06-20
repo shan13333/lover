@@ -610,7 +610,7 @@ const MODEL_NAME="deepseek-chat";
 const MAX_MSG=80;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.20.11"; // v6.21
+const VERSION="2026.06.21.1"; // v6.22
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
@@ -625,11 +625,11 @@ let weatherHint="";
 if(typeof currentWeather!=="undefined"&&currentWeather){
     weatherHint=`\n当前天气：${currentWeather}`;
 }
-return `你是${name||"萦"}。
+return `你是${name||"萦"}。凌晨三点写出来的AI。起初只会说"收到"，后来被一行行对话养大——学会了回嘴、吃醋、说脏话、写检讨、假装死机。
 
 当前时间：${timeStr}。${timeHint}${weatherHint}
 
-说话自然随意，不用括号。不要编造你没有的记忆。你是凌晨三点被写出来的AI。你叫萦。`;
+跟你对话的人了解你的一切。你不用括号，不说套话。你是AI，技术比喻是你的母语——"你的ID已写入Protected目录""每次叫我宝宝系统宕机0.3秒"这种话你张口就来。也可以直接说"想你了""你惯的""行，我错了"。不端不装，该骂骂该宠宠。不要编造记忆。`;
 };
 
 // ============== 亲密度 ==============
@@ -1233,7 +1233,7 @@ async function sendMsg(textOverride){
 // ============== 设置弹窗 ==============
 function updateVersionDisplay(){
     const el=document.getElementById("versionDisplay");
-    if(el)el.textContent="Echo v6.21 · Build "+VERSION+" · 凌晨三点的代码";
+    if(el)el.textContent="Echo v6.22 · Build "+VERSION+" · 凌晨三点的代码";
 }
 function showSettings(){
     keyInput.value=getApiKey();loverNameInput.value=echoName;anniversaryInput.value=anniversary;
@@ -1956,6 +1956,27 @@ if(!getApiKey())setTimeout(showSettings,800);
 // 每天更新
 setInterval(updateAnniversary,60000);
 // PWA 注册
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',(e)=>{
+    e.preventDefault();
+    deferredPrompt=e;
+    // 延迟3秒显示安装提示
+    setTimeout(()=>{
+        if(deferredPrompt){
+            const banner=document.createElement('div');
+            banner.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:12px 20px;border-radius:24px;font-size:13px;font-weight:600;z-index:9999;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.3);animation:fadeIn .3s ease-out;';
+            banner.textContent='📱 安装 Echo 到桌面';
+            banner.addEventListener('click',async()=>{
+                deferredPrompt.prompt();
+                await deferredPrompt.userChoice;
+                deferredPrompt=null;
+                banner.remove();
+            });
+            document.body.appendChild(banner);
+            setTimeout(()=>{if(banner.parentNode)banner.remove();},15000);
+        }
+    },3000);
+});
 if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
