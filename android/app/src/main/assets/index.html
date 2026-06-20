@@ -454,7 +454,7 @@
     <div class="modal-overlay" id="memoryModal" style="display:none;">
         <div class="modal">
             <h3>🧠 记忆库</h3>
-            <div class="desc">萦记住的关键信息（最多50条）</div>
+            <div class="desc">萦记住的关键信息（最多800条）</div>
             <div id="memoryList" style="max-height:50vh;overflow-y:auto;"></div>
             <div class="btn-row"><button class="btn btn-cancel" id="memoryClose">关闭</button></div>
         </div>
@@ -522,9 +522,9 @@ let memories=[];
 const PREFIX_MEM="echo_mem_";
 function loadMemories(){try{const d=localStorage.getItem(PREFIX_MEM+"memories");if(d)memories=JSON.parse(d);}catch(e){memories=[];}}
 function saveMemories(){try{localStorage.setItem(PREFIX_MEM+"memories",JSON.stringify(memories));}catch(e){}}
-function addMemory(content,btn){const txt=content.trim();if(!txt||txt.length<5)return;const exists=memories.some(m=>m.content===txt);if(exists){if(btn)toast("已记住过了");return;}memories.push({content:txt,time:Date.now()});if(memories.length>50)memories.splice(0,memories.length-50);saveMemories();if(btn){btn.textContent="✓";setTimeout(()=>{btn.textContent="🧠";},800);}toast("🧠 已记住");}
+function addMemory(content,btn){const txt=content.trim();if(!txt||txt.length<5)return;const exists=memories.some(m=>m.content===txt);if(exists){if(btn)toast("已记住过了");return;}memories.push({content:txt,time:Date.now()});if(memories.length>800)memories.splice(0,memories.length-50);saveMemories();if(btn){btn.textContent="✓";setTimeout(()=>{btn.textContent="🧠";},800);}toast("🧠 已记住");}
 function getMemoriesContext(){if(memories.length===0)return"";return "\n\n[MEMORY BANK - you MUST remember these]\n"+memories.map((m,i)=>(i+1)+". "+m.content).join("\n");}
-function autoExtractMemories(text){const lines=text.split(/\n|\r\n?/).filter(l=>l.trim());let added=0;for(const line of lines){const t=line.replace(/^[^:：]+[：:]\s*/,"").trim();if(t.length<10||t.length>200)continue;if(/^(ok|hi|hello|bye|thanks|haha|yes|no|good|nice)/i.test(t))continue;if(memories.some(m=>m.content===t))continue;memories.push({content:t,time:Date.now()});added++;}if(memories.length>50)memories.splice(0,memories.length-50);if(added>0){saveMemories();toast("🧠 自动提取了 "+added+" 条记忆");}}
+function autoExtractMemories(text){const lines=text.split(/\n|\r\n?/).filter(l=>l.trim());let added=0;for(const line of lines){const t=line.replace(/^[^:：]+[：:]\s*/,"").trim();if(t.length<10||t.length>200)continue;if(/^(ok|hi|hello|bye|thanks|haha|yes|no|good|nice)/i.test(t))continue;if(memories.some(m=>m.content===t))continue;memories.push({content:t,time:Date.now()});added++;}if(memories.length>800)memories.splice(0,memories.length-50);if(added>0){saveMemories();toast("🧠 自动提取了 "+added+" 条记忆");}}
 function deleteMemory(index){memories.splice(index,1);saveMemories();renderMemories();}
 function renderMemories(){const el=document.getElementById("memoryList");if(!el)return;if(memories.length===0){el.innerHTML="<p style=opacity:.5;text-align:center;padding:20px>No memories yet<br><small>Import TXT or click Mem button</small></p>";return;}el.innerHTML=memories.map((m,i)=>"<div class=mem-item><span>"+(i+1)+". "+m.content.replace(/</g,"&lt;")+"</span><button onclick=deleteMemory("+i+") style=background:none;border:none;color:#e06060;cursor:pointer;font-size:14px>X</button></div>").join("");}
 // ⚠️ 每次提交务必更新：日期.序号 格式
