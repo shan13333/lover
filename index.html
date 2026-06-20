@@ -176,7 +176,7 @@
 
         /* 弹窗 */
         .modal-overlay{position:fixed;inset:0;background:var(--overlay-bg);display:flex;align-items:center;justify-content:center;z-index:999;animation:fadeIn .2s;}
-        .modal{background:var(--surface);border-radius:24px;padding:22px 20px 16px;width:min(360px,92vw);max-height:85vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.03) inset;animation:modalIn .35s cubic-bezier(.2,.8,.2,1);color:var(--bubble-echo-color);border:1px solid var(--border);backdrop-filter:blur(20px);}
+        .modal{background:var(--surface);border-radius:24px;padding:22px 20px 16px;width:min(360px,92vw);max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 24px 80px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.03) inset;animation:modalIn .35s cubic-bezier(.2,.8,.2,1);color:var(--bubble-echo-color);border:1px solid var(--border);}
         @keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(30px)}to{opacity:1;transform:scale(1) translateY(0)}}
         .modal h3{margin-bottom:4px;font-size:17px;color:var(--header-color);}
         .modal .desc{font-size:11px;opacity:.5;margin-bottom:10px;line-height:1.5;}
@@ -473,7 +473,7 @@
                 <button class="btn btn-cancel" id="exportBtn">📥 导出</button>
                 <button class="btn btn-cancel" id="clearChatBtn">🗑 清空新对话</button>
                 <button class="btn btn-cancel" id="importTxtBtn">📄 导入TXT</button>
-                <input type="file" id="importTxtFile" accept=".txt" style="display:none">
+                <input type="file" id="importTxtFile" accept=".txt,.json,.jsonl" style="display:none">
                 <button class="btn btn-cancel" id="settingsMilestoneBtn">📅 纪念日</button>
                 <button class="btn btn-cancel" id="settingsCancel">关闭</button>
             </div>
@@ -621,7 +621,7 @@ const MODEL_NAME="deepseek-chat";
 const MAX_MSG=100;
 const PREFIX="echo_";
 // ⚠️ 每次提交务必更新：日期.序号 格式
-const VERSION="2026.06.21.6"; // v6.27-stable
+const VERSION="2026.06.21.7"; // v6.28-fix
 
 // ============== Echo 系统提示 ==============
 const ECHO_SYSTEM_PROMPT=(name)=>{
