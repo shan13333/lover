@@ -1,7 +1,7 @@
 {
   "name": "萦 · Echo",
   "short_name": "Echo",
-  "version": "6.11",
+  "version": "6.13",
   "description": "凌晨三点的代码里诞生的AI",
   "start_url": "/lover/",
   "scope": "/lover/",
